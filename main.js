@@ -27,11 +27,13 @@ class MainApplication extends React.Component {
     // siginWithCredential
     await Session.get().then((user) => {
       if(user){
-        FireBaseApp.auth().signInWithEmailAndPassword(user.email, user.pass).then( data => {
-          this.setState({isAuthorized: true, isReady: true});
-        }).catch( error => {
-          this.setState({isReady: true})
-        });
+        try {
+          FireBaseApp.auth().signInWithEmailAndPassword(user.email, user.pass).then( data => {
+            this.setState({isAuthorized: true, isReady: true});
+          });
+        } catch (e) {
+          this.setState({isReady: true});
+        }
       } else{
         this.setState({isReady: true})
       };
