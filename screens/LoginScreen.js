@@ -32,21 +32,22 @@ export default class LoginScreen extends React.Component {
 
   login() {
     FireBaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then(signInWithEmailAndPasswordSuccess)
-      .catch(signInWithEmailAndPasswordFail)
+      .then( data => this._signInWithEmailAndPasswordSuccess(data))
+      .catch(this._signInWithEmailAndPasswordFail)
+  }
+
+  _signInWithEmailAndPasswordSuccess(user){
+    Session.create(user, this.state.password)
+    Actions.authorized({user})
+  }
+
+  _signInWithEmailAndPasswordFail(error){
+    let errorCode = error.code;
+    let errorMessage = error.message;
+    console.warn(error);
   }
 }
 
-function signInWithEmailAndPasswordSuccess(user){
-  Session.create(user)
-  Actions.home({user})
-}
-
-function signInWithEmailAndPasswordFail(error){
-  let errorCode = error.code;
-  let errorMessage = error.message;
-  console.warn(error);
-}
 
 
 const styles = {

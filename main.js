@@ -24,11 +24,18 @@ class MainApplication extends React.Component {
   }
 
   async _cacheResourcesAsync(){
+    // siginWithCredential
     await Session.get().then((user) => {
-      if(user)
-        this.setState({isAuthorized: true})
-    })
-    this.setState({isReady: true})
+      if(user){
+        FireBaseApp.auth().signInWithEmailAndPassword(user.email, user.pass).then( data => {
+          this.setState({isAuthorized: true, isReady: true});
+        }).catch( error => {
+          this.setState({isReady: true})
+        });
+      } else{
+        this.setState({isReady: true})
+      };
+    }) ;
   }
 }
 

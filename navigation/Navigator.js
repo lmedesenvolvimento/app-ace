@@ -20,7 +20,7 @@ class Navigator extends Component{
       <View style={styles.container}>
         <Router>
           <Scene key="root" hideNavBar>
-            <Scene key="unauthenticated" initial={!this.props.authorized}>
+            <Scene key="unauthorized" initial={!this.props.authorized}>
               <Scene key="login"
                 component={LoginScreen}
                 title="Login"
@@ -31,13 +31,14 @@ class Navigator extends Component{
                 title="Register"
                 />
             </Scene>
-            <Scene
-              key="home"
-              component={HomeScreen}
-              initial={this.props.authorized}
-              type='replace'
-              title="Home"
-              />
+            <Scene key="authorized" type="replace" initial={this.props.authorized}>
+              <Scene
+                key="home"
+                component={HomeScreen}
+                type="replace"
+                title="Home"
+                />
+            </Scene>
           </Scene>
         </Router>
       </View>

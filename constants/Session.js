@@ -1,9 +1,12 @@
 import { AsyncStorage } from 'react-native';
 
 export default {
-  create: async (credential) => {
+  create: async (credential, secret) => {
     try {
-      await AsyncStorage.setItem("@MyCredential", JSON.stringify(credential))
+      await AsyncStorage.setItem(
+        "@MyCredential",
+        JSON.stringify( { email: credential.email, pass: secret } )
+      )
     } catch (e) {
       console.log(e)
     }
@@ -19,7 +22,7 @@ export default {
   },
   destroy: async () => {
     try {
-      await AsyncStorage.removeItem('@MyCredential')
+      await AsyncStorage.clear()
     } catch (e) {
       console.warn(e)
     }

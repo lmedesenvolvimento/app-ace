@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, ScrollView, View } from 'react-native';
+import { ScrollView, View } from 'react-native';
+import { Text, Button } from 'react-native-elements';
 import { Actions } from 'react-native-router-flux';
 
 import Theme from '../constants/Theme';
@@ -7,24 +8,21 @@ import Layout from '../constants/Layout';
 
 import FireBaseApp from '../constants/FirebaseApp';
 
+import LogoutButton from '../components/LogoutButton';
+
 export default class HomeScreen extends React.Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
   }
   render() {
-    let { user } = this.props
+    let { currentUser } = FireBaseApp.auth()
     return (
-      <View style={styles.container}>
-        <Text>Olá, Mundo</Text>
-      </View>
+      <ScrollView style={Layout.grid}>
+        <View style={Layout.padding}>
+          <Text>Olá, {currentUser.email}</Text>
+        </View>
+        <LogoutButton />
+      </ScrollView>
     );
   }
 }
-
-const styles = {
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  }
-};

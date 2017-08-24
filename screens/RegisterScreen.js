@@ -7,6 +7,8 @@ import { Button, FormInput, FormLabel } from 'react-native-elements';
 import Layout from "../constants/Layout";
 import Theme from "../constants/Theme";
 
+import Session from "../constants/Session";
+
 import FireBaseApp from '../constants/FirebaseApp';
 
 export default class RegisterScreen extends React.Component {
@@ -32,25 +34,27 @@ export default class RegisterScreen extends React.Component {
 
   register() {
     FireBaseApp.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(createUserWithEmailAndPasswordSuccess)
-      .catch(createUserWithEmailAndPasswordFail)
+      .then( user => this._createUserWithEmailAndPasswordSuccess(user) )
+      .catch(this._createUserWithEmailAndPasswordFail)
+  }
+
+  _createUserWithEmailAndPasswordSuccess(user){
+    Session.create(user, this.state.password)
+    Actions.home({user})
+  }
+
+  _createUserWithEmailAndPasswordFail(error){
+    let errorCode = error.code;
+    let errorMessage = error.message;
+    if (errorCode == 'auth/weak-password') {
+      alert('The password is too weak.');
+    } else {
+      alert(errorMessage);
+    }
+    console.log(error);
   }
 }
 
-function createUserWithEmailAndPasswordSuccess(user){
-  Actions.home({user})
-}
-
-function createUserWithEmailAndPasswordFail(error){
-  let errorCode = error.code;
-  let errorMessage = error.message;
-  if (errorCode == 'auth/weak-password') {
-    alert('The password is too weak.');
-  } else {
-    alert(errorMessage);
-  }
-  console.log(error);
-}
 
 const styles = StyleSheet.create({
   container: {

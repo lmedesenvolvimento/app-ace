@@ -7,5 +7,9 @@ export default {
   },
   col: {
     flexDirection: 'column'
+  },
+  padding: {
+    marginVertical: 24,
+    marginHorizontal: 16,
   }
 }
