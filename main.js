@@ -7,7 +7,7 @@ import Session from './constants/Session';
 
 import Navigator from './navigation/Navigator';
 
-class MainApplication extends React.Component {
+export default class MainApplication extends React.Component {
   state = {
     isAuthorized: false,
     isReady: false

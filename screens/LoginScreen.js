@@ -10,6 +10,8 @@ import Layout from '../constants/Layout';
 import Session from '../constants/Session';
 import FireBaseApp from '../constants/FirebaseApp';
 
+import UserCallbacks from '../hooks/UserCallbacks';
+
 export default class LoginScreen extends React.Component {
   state = {
     email: '',
@@ -32,19 +34,8 @@ export default class LoginScreen extends React.Component {
 
   login() {
     FireBaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then( data => this._signInWithEmailAndPasswordSuccess(data))
-      .catch(this._signInWithEmailAndPasswordFail)
-  }
-
-  _signInWithEmailAndPasswordSuccess(user){
-    Session.create(user, this.state.password)
-    Actions.authorized({user})
-  }
-
-  _signInWithEmailAndPasswordFail(error){
-    let errorCode = error.code;
-    let errorMessage = error.message;
-    console.warn(error);
+      .then( data => UserCallbacks.signInWithEmailAndPasswordSuccess(data, this.state.password))
+      .catch(UserCallbacks.signInWithEmailAndPasswordFail)
   }
 }
 

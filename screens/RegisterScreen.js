@@ -8,8 +8,9 @@ import Layout from "../constants/Layout";
 import Theme from "../constants/Theme";
 
 import Session from "../constants/Session";
-
 import FireBaseApp from '../constants/FirebaseApp';
+
+import UserCallbacks from '../hooks/UserCallbacks';
 
 export default class RegisterScreen extends React.Component {
   state = {
@@ -34,24 +35,8 @@ export default class RegisterScreen extends React.Component {
 
   register() {
     FireBaseApp.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then( user => this._createUserWithEmailAndPasswordSuccess(user) )
-      .catch(this._createUserWithEmailAndPasswordFail)
-  }
-
-  _createUserWithEmailAndPasswordSuccess(user){
-    Session.create(user, this.state.password)
-    Actions.home({user})
-  }
-
-  _createUserWithEmailAndPasswordFail(error){
-    let errorCode = error.code;
-    let errorMessage = error.message;
-    if (errorCode == 'auth/weak-password') {
-      alert('The password is too weak.');
-    } else {
-      alert(errorMessage);
-    }
-    console.log(error);
+      .then( user => UserCallbacks.createUserWithEmailAndPasswordSuccess(user, this.state.password) )
+      .catch(UserCallbacks.createUserWithEmailAndPasswordFail)
   }
 }
 
