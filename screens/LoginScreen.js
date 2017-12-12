@@ -25,7 +25,6 @@ export default class LoginScreen extends React.Component {
             <FormInput inputStyle={Theme.formInput} placeholder="your@email.com" onChangeText={ email => this.setState({email}) }></FormInput>
             <FormInput inputStyle={Theme.formInput} placeholder="Password" secureTextEntry={true} onChangeText={ password => this.setState({password}) }></FormInput>
             <Button buttonStyle={Theme.btnPrimary} raised title="Login" onPress={ _=> this.login() }></Button>
-            <Button buttonStyle={Theme.btn} raised title="Registrar-se" onPress={ _=> Actions.register() }></Button>
           </View>
         </ScrollView>
       </View>

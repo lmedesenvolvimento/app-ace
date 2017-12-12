@@ -1,4 +1,4 @@
-package br.com.react_native_router_flux_firebase;
+package br.com.aedes_em_foco_agent;
 
 import android.os.Bundle;
 
@@ -8,14 +8,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import br.com.react_native_router_flux_firebase.generated.ExponentBuildConstants;
+import br.com.aedes_em_foco_agent.generated.ExponentBuildConstants;
 import host.exp.expoview.ExponentActivity;
 
 public class MainActivity extends ExponentActivity {
 
   @Override
   public String publishedUrl() {
-    return "exp://exp.host/@damisgarcia/blank-project-with-router-flux";
+    return "exp://exp.host/@damisgarcia/aedes_em_foco_agent";
   }
 
   @Override

@@ -25,11 +25,6 @@ class Navigator extends Component{
                 component={LoginScreen}
                 title="Login"
                 />
-              <Scene
-                key="register"
-                component={RegisterScreen}
-                title="Register"
-                />
             </Scene>
             <Scene key="authorized" type="replace" initial={this.props.authorized}>
               <Scene

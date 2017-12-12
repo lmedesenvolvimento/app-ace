@@ -5,7 +5,7 @@ android {
   buildToolsVersion '26.0.1'
 
   defaultConfig {
-    applicationId "br.com.react_native_router_flux_firebase"
+    applicationId "br.com.aedes_em_foco_agent"
     minSdkVersion 19
     targetSdkVersion 26
     versionCode 1
@@ -15,7 +15,7 @@ android {
       abiFilters 'armeabi-v7a', 'x86'
     }
     manifestPlaceholders = [
-      'appAuthRedirectScheme': 'br.com.react_native_router_flux_firebase'
+      'appAuthRedirectScheme': 'br.com.aedes_em_foco_agent'
     ]
   }
   buildTypes {

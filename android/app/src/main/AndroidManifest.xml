@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="br.com.react_native_router_flux_firebase"
+<manifest package="br.com.aedes_em_foco_agent"
           xmlns:android="http://schemas.android.com/apk/res/android">
 
   <application

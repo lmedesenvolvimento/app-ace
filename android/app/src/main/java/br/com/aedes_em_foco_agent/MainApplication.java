@@ -1,4 +1,4 @@
-package br.com.react_native_router_flux_firebase;
+package br.com.aedes_em_foco_agent;
 
 import android.support.multidex.MultiDexApplication;
 
