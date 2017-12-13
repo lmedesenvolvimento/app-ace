@@ -6,9 +6,9 @@ import { Button, FormInput, FormLabel } from 'react-native-elements';
 
 import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
+import Session from '../services/Session';
 
-import Session from '../constants/Session';
-import FireBaseApp from '../constants/FirebaseApp';
+import Auth from '../services/Auth';
 
 import UserCallbacks from '../hooks/UserCallbacks';
 
@@ -32,13 +32,9 @@ export default class LoginScreen extends React.Component {
   }
 
   login() {
-    FireBaseApp.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
-      .then( data => UserCallbacks.signInWithEmailAndPasswordSuccess(data, this.state.password))
-      .catch(UserCallbacks.signInWithEmailAndPasswordFail)
+    Auth.sign_in(this.state.email, this.state.password).then(UserCallbacks.signInWithEmailAndPasswordSuccess, UserCallbacks.signInWithEmailAndPasswordFail)
   }
 }
-
-
 
 const styles = {
   container: {

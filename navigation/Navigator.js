@@ -3,10 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { Router, Scene } from 'react-native-router-flux';
 
 import FireBaseApp from '../constants/FirebaseApp';
-import Session from '../constants/Session';
+import Session from '../services/Session';
 
 import LoginScreen from '../screens/LoginScreen';
-import RegisterScreen from '../screens/RegisterScreen';
 import HomeScreen from '../screens/HomeScreen';
 
 

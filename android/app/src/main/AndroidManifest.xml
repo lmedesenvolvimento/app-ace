@@ -27,6 +27,7 @@
         <category android:name="android.intent.category.BROWSABLE"/>
       </intent-filter>
     </activity>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
   </application>
 
 </manifest>

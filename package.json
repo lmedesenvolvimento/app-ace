@@ -6,6 +6,7 @@
   "private": true,
   "main": "main.js",
   "dependencies": {
+    "axios": "^0.17.1",
     "expo": "17.0.0",
     "firebase": "^4.3.0",
     "react": "16.0.0-alpha.6",

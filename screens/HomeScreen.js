@@ -5,21 +5,26 @@ import { Actions } from 'react-native-router-flux';
 
 import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
-
-import FireBaseApp from '../constants/FirebaseApp';
+import Session from '../services/Session';
 
 import LogoutButton from '../components/LogoutButton';
 
 export default class HomeScreen extends React.Component {
+  state = {
+    currentUser: null
+  }
   constructor(props) {
     super(props);
   }
+  componentDidMount(){
+    console.log(Session.currentUser)
+    this.setState({ currentUser: Session.currentUser })
+  }
   render() {
-    let { currentUser } = FireBaseApp.auth()
     return (
       <ScrollView style={Layout.grid}>
         <View style={Layout.padding}>
-          <Text>Olá, {currentUser.email}</Text>
+          <Text>{JSON.stringify(this.state.currentUser)}</Text>
         </View>
         <LogoutButton />
       </ScrollView>

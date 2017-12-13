@@ -3,7 +3,7 @@ import { Actions, ActionConst } from 'react-native-router-flux';
 import { Button }  from 'react-native-elements';
 
 import Theme from '../constants/Theme';
-import Session from '../constants/Session';
+import Session from '../services/Session';
 
 import FireBaseApp from '../constants/FirebaseApp';
 
@@ -13,14 +13,7 @@ export default class LogoutButton extends React.Component {
   }
 
   destroySession(){
-    FireBaseApp.auth().signOut()
-    .then( _=> {
-      Session.destroy()
-      Actions.unauthorized({type: ActionConst.RESET})
-    })
-    .catch( error => {
-      console.warn(error)
-      Actions.login()
-    })
+    Session.Credential.destroy()
+    Actions.unauthorized({type: ActionConst.RESET})    
   }
 }
