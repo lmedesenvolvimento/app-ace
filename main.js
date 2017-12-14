@@ -1,7 +1,10 @@
 import Expo from 'expo';
 import React from 'react';
-import { AppState, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 
+import { Provider } from 'react-redux';
+
+import Store, { configureStore } from './constants/Store';
 import FireBaseApp from './constants/FirebaseApp';
 
 import Auth from './services/Auth';
@@ -12,7 +15,6 @@ import Navigator from './navigation/Navigator';
 
 export default class MainApplication extends React.Component {
   state = {
-    appState: AppState.currentState,
     isAuthorized: false,
     isReady: false
   }
@@ -21,29 +23,12 @@ export default class MainApplication extends React.Component {
     this._cacheResourcesAsync();
   }
 
-  componentDidMount(){
-    AppState.addEventListener('change', (nextAppState)=> this._handleAppStateChange(nextAppState));
-  }
-
-  componentWillUnmount(){
-    AppState.removeEventListener('change', (nextAppState)=> this._handleAppStateChange(nextAppState));
-  }
-
   render(){
     if(this.state.isReady){
       return <Navigator authorized={this.state.isAuthorized}/>;
     } else{
       return <Expo.AppLoading/>;
     }
-  }
-
-  _handleAppStateChange(nextAppState){
-    if (this.state.appState.match(/inactive|background/) && nextAppState === 'active') {
-      console.log('Voltando do cochilo!')
-    } else if(nextAppState.match(/inactive|background/)){
-      console.log('Indo tirar um cochilo!')
-    }
-    this.setState({appState: nextAppState});
   }
 
   async _cacheResourcesAsync(){

@@ -1,15 +1,42 @@
 import React, { Component } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Router, Scene } from 'react-native-router-flux';
+import { connect, Provider } from 'react-redux';
+import { Actions, Router, Scene } from 'react-native-router-flux';
 
 import FireBaseApp from '../constants/FirebaseApp';
+import Store, { configureStore } from '../constants/Store';
+
 import Session from '../services/Session';
 
 import LoginScreen from '../screens/LoginScreen';
 import HomeScreen from '../screens/HomeScreen';
 
+const RouterWithRedux = connect()(Router);
 
-class Navigator extends Component{
+Store.instance = configureStore()
+
+class Navigator extends Component {
+
+  scenes = Actions.create(
+    <Scene key="root">
+      <Scene key="unauthorized" initial={!this.props.authorized} hideNavBar>
+        <Scene key="login"
+          component={LoginScreen}
+          title="Login"
+          />
+      </Scene>
+      <Scene key="authorized" type="replace" initial={this.props.authorized}>
+        <Scene
+          key="home"
+          component={HomeScreen}
+          type="replace"
+          title="Home"
+          />
+      </Scene>
+    </Scene>
+  );
+
+
   constructor(props){
     super(props);
   }
@@ -17,24 +44,9 @@ class Navigator extends Component{
   render(){
     return(
       <View style={styles.container}>
-        <Router>
-          <Scene key="root" hideNavBar>
-            <Scene key="unauthorized" initial={!this.props.authorized}>
-              <Scene key="login"
-                component={LoginScreen}
-                title="Login"
-                />
-            </Scene>
-            <Scene key="authorized" type="replace" initial={this.props.authorized}>
-              <Scene
-                key="home"
-                component={HomeScreen}
-                type="replace"
-                title="Home"
-                />
-            </Scene>
-          </Scene>
-        </Router>
+        <Provider store={Store.instance}>
+          <RouterWithRedux scenes={this.scenes}></RouterWithRedux>
+        </Provider>
       </View>
     );
   }

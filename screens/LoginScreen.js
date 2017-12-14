@@ -6,9 +6,9 @@ import { Button, FormInput, FormLabel } from 'react-native-elements';
 
 import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
-import Session from '../services/Session';
 
 import Auth from '../services/Auth';
+import Session from '../services/Session';
 
 import UserCallbacks from '../hooks/UserCallbacks';
 
@@ -32,9 +32,11 @@ export default class LoginScreen extends React.Component {
   }
 
   login() {
-    Auth.sign_in(this.state.email, this.state.password).then(UserCallbacks.signInWithEmailAndPasswordSuccess, UserCallbacks.signInWithEmailAndPasswordFail)
+    Auth.sign_in(this.state.email, this.state.password).then(UserCallbacks.signInWithEmailAndPasswordSuccess, )
   }
 }
+
+
 
 const styles = {
   container: {
