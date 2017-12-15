@@ -1,4 +1,0 @@
-export default {
-  CONNECTED: 'ISCONNECTED',
-  NOTCONNECTED: 'NOTCONNECTED'
-}
