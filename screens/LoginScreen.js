@@ -42,7 +42,7 @@ class LoginScreen extends React.Component {
               <Input secureTextEntry={true} onChangeText={ password => this.setState({password}) } />
             </Item>
           </Form>
-          <Button block onPress={ _=> this.login() } style={{ marginVertical: 24}}>
+          <Button block onPress={ _=> this.login() } style={Layout.marginVertical}>
             <Text>Login</Text>
           </Button>
         </Content>

@@ -11,5 +11,8 @@ export default {
   padding: {
     marginVertical: 24,
     marginHorizontal: 16,
+  },
+  marginVertical: {
+    marginVertical: 24
   }
 }
