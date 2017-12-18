@@ -3,6 +3,9 @@
 # expo
 .expo/
 
+# variables
+env.json
+
 # dependencies
 /node_modules
 

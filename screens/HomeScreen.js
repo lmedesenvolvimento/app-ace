@@ -24,10 +24,13 @@ class HomeScreen extends React.Component {
   }
 
   render() {
+    let { currentUser } = this.props;
+
     return (
       <Container>
         <Content padder>
-          <Text> Is Connected: {this.props.network.isConnected}</Text>
+          <Text> Is Connected: {this.props.network.isConnected ? "Online" : "Offline"}</Text>
+          <Text>{JSON.stringify(currentUser)}</Text>
           <LogoutButton />
         </Content>
       </Container>
@@ -35,4 +38,4 @@ class HomeScreen extends React.Component {
   }
 }
 
-export default connect(({network}) => ({network}))(HomeScreen)
+export default connect(({network, currentUser}) => ({network, currentUser}))(HomeScreen)

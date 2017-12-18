@@ -1,4 +1,4 @@
-import NetworkTypes from "../types/NetworkTypes";
+import network_types from "../types/network_types";
 
 const initialState = {
   isConnected: false
@@ -6,9 +6,9 @@ const initialState = {
 
 export default function reducer(state = initialState, action){
   switch (action.type) {
-    case NetworkTypes.CONNECTED:
+    case network_types.CONNECTED:
       return { ...state, isConnected: true }
-    case NetworkTypes.NOTCONNECTED:
+    case network_types.NOTCONNECTED:
       return { ...state, isConnected: false }
     default:
       return state
