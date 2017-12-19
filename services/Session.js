@@ -6,7 +6,7 @@ export default {
       try {
         await AsyncStorage.setItem(
           "@MyCredential",
-          JSON.stringify(credentials.user)
+          JSON.stringify(credentials)
         )
       } catch (e) {
         console.log(e)

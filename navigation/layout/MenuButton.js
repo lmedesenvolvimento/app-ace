@@ -13,7 +13,7 @@ export default class MenuButton extends Component{
   render(){
     return (
       <TouchableOpacity onPress={this._drawerOpen.bind(this)}>
-        <Icon name="menu" size={24} style={{marginHorizontal: 16 }} />
+        <Icon name="menu" size={18} style={{marginHorizontal: 16, color: "white"}} />
       </TouchableOpacity>
     );
   }

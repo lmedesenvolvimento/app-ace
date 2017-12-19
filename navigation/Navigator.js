@@ -10,6 +10,7 @@ import {
   Stack
 } from 'react-native-router-flux';
 
+import Colors from '../constants/Colors';
 import Store, { configureStore } from '../constants/Store';
 
 import Session from '../services/Session';
@@ -20,6 +21,7 @@ import MenuButton from './layout/MenuButton';
 import LoginScreen from '../screens/LoginScreen';
 import AboutScreen from '../screens/AboutScreen';
 import HomeScreen from '../screens/HomeScreen';
+import ProfileScreen from '../screens/ProfileScreen';
 
 const RouterWithRedux = connect()(Router);
 
@@ -29,7 +31,7 @@ class Navigator extends Component {
 
   scenes = Actions.create(
     <Scene key="root" hideNavBar>
-      <Scene key="unauthorized" initial={!this.props.authorized} hideNavBar>
+      <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
         <Stack>
           <Scene key="login"
             component={LoginScreen}
@@ -39,22 +41,26 @@ class Navigator extends Component {
       </Scene>
       <Scene key="authorized" type="replace" initial={this.props.authorized} hideNavBar>
         <Drawer
-            key="drawer"
-            hideNavBar
-            contentComponent={MainMenu}
-            drawerWidth={300}
-            renderLeftButton={() => <MenuButton /> }>
+          key="drawer"
+          hideNavBar
+          contentComponent={MainMenu}
+          drawerWidth={300}
+          navigationBarStyle={styles.navigationBarStyle}
+          titleStyle={styles.navTitleStyle}
+          renderLeftButton={() => <MenuButton /> }>
             <Scene
               key="home"
               component={HomeScreen}
               type="replace"
-              title="Home"
-              />
+              title="Home" />
             <Scene
               key="about"
               component={AboutScreen}
-              title="About"
-              />
+              title="About" />
+            <Scene
+              key="profile"
+              component={ProfileScreen}
+              title="Perfil" />
         </Drawer>
       </Scene>
     </Scene>
@@ -85,4 +91,10 @@ const styles = StyleSheet.create({
     marginTop: 24,
     backgroundColor: 'white'
   },
+  navigationBarStyle: {
+    backgroundColor: Colors.primaryColor,
+  },
+  navTitleStyle: {
+    color: 'white'
+  }
 });

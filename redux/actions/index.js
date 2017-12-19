@@ -1,5 +1,7 @@
-import * as NetworkAction from "./network_actions";
+import * as NetworkActions from "./network_actions";
+import * as UserActions from "./user_actions";
 
 export default {
-  network: NetworkAction
+  networkActions: NetworkActions,
+  userActions: UserActions
 }

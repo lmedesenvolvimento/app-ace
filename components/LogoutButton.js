@@ -9,7 +9,7 @@ import Session from '../services/Session';
 export default class LogoutButton extends React.Component {
   render(){
     return (
-      <Button block onPress={ _=> this.destroySession() } style={Layout.marginVertical}>
+      <Button primary block onPress={ _=> this.destroySession() } style={Layout.marginVertical}>
         <Text>Sair</Text>
       </Button>
     );

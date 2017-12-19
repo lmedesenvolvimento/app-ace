@@ -1,3 +1,4 @@
 export default {
-  primaryColor: "#3D90F3"
+  primaryColor: "#00796B", // Teal 700
+  accentColor: "#FF9800" // Orange 500
 }

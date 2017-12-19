@@ -51,7 +51,7 @@ class LoginScreen extends React.Component {
   }
 
   login() {
-    Auth.sign_in(this.state.email, this.state.password).then(UserCallbacks.signInWithEmailAndPasswordSuccess, )
+    Auth.sign_in(this.state.email, this.state.password).then(UserCallbacks.signInWithEmailAndPasswordSuccess, UserCallbacks.signInWithEmailAndPasswordFail)
   }
 }
 

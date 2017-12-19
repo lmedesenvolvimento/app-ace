@@ -2,7 +2,7 @@ import Http from "./Http";
 import Session from "./Session";
 
 import Store from '../constants/Store';
-import * as UserActions from '../redux/actions/user_action';
+import * as UserActions from '../redux/actions/user_actions';
 
 export default {
   sign_in: async (email, password) => {

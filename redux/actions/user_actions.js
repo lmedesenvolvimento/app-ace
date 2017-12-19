@@ -6,3 +6,9 @@ export function setUser(data){
     data: data
   };
 }
+
+export function getUser(){
+  return {
+    type: Types.GET_PROFILE
+  };
+}
