@@ -54,6 +54,7 @@ class ProfileScreen extends React.Component {
                 <Input value={this.state.currentUser.email} disabled={true} />
               </Item>
             </Form>
+            <LogoutButton />
           </Content>
         </Container>
       );

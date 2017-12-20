@@ -213,7 +213,7 @@ export default {
   lineHeight: platform === "ios" ? 20 : 24,
 
   // List
-  listBg: "#fff",
+  listBg: 'rgba(255,255,255,0.1)', // overided
   listBorderColor: "#c9c9c9",
   listDividerBg: "#f4f4f4",
   listBtnUnderlayColor: "#DDD",
@@ -257,6 +257,7 @@ export default {
 
   // Text
   textColor: "#000",
+  textColorLight: "#bbb", // added
   inverseTextColor: "#fff",
   noteFontSize: 14,
 

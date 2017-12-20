@@ -1,6 +1,6 @@
 import Expo from 'expo';
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, StatusBar, View, Platform } from 'react-native';
 
 import { StyleProvider, Button, Text, getTheme } from 'native-base';
 

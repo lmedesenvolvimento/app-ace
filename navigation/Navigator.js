@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Platform } from 'react-native';
 import { connect, Provider } from 'react-redux';
 
 import {
@@ -28,45 +28,6 @@ const RouterWithRedux = connect()(Router);
 Store.instance = configureStore()
 
 class Navigator extends Component {
-
-  scenes = Actions.create(
-    <Scene key="root" hideNavBar>
-      <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
-        <Stack>
-          <Scene key="login"
-            component={LoginScreen}
-            title="Login"
-            />
-        </Stack>
-      </Scene>
-      <Scene key="authorized" type="replace" initial={this.props.authorized} hideNavBar>
-        <Drawer
-          key="drawer"
-          hideNavBar
-          contentComponent={MainMenu}
-          drawerWidth={300}
-          navigationBarStyle={styles.navigationBarStyle}
-          titleStyle={styles.navTitleStyle}
-          renderLeftButton={() => <MenuButton /> }>
-            <Scene
-              key="home"
-              component={HomeScreen}
-              type="replace"
-              title="Home" />
-            <Scene
-              key="about"
-              component={AboutScreen}
-              title="About" />
-            <Scene
-              key="profile"
-              component={ProfileScreen}
-              title="Perfil" />
-        </Drawer>
-      </Scene>
-    </Scene>
-  );
-
-
   constructor(props){
     super(props);
   }
@@ -75,7 +36,40 @@ class Navigator extends Component {
     return(
       <View style={styles.container}>
         <Provider store={Store.instance}>
-          <RouterWithRedux scenes={this.scenes}></RouterWithRedux>
+          <RouterWithRedux sceneStyle={styles.sceneStyle}>
+            <Scene key="root" hideNavBar>
+              <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
+                <Stack>
+                  <Scene key="login"
+                    component={LoginScreen}
+                    title="Login"
+                    />
+                </Stack>
+              </Scene>
+              <Scene key="authorized" type="replace" initial={this.props.authorized} hideNavBar>
+                <Drawer
+                  key="drawer"
+                  contentComponent={MainMenu}
+                  navigationBarStyle={styles.navigationBarStyle}
+                  titleStyle={styles.navTitleStyle}
+                  renderLeftButton={() => <MenuButton /> }>
+                  <Scene
+                    key="home"
+                    component={HomeScreen}
+                    type="replace"
+                    title="AEDES em foco" />
+                  <Scene
+                    key="about"
+                    component={AboutScreen}
+                    title="About" />
+                  <Scene
+                    key="profile"
+                    component={ProfileScreen}
+                    title="Perfil" />
+                </Drawer>
+              </Scene>
+            </Scene>
+          </RouterWithRedux>
         </Provider>
       </View>
     );
@@ -88,13 +82,16 @@ export default Navigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 24,
-    backgroundColor: 'white'
+    paddingTop: 24,
+    backgroundColor: Colors.primaryColor
   },
   navigationBarStyle: {
     backgroundColor: Colors.primaryColor,
   },
   navTitleStyle: {
     color: 'white'
+  },
+  sceneStyle: {
+    backgroundColor: 'white'
   }
 });

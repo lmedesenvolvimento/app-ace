@@ -1,5 +1,17 @@
+import Expo from 'expo';
 import React from 'react';
-import { Header, Container, Content, Text, Body, Button, List, ListItem } from 'native-base';
+import { View } from 'react-native';
+
+import {
+  Header,
+  Container,
+  Content,
+  Text,
+  Body,
+  Button,
+  List,
+  ListItem
+} from 'native-base';
 
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
@@ -15,11 +27,23 @@ class AboutScreen extends React.Component {
     super(props);
   }
   render() {
+    let { manifest } = Expo.Constants;
     return (
-      <Container>
-        <Content padder>
-          <Text>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</Text>          
-        </Content>
+      <Container style={Layout.padding}>
+        <View style={Layout.marginVertical8}>
+          <Text>{manifest.name}</Text>
+          <Text note>{manifest.version}</Text>
+        </View>
+
+        <View style={Layout.marginVertical8}>
+          <Text>Descrição</Text>
+          <Text note>{manifest.description || "Sem descrição"}</Text>
+        </View>
+
+        <View style={Layout.marginVertical8}>
+          <Text>Autor</Text>
+          <Text note>Laboratório de Mídias Educacional</Text>
+        </View>
       </Container>
     );
   }
