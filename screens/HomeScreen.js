@@ -1,12 +1,28 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Header, Container, Content, Text, Subtitle, Left, Right, Body, Button, List, ListItem, Icon } from 'native-base';
+
+import {
+  Header,
+  Container,
+  Content,
+  Text,
+  Title,
+  Left,
+  Right,
+  Body,
+  Button,
+  List,
+  ListItem,
+  Icon
+} from 'native-base';
+
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
 import { Actions } from 'react-native-router-flux';
 
 import Theme from '../constants/Theme';
+import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 import Session from '../services/Session';
 
@@ -32,6 +48,11 @@ class HomeScreen extends React.Component {
 
     return (
       <Container>
+        <Header>
+          <Left>
+            <Title>Quadras</Title>
+          </Left>
+        </Header>
         <Content padder>
           <List dataArray={items} renderRow={this.renderItem} />
         </Content>
@@ -69,7 +90,7 @@ const styles = {
     height: 51,
     borderBottomWidth: Theme.borderWidth,
     borderBottomColor: Theme.listBorderColor,
-    paddingHorizontal: 24,
+    paddingHorizontal: 8,
     alignItems: 'flex-end',
     justifyContent: 'center',
   }
