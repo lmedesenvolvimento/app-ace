@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, Platform } from 'react-native';
+import { BackHandler, StyleSheet, View, Platform } from 'react-native';
 import { connect, Provider } from 'react-redux';
 
 import {
@@ -7,7 +7,9 @@ import {
   Drawer,
   Router,
   Scene,
-  Stack
+  Stack,
+  Modal,
+  Lightbox
 } from 'react-native-router-flux';
 
 import Colors from '../constants/Colors';
@@ -22,6 +24,9 @@ import LoginScreen from '../screens/LoginScreen';
 import AboutScreen from '../screens/AboutScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
+import ZoneScreen from '../screens/ZoneScreen';
+
+import NewZoneModal from '../modals/NewZoneModal';
 
 const RouterWithRedux = connect()(Router);
 
@@ -33,11 +38,17 @@ class Navigator extends Component {
   }
 
   render(){
+    // Prevent app exit
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    })
+
+
     return(
       <View style={styles.container}>
         <Provider store={Store.instance}>
           <RouterWithRedux sceneStyle={styles.sceneStyle}>
-            <Scene key="root" hideNavBar>
+            <Modal key="root">
               <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
                 <Stack>
                   <Scene key="login"
@@ -52,12 +63,15 @@ class Navigator extends Component {
                   contentComponent={MainMenu}
                   navigationBarStyle={styles.navigationBarStyle}
                   titleStyle={styles.navTitleStyle}
+                  drawerOpenRoute='DrawerOpen'
+                	drawerCloseRoute='DrawerClose'
+                	drawerToggleRoute='DrawerToggle'
                   renderLeftButton={() => <MenuButton /> }>
                   <Scene
                     key="home"
                     component={HomeScreen}
-                    type="replace"
-                    title="AEDES em foco" />
+                    title="AEDES em foco">
+                  </Scene>
                   <Scene
                     key="about"
                     component={AboutScreen}
@@ -67,8 +81,19 @@ class Navigator extends Component {
                     component={ProfileScreen}
                     title="Perfil" />
                 </Drawer>
+
+                {/* LOCATIONS SCENES */}
+                <Scene
+                  key="zone"
+                  component={ZoneScreen}
+                  type="push"
+                  title="Quadra 1"
+                  hideNavBar />
+                {/* END LOCATIONS SCENES */}
               </Scene>
-            </Scene>
+              {/* MODALS*/}
+              <Scene key="newZoneModal" component={NewZoneModal} modal title="Novo Logradouro" hideNavBar />
+            </Modal>
           </RouterWithRedux>
         </Provider>
       </View>

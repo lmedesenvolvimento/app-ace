@@ -13,7 +13,8 @@ import {
   Button,
   List,
   ListItem,
-  Icon
+  Icon,
+  Fab
 } from 'native-base';
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -28,7 +29,7 @@ import Session from '../services/Session';
 
 import LogoutButton from '../components/LogoutButton';
 
-class HomeScreen extends React.Component {
+class ZoneScreen extends React.Component {
   state = {
     currentUser: null
   }
@@ -44,31 +45,37 @@ class HomeScreen extends React.Component {
   render() {
     let { currentUser } = this.props;
 
-    let items = ["Quadra 1", "Quadra 2", "Quadra 3"];
+    let items = ["Assunção", "Ana Bilhar", "Antônio Augusto", "Azevedo Bolão", "Beljamin Franklin", "Bezerra de Meneses"];
 
     return (
       <Container>
         <Header>
-          <Left>
-            <Title>Quadras</Title>
-          </Left>
+          <Body>
+            <Title>Quadra 1</Title>
+          </Body>
         </Header>
         <Content padder>
           <List dataArray={items} renderRow={this.renderItem} />
         </Content>
+        <Fab
+          direction="up"
+          position="bottomRight"
+          style={{ backgroundColor: Colors.accentColor }}
+          onPress={() => Actions.newZoneModal({error: "Network failed...", hide: false})}>
+          <MaterialIcons name="location-on" size={24} />
+        </Fab>
       </Container>
     );
   }
 
   renderItem(item){
     return(
-      <ListItem icon onPress={()=> Actions.zone({zone: item, title: item})} style={Layout.listHeight}>
+      <ListItem icon onPress={()=> false} style={Layout.listHeight}>
         <Left>
-          <Icon name='map' size={36} />
+          <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
           <Text>{item}</Text>
-          <Text note>Município</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />
@@ -78,4 +85,4 @@ class HomeScreen extends React.Component {
   }
 }
 
-export default connect(({network, currentUser}) => ({network, currentUser}))(HomeScreen)
+export default connect(({network, currentUser}) => ({network, currentUser}))(ZoneScreen);
