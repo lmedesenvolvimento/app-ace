@@ -17,6 +17,8 @@ import {
   Fab
 } from 'native-base';
 
+import SearchBar from 'react-native-searchbar';
+
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
@@ -29,39 +31,58 @@ import Session from '../services/Session';
 
 import LogoutButton from '../components/LogoutButton';
 
+import * as _ from "lodash";
+
 class ZoneScreen extends React.Component {
   state = {
-    currentUser: null
+    items: []
   }
+
+  // persistence
+  items = ["Assunção", "Ana Bilhar", "Antônio Augusto", "Azevedo Bolão", "Benjamin Franklin", "Bezerra de Meneses"];
 
   constructor(props) {
     super(props);
   }
 
   componentDidMount(){
-    this.setState({ currentUser: Session.currentUser })
+    this.setState({ items: this.items })
   }
 
   render() {
     let { currentUser } = this.props;
 
-    let items = ["Assunção", "Ana Bilhar", "Antônio Augusto", "Azevedo Bolão", "Beljamin Franklin", "Bezerra de Meneses"];
-
     return (
       <Container>
-        <Header>
+        <Header style={{ zIndex: 9 }}>
+          <Left>
+            <Button transparent onPress={()=> Actions.pop()}>
+              <Icon name='md-arrow-back' />
+            </Button>
+          </Left>
           <Body>
             <Title>Quadra 1</Title>
           </Body>
+          <Right>
+            <Button transparent onPress={()=> this.searchBar.show()}>
+              <Icon android="md-search" ios="ios-search" />
+            </Button>
+          </Right>
+          <SearchBar
+            ref={(ref) => this.searchBar = ref}
+            data={this.items}
+            animate={false}
+            placeholder="Pesquisar"
+            handleSearch={(q)=> this._handleSearch(q)} />
         </Header>
         <Content padder>
-          <List dataArray={items} renderRow={this.renderItem} />
+          <List dataArray={this.state.items} renderRow={this.renderItem} />
         </Content>
         <Fab
           direction="up"
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.newZoneModal({error: "Network failed...", hide: false})}>
+          onPress={() => Actions.newZoneModal({hide: false})}>
           <MaterialIcons name="location-on" size={24} />
         </Fab>
       </Container>
@@ -83,6 +104,12 @@ class ZoneScreen extends React.Component {
       </ListItem>
     );
   }
+
+  _handleSearch(q){
+    // Use Lodash regex for get match items
+    let result = _.filter(this.items, (i)=> _.isMatch(i, q));
+    this.setState({items:  result})
+  }
 }
 
-export default connect(({network, currentUser}) => ({network, currentUser}))(ZoneScreen);
+export default connect(({currentUser}) => ({currentUser}))(ZoneScreen);

@@ -29,16 +29,8 @@ import Session from '../services/Session';
 import LogoutButton from '../components/LogoutButton';
 
 class HomeScreen extends React.Component {
-  state = {
-    currentUser: null
-  }
-
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount(){
-    this.setState({ currentUser: Session.currentUser })
   }
 
   render() {

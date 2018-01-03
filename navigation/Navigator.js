@@ -37,24 +37,26 @@ class Navigator extends Component {
     super(props);
   }
 
-  render(){
+  onBackPress(){
     // Prevent app exit
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      return true;
-    })
+    if (Actions.currentScene == "_home" && Actions.state.index === 0) {
+      return false;
+    }
+    Actions.pop();
+    return true;
+  }
 
-
+  render(){
     return(
       <View style={styles.container}>
         <Provider store={Store.instance}>
-          <RouterWithRedux sceneStyle={styles.sceneStyle}>
+          <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={this.onBackPress}>
             <Modal key="root">
               <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
                 <Stack>
                   <Scene key="login"
                     component={LoginScreen}
-                    title="Login"
-                    />
+                    title="Login" />
                 </Stack>
               </Scene>
               <Scene key="authorized" type="replace" initial={this.props.authorized} hideNavBar>
@@ -91,8 +93,10 @@ class Navigator extends Component {
                   hideNavBar />
                 {/* END LOCATIONS SCENES */}
               </Scene>
+
               {/* MODALS*/}
               <Scene key="newZoneModal" component={NewZoneModal} modal title="Novo Logradouro" hideNavBar />
+              {/* END MODALS*/}
             </Modal>
           </RouterWithRedux>
         </Provider>

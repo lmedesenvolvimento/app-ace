@@ -3,6 +3,14 @@
     "sdkVersion": "23.0.0",
     "name":"Aedes em Foco Agente",
     "description":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.",
-    "slug":"aedes-agent-react-native"
+    "slug":"aedes-agent-react-native",
+    "platforms": ["android", "ios"],
+    "orientation": "portrait",
+    "icon": "./assets/images/aedes_em_foco.png",
+    "primaryColor": "#00796B",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./assets/images/aedes_em_foco.png",
+    }
   }
 }
