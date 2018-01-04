@@ -33,13 +33,15 @@ const RouterWithRedux = connect()(Router);
 Store.instance = configureStore()
 
 class Navigator extends Component {
+  whitelistExitApp = ["_home", "login"]
+
   constructor(props){
     super(props);
   }
 
   onBackPress(){
     // Prevent app exit
-    if (Actions.currentScene == "_home" && Actions.state.index === 0) {
+    if (this.whitelistExitApp.includes(Actions.currentScene) && Actions.state.index === 0) {
       return false;
     }
     Actions.pop();
@@ -50,13 +52,14 @@ class Navigator extends Component {
     return(
       <View style={styles.container}>
         <Provider store={Store.instance}>
-          <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={this.onBackPress}>
+          <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={ () => this.onBackPress() }>
             <Modal key="root">
               <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
                 <Stack>
                   <Scene key="login"
                     component={LoginScreen}
-                    title="Login" />
+                    title="Login"
+                    hideNavBar />
                 </Stack>
               </Scene>
               <Scene key="authorized" type="replace" initial={this.props.authorized} hideNavBar>
