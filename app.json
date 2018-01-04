@@ -4,6 +4,7 @@
     "name":"Aedes em Foco Agente",
     "description":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.",
     "slug":"aedes-agent-react-native",
+    "privacy": "unlisted",
     "platforms": ["android", "ios"],
     "orientation": "portrait",
     "icon": "./assets/images/aedes_em_foco.png",
