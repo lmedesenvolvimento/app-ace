@@ -21,6 +21,8 @@ export default {
   signInWithEmailAndPasswordFail: (error) => {
     Store.instance.dispatch(AuthActions.toDone());
 
+    console.log(error)
+
     if (Platform.OS == 'ios'){
       alert(error.response.data.error)
     } else{

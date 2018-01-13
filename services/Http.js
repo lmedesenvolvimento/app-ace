@@ -1,8 +1,11 @@
 import Config from "../env.json";
 import axios from "axios";
 
-axios.defaults.baseURL = Config.BASEURL;
-axios.defaults.headers.common['Accept'] = 'application/json';
-axios.defaults.headers.common['Content-Type'] = 'application/json';
+let instance = axios.create({
+  baseURL: Config.BASEURL
+});
 
-export default axios;
+instance.defaults.headers.common['Accept'] = 'application/json';
+instance.defaults.headers.common['Content-Type'] = 'application/json';
+
+export default instance;

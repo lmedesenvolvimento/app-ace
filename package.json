@@ -19,6 +19,8 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "apollo-client": "^2.2.0",
+    "apollo-fetch": "^0.7.0",
     "expo": "^23.0.4",
     "native-base": "^2.3.5",
     "react": "16.0.0",

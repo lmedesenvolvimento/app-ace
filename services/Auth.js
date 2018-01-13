@@ -1,4 +1,5 @@
 import Http from "./Http";
+import { applyApolloMiddleware } from "./ApolloClient";
 import Session from "./Session";
 
 import Store from '../constants/Store';
@@ -25,4 +26,6 @@ function configCredentials(credential){
   // Config Next Requests
   Http.defaults.headers.common['X-User-Email'] = credential.email;
   Http.defaults.headers.common['X-User-Token'] = credential.authentication_token;
+  // Create ApolloClient
+  applyApolloMiddleware(credential)
 }

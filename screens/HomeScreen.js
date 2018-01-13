@@ -19,7 +19,10 @@ import {
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
+
+import ReduxActions from "../redux/actions";
 
 import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
@@ -33,10 +36,15 @@ class HomeScreen extends React.Component {
     super(props);
   }
 
-  render() {
-    let { currentUser } = this.props;
+  componentDidMount(){
+    this.props.getFieldGroups()
+    console.log(this.props)
+  }
 
-    let items = ["Quadra 1", "Quadra 2", "Quadra 3"];
+  render() {
+    let { currentUser, fieldGroups } = this.props.state;
+
+    let items = fieldGroups.data;
 
     return (
       <Container>
@@ -59,7 +67,7 @@ class HomeScreen extends React.Component {
           <Icon name='map' size={36} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>{item}</Text>
+          <Text>{item.name}</Text>
           <Text note>Município</Text>
         </Body>
         <View style={Layout.listItemChevron}>
@@ -70,4 +78,17 @@ class HomeScreen extends React.Component {
   }
 }
 
-export default connect(({network, currentUser}) => ({network, currentUser}))(HomeScreen)
+function mapStateToProps(state) {
+  return {
+    state: {
+      currentUser: state.currentUser,
+      fieldGroups: state.fieldGroups
+    }
+  }
+}
+
+function mapDispatchToProps(dispatch, ownProps){
+  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
