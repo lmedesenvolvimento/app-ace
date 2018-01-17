@@ -14,4 +14,4 @@ export function applyApolloMiddleware(credential){
   });
 }
 
-export const client = createApolloFetch({ uri });
+export var client = createApolloFetch({ uri });;

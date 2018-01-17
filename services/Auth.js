@@ -13,7 +13,9 @@ export default {
         password: password
       }
     });
+
     configCredentials(response.data)
+
     return response.data;
   },
   configCredentials: configCredentials
