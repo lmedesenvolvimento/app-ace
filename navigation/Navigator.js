@@ -26,8 +26,8 @@ import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 
 // Location Flux
-import ZoneScreen from '../screens/ZoneScreen';
-import NewZoneModal from '../modals/NewZoneModal';
+import StreetScreen from '../screens/StreetScreen';
+import NewStreetModal from '../modals/NewStreetModal';
 import LocationScreen from '../screens/LocationScreen';
 
 const RouterWithRedux = connect()(Router);
@@ -92,7 +92,7 @@ class Navigator extends Component {
                 {/* LOCATIONS SCENES */}
                 <Scene
                   key="zone"
-                  component={ZoneScreen}
+                  component={StreetScreen}
                   type="push"
                   hideNavBar />
                 <Scene
@@ -104,7 +104,7 @@ class Navigator extends Component {
               </Scene>
 
               {/* MODALS*/}
-              <Scene key="newZoneModal" component={NewZoneModal} modal title="Novo Logradouro" hideNavBar />
+              <Scene key="newZoneModal" component={NewStreetModal} modal title="Novo Logradouro" hideNavBar />
               {/* END MODALS*/}
             </Modal>
           </RouterWithRedux>

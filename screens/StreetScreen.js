@@ -33,7 +33,7 @@ import LogoutButton from '../components/LogoutButton';
 
 import * as _ from "lodash";
 
-class ZoneScreen extends React.Component {
+class StreetScreen extends React.Component {
   state = {
     items: []
   }
@@ -112,4 +112,4 @@ class ZoneScreen extends React.Component {
   }
 }
 
-export default connect(({currentUser}) => ({currentUser}))(ZoneScreen);
+export default connect(({currentUser}) => ({currentUser}))(StreetScreen);
