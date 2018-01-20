@@ -24,9 +24,11 @@ import LoginScreen from '../screens/LoginScreen';
 import AboutScreen from '../screens/AboutScreen';
 import HomeScreen from '../screens/HomeScreen';
 import ProfileScreen from '../screens/ProfileScreen';
-import ZoneScreen from '../screens/ZoneScreen';
 
+// Location Flux
+import ZoneScreen from '../screens/ZoneScreen';
 import NewZoneModal from '../modals/NewZoneModal';
+import LocationScreen from '../screens/LocationScreen';
 
 const RouterWithRedux = connect()(Router);
 
@@ -92,7 +94,11 @@ class Navigator extends Component {
                   key="zone"
                   component={ZoneScreen}
                   type="push"
-                  title="Quadra 1"
+                  hideNavBar />
+                <Scene
+                  key="location"
+                  component={LocationScreen}
+                  type="push"
                   hideNavBar />
                 {/* END LOCATIONS SCENES */}
               </Scene>

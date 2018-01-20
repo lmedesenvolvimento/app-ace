@@ -14,6 +14,9 @@ import {
   List,
   ListItem,
   Icon,
+  Tab,
+  Tabs,
+  TabHeading,
   Fab
 } from 'native-base';
 
@@ -33,20 +36,28 @@ import LogoutButton from '../components/LogoutButton';
 
 import * as _ from "lodash";
 
-class ZoneScreen extends React.Component {
+class LocationScreen extends React.Component {
   state = {
-    items: []
+    locations: []
   }
 
   // persistence
-  items = ["Assunção", "Ana Bilhar", "Antônio Augusto", "Azevedo Bolão", "Benjamin Franklin", "Bezerra de Meneses"];
+  locations = [
+    { name: "Nº 33", checked: false },
+    { name: "Nº 34", checked: false },
+    { name: "Nº 35", checked: false },
+    { name: "Nº 36", checked: false },
+    { name: "Nº 37", checked: false },
+    { name: "Nº 38", checked: true },
+    { name: "Nº 39", checked: true }
+  ];
 
   constructor(props) {
     super(props);
   }
 
   componentDidMount(){
-    this.setState({ items: this.items })
+    this.setState({ locations: this.locations })
   }
 
   render() {
@@ -54,14 +65,14 @@ class ZoneScreen extends React.Component {
 
     return (
       <Container>
-        <Header style={{ zIndex: 9 }}>
+        <Header hasTabs={true} style={{ zIndex: 9 }}>
           <Left>
             <Button transparent onPress={()=> Actions.pop()}>
               <Icon name='md-arrow-back' />
             </Button>
           </Left>
           <Body>
-            <Title>{this.props.title}</Title>
+            <Title>{ this.props.title }</Title>
           </Body>
           <Right>
             <Button transparent onPress={()=> this.searchBar.show()}>
@@ -70,14 +81,23 @@ class ZoneScreen extends React.Component {
           </Right>
           <SearchBar
             ref={(ref) => this.searchBar = ref}
-            data={this.items}
+            data={this.locations}
             animate={false}
             placeholder="Pesquisar"
             handleSearch={(q)=> this._handleSearch(q)} />
         </Header>
-        <Content padder>
-          <List dataArray={this.state.items} renderRow={this.renderItem} />
-        </Content>
+        <Tabs>
+          <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
+            <Content padder>
+              <List dataArray={_.filter(this.state.locations, { checked: false })} renderRow={this.renderItem} />
+            </Content>
+          </Tab>
+          <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
+            <Content padder>
+              <List dataArray={_.filter(this.state.locations, { checked: true })} renderRow={this.renderItem} />
+            </Content>
+          </Tab>
+        </Tabs>
         <Fab
           direction="up"
           position="bottomRight"
@@ -89,27 +109,25 @@ class ZoneScreen extends React.Component {
     );
   }
 
-  renderItem(item){
+  renderItem(location){
     return(
-      <ListItem icon onPress={()=> Actions.location({location: item, title: item})} style={Layout.listHeight}>
+      <ListItem icon onPress={()=> false} style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>{item}</Text>
+          <Text>{location.name}</Text>
+          <Text note>Localização</Text>
         </Body>
-        <View style={Layout.listItemChevron}>
-          <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />
-        </View>
       </ListItem>
     );
   }
 
   _handleSearch(q){
-    // Use Lodash regex for get match items
-    let result = _.filter(this.items, (i)=> _.isMatch(i, q));
-    this.setState({items:  result})
+    // Use Lodash regex for get match locations
+    let result = _.filter(this.locations, (i)=> _.isMatch(i.name, q));
+    this.setState({locations:  result})
   }
 }
 
-export default connect(({currentUser}) => ({currentUser}))(ZoneScreen);
+export default connect(({currentUser}) => ({currentUser}))(LocationScreen);

@@ -62,13 +62,13 @@ class HomeScreen extends React.Component {
 
   renderItem(item){
     return(
-      <ListItem icon onPress={()=> Actions.zone({zone: item, title: item})} style={Layout.listHeight}>
+      <ListItem icon onPress={()=> Actions.zone({zone: item, title: item.name})} style={Layout.listHeight}>
         <Left>
           <Icon name='map' size={36} />
         </Left>
         <Body style={Layout.listItemBody}>
           <Text>{item.name}</Text>
-          <Text note>Município</Text>
+          <Text note>{ item.neighborhood.name }</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />

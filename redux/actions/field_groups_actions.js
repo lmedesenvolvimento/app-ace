@@ -20,5 +20,14 @@ export function getFieldGroups(){
 }
 
 let gql_get_field_groups = {
-  query:`query { field_groups { name } }`
+  query:`query {
+    field_groups {
+      id
+      name
+      neighborhood {
+        id
+        name
+      }
+    }
+  }`
 };
