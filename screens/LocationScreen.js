@@ -43,13 +43,13 @@ class LocationScreen extends React.Component {
 
   // persistence
   locations = [
-    { name: "Nº 33", checked: false },
-    { name: "Nº 34", checked: false },
-    { name: "Nº 35", checked: false },
-    { name: "Nº 36", checked: false },
-    { name: "Nº 37", checked: false },
-    { name: "Nº 38", checked: true },
-    { name: "Nº 39", checked: true }
+    { name: "33", checked: false },
+    { name: "34", checked: false },
+    { name: "35", checked: false },
+    { name: "36", checked: false },
+    { name: "37", checked: false },
+    { name: "38", checked: true },
+    { name: "39", checked: true }
   ];
 
   constructor(props) {
@@ -97,14 +97,7 @@ class LocationScreen extends React.Component {
               <List dataArray={_.filter(this.state.locations, { checked: true })} renderRow={this.renderItem} />
             </Content>
           </Tab>
-        </Tabs>
-        <Fab
-          direction="up"
-          position="bottomRight"
-          style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.newZoneModal({hide: false})}>
-          <MaterialIcons name="location-on" size={24} />
-        </Fab>
+        </Tabs>        
       </Container>
     );
   }
@@ -116,7 +109,7 @@ class LocationScreen extends React.Component {
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>{location.name}</Text>
+          <Text>Nº {location.name}</Text>
           <Text note>Localização</Text>
         </Body>
       </ListItem>
