@@ -84,7 +84,8 @@ class LocationScreen extends React.Component {
             data={this.locations}
             animate={false}
             placeholder="Pesquisar"
-            handleSearch={(q)=> this._handleSearch(q)} />
+            handleSearch={(q)=> this._handleSearch(q)}
+            onBack={ ()=> this._onSearchExit() } />
         </Header>
         <Tabs>
           <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
@@ -97,7 +98,7 @@ class LocationScreen extends React.Component {
               <List dataArray={_.filter(this.state.locations, { checked: true })} renderRow={this.renderItem} />
             </Content>
           </Tab>
-        </Tabs>        
+        </Tabs>
       </Container>
     );
   }
@@ -114,6 +115,11 @@ class LocationScreen extends React.Component {
         </Body>
       </ListItem>
     );
+  }
+
+  _onSearchExit(){
+    this.setState({locations: this.locations});
+    this.searchBar.hide()
   }
 
   _handleSearch(q){

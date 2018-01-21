@@ -73,7 +73,8 @@ class StreetScreen extends React.Component {
             data={this.items}
             animate={false}
             placeholder="Pesquisar"
-            handleSearch={(q)=> this._handleSearch(q)} />
+            handleSearch={(q)=> this._handleSearch(q)}
+            onBack={ ()=> this._onSearchExit() } />
         </Header>
         <Content padder>
           <List dataArray={this.state.items} renderRow={this.renderItem} />
@@ -103,6 +104,11 @@ class StreetScreen extends React.Component {
         </View>
       </ListItem>
     );
+  }
+
+  _onSearchExit(){
+    this.setState({items: this.items});
+    this.searchBar.hide()
   }
 
   _handleSearch(q){
