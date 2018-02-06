@@ -25,22 +25,33 @@ import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
+
+import ReduxActions from "../redux/actions";
 
 class NewZoneModal extends React.Component {
   state = {
-    street: undefined,
-    neighborhood: undefined
+    address: undefined,
+    neighborhood: {}
   }
-
-  neighborhoods = ['Aldeota','Bairro de Fátima','Messejana','Parque Araxá','Jacarecanga']
 
   constructor(props) {
     super(props);
   }
 
+  componentDidMount(){
+    this.setState({ neighborhood: this.props.zone.neighborhood })
+  }
+
+  okModal(){
+    this.props.addFieldGroup(this.props.zone.id, this.state)
+    this.dismissModal()
+  }
+
   dismissModal(){
-    Actions.pop()
+    // Is nesscessary for prevent cache page
+    Actions.pop({ refresh: { refresh: Math.random() }});
   }
 
   render() {
@@ -50,20 +61,13 @@ class NewZoneModal extends React.Component {
           <H1 style={Layout.padding}>Novo Logradouro</H1>
           <Form>
             <View style={Layout.padding}>
-              <Label>Selecione um Bairro</Label>
-              <Picker
-                mode="dropdown"
-                iosHeader="Selecione um bairro"
-                placeholder="Selecione um bairro"
-                selectedValue={this.state.neighborhood}
-                onValueChange={(neighborhood)=> this.setState({ neighborhood })}>
-                  { this.renderNeighborhoodsItems() }
-              </Picker>
+              <Label>Bairro</Label>
+              <Input placeholder="Nome do Bairro" value={this.state.neighborhood.name} disabled={true}/>
             </View>
 
             <Item stackedLabel>
               <Label>Logradouro</Label>
-              <Input placeholder="Nome do Logradouro"/>
+              <Input placeholder="Nome do Logradouro" value={this.state.address} onChangeText={(address)=> this.setState({address})} />
             </Item>
           </Form>
         </Content>
@@ -74,7 +78,7 @@ class NewZoneModal extends React.Component {
             </Button>
           </Left>
           <Right>
-            <Button transparent onPress={this.dismissModal}>
+            <Button transparent onPress={ () => this.okModal() }>
               <Text>Novo Logradouro</Text>
             </Button>
           </Right>
@@ -82,15 +86,19 @@ class NewZoneModal extends React.Component {
       </Container>
     );
   }
+}
 
-  renderNeighborhoodsItems(){
-    return this.neighborhoods.map((n, index) => {
-      return (
-        <Item label={n} value={n} key={index} />
-      );
-    })
+function mapStateToProps(state) {
+  return {
+    state: {
+      currentUser: state.currentUser,
+      fieldGroups: state.fieldGroups
+    }
   }
 }
 
+function mapDispatchToProps(dispatch, ownProps){
+  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+}
 
-export default connect(({currentUser}) => ({network, currentUser}))(NewZoneModal);
+export default connect(mapStateToProps, mapDispatchToProps)(NewZoneModal);

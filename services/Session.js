@@ -1,6 +1,6 @@
 import { AsyncStorage } from 'react-native';
 
-export default {
+let Session = {
   Credential: {
     create: async (credentials) => {
       try {
@@ -28,5 +28,40 @@ export default {
       }
     }
   },
+  Storage: {
+    initialState: { data: [] },
+    create: async (key, value) => {
+      try {
+        await AsyncStorage.setItem(
+          key,
+          JSON.stringify(value)
+        )
+        let data = await AsyncStorage.getItem(key);
+        // Put in cache for easy access
+        Session.Storage.cache = data
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    get: async (key) => {
+      try{
+        const data = await AsyncStorage.getItem(key);
+        Session.Storage.cache = data ? JSON.parse(data) : null
+        return Session.Storage.cache;
+      } catch(e){
+        return null
+      }
+    },
+    destroy: async (key) => {
+      try {
+        await AsyncStorage.removeItem(key)
+      } catch (e) {
+        console.warn(e)
+      }
+    },
+    cache: null
+  },
   currentUser: null,
 }
+
+export default Session;

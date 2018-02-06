@@ -37,16 +37,12 @@ class StreetScreen extends React.Component {
   state = {
     items: []
   }
-
-  // persistence
-  items = ["Assunção", "Ana Bilhar", "Antônio Augusto", "Azevedo Bolão", "Benjamin Franklin", "Bezerra de Meneses"];
-
   constructor(props) {
     super(props);
   }
 
   componentDidMount(){
-    this.setState({ items: this.items })
+    this.setState({items: this.props.public_areas})
   }
 
   render() {
@@ -83,7 +79,7 @@ class StreetScreen extends React.Component {
           direction="up"
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.newZoneModal({hide: false})}>
+          onPress={() => Actions.newZoneModal({hide: false, zone: this.props.zone})}>
           <MaterialIcons name="location-on" size={24} />
         </Fab>
       </Container>
@@ -92,12 +88,12 @@ class StreetScreen extends React.Component {
 
   renderItem(item){
     return(
-      <ListItem icon onPress={()=> Actions.location({location: item, title: item})} style={Layout.listHeight}>
+      <ListItem icon onPress={()=> Actions.location({street: item, title: item.address})} style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>{item}</Text>
+          <Text>{item.address}</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />
@@ -107,13 +103,13 @@ class StreetScreen extends React.Component {
   }
 
   _onSearchExit(){
-    this.setState({items: this.items});
+    this.setState({items: this.props.public_areas});
     this.searchBar.hide()
   }
 
   _handleSearch(q){
     // Use Lodash regex for get match items
-    let result = _.filter(this.items, (i)=> _.isMatch(i, q));
+    let result = _.filter(this.props.public_areas, (i)=> _.isMatch(i.address, q));
     this.setState({items:  result})
   }
 }

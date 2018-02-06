@@ -15,7 +15,7 @@ export default {
     // Config Apollo
     applyApolloMiddleware(user)
     // Save in AsyncStorage
-    Session.Credential.create(user);
+    Session.Credential.create(user)
     // Dispatch Userr
     Store.instance.dispatch(UserActions.setUser(user));
     Store.instance.dispatch(AuthActions.toDone());
@@ -25,13 +25,12 @@ export default {
   signInWithEmailAndPasswordFail: (error) => {
     Store.instance.dispatch(AuthActions.toDone());
 
-    console.log(error)
-
+    console.log(error);
+    
     if (Platform.OS == 'ios'){
       alert(error.response.data.error)
     } else{
       ToastAndroid.show(error.response.data.error, ToastAndroid.SHORT);
     }
-    console.log(error.response.data);
   }
 }

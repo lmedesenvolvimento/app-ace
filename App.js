@@ -37,25 +37,29 @@ export default class App extends React.Component {
   }
 
   async _cacheResourcesAsync(){
+    let user;
+
     await Expo.Font.loadAsync({
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
       'Ionicons': require("@expo/vector-icons/fonts/Ionicons.ttf")
     });
 
-    await Session.Credential.get().then((user) => {
+    Session.Credential.get().then((user) => {
       if(user){
         try {
-          Auth.configCredentials(user)
-          this.setState({isAuthorized: true, isReady: true});
+          Auth.configCredentials(user, () => {
+            this.setState({isAuthorized: true, isReady: true});
+          });
         } catch (e) {
           this.setState({isReady: true});
         }
       } else{
         this.setState({isReady: true})
-      };
+      }
     });
   }
+
 }
 
 const styles = StyleSheet.create({

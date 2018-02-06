@@ -22,7 +22,22 @@ export default {
 }
 
 
-function configCredentials(credential){
+function configCredentials(credential, callback){
+  // Load LocalStorage
+  if(credential.email){
+    Session.Storage.get(credential.email).then((response)=>{
+      // If Storage is empty
+      if(!response){
+        Session.Storage.create(credential.email, Session.Storage.initialState).then(()=>{
+          console.log("FINISH")
+          return callback ? callback() : false
+        })
+      } else{
+        console.log("FINISH?")
+        return callback ? callback() : false
+      }
+    })
+  }
   // Dispatch Userr
   Store.instance.dispatch(UserActions.setUser(credential))
   // Config Next Requests

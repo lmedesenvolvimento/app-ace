@@ -38,26 +38,15 @@ import * as _ from "lodash";
 
 class LocationScreen extends React.Component {
   state = {
-    locations: []
+    addresses: []
   }
-
-  // persistence
-  locations = [
-    { name: "33", checked: false },
-    { name: "34", checked: false },
-    { name: "35", checked: false },
-    { name: "36", checked: false },
-    { name: "37", checked: false },
-    { name: "38", checked: true },
-    { name: "39", checked: true }
-  ];
 
   constructor(props) {
     super(props);
   }
 
   componentDidMount(){
-    this.setState({ locations: this.locations })
+    this.setState({ addresses: this.props.street.addresses })
   }
 
   render() {
@@ -81,7 +70,7 @@ class LocationScreen extends React.Component {
           </Right>
           <SearchBar
             ref={(ref) => this.searchBar = ref}
-            data={this.locations}
+            data={this.props.addresses}
             animate={false}
             placeholder="Pesquisar"
             handleSearch={(q)=> this._handleSearch(q)}
@@ -90,12 +79,12 @@ class LocationScreen extends React.Component {
         <Tabs>
           <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content padder>
-              <List dataArray={_.filter(this.state.locations, { checked: false })} renderRow={this.renderItem} />
+              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => !obj.visits.length )} renderRow={this.renderItem} />
             </Content>
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
             <Content padder>
-              <List dataArray={_.filter(this.state.locations, { checked: true })} renderRow={this.renderItem} />
+              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => obj.visits.length)} renderRow={this.renderItem} />
             </Content>
           </Tab>
         </Tabs>
@@ -103,29 +92,29 @@ class LocationScreen extends React.Component {
     );
   }
 
-  renderItem(location){
+  renderItem(address){
     return(
       <ListItem icon onPress={()=> false} style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>Nº {location.name}</Text>
-          <Text note>Localização</Text>
+          <Text>Nº {address.number}</Text>
+          <Text note>{address.complement}</Text>
         </Body>
       </ListItem>
     );
   }
 
   _onSearchExit(){
-    this.setState({locations: this.locations});
+    this.setState({addresses: this.props.addresses});
     this.searchBar.hide()
   }
 
   _handleSearch(q){
     // Use Lodash regex for get match locations
-    let result = _.filter(this.locations, (i)=> _.isMatch(i.name, q));
-    this.setState({locations:  result})
+    let result = _.filter(this.props.addresses, (i)=> _.isMatch(i.number, q));
+    this.setState({addresses:  result})
   }
 }
 
