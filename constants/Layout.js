@@ -20,6 +20,10 @@ export default {
   marginVertical8:{
     marginVertical: 8
   },
+  listMargin:{
+    marginTop: 8,
+    marginBottom: 36
+  },
   // Resolve Native-base bug for firstListItem
   firstListItem:{
     marginLeft: 0,

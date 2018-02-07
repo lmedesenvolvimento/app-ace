@@ -73,13 +73,13 @@ class StreetScreen extends React.Component {
             onBack={ ()=> this._onSearchExit() } />
         </Header>
         <Content padder>
-          <List dataArray={this.state.items} renderRow={this.renderItem} />
+          <List dataArray={ _.orderBy(this.state.items, ['address']) } renderRow={this.renderItem} style={Layout.listMargin} />
         </Content>
         <Fab
           direction="up"
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.newZoneModal({hide: false, zone: this.props.zone})}>
+          onPress={() => Actions.newZoneModal({hide: false, zone: this.props.zone, zoneIndex: this.props.zoneIndex})}>
           <MaterialIcons name="location-on" size={24} />
         </Fab>
       </Container>

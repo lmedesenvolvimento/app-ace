@@ -34,9 +34,9 @@ export function getFieldGroups(){
   }
 }
 
-export function addFieldGroup(id, field_group){
+export function addFieldGroup(index, field_group){
   return (dispatch, getState) => {
-    dispatch({ type: Types.PUSH_PUBLIC_AREA, data: {id, field_group} })
+    dispatch({ type: Types.PUSH_PUBLIC_AREA, data: {index, field_group} })
     // Update LocalStorage
     commit(getState)
   }

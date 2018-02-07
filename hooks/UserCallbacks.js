@@ -3,6 +3,7 @@ import { Actions } from 'react-native-router-flux';
 
 import Store from '../constants/Store';
 import Session from '../services/Session';
+import { simpleToast } from '../services/Toast';
 import { applyApolloMiddleware } from "../services/ApolloClient";
 
 import * as UserActions from '../redux/actions/user_actions';
@@ -24,13 +25,6 @@ export default {
   },
   signInWithEmailAndPasswordFail: (error) => {
     Store.instance.dispatch(AuthActions.toDone());
-
-    console.log(error);
-    
-    if (Platform.OS == 'ios'){
-      alert(error.response.data.error)
-    } else{
-      ToastAndroid.show(error.response.data.error, ToastAndroid.SHORT);
-    }
+    simpleToast(error.response.data.error);
   }
 }

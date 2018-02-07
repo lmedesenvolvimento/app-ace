@@ -24,6 +24,8 @@ import {
 import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
 
+import { simpleToast } from '../services/Toast';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
@@ -45,7 +47,10 @@ class NewZoneModal extends React.Component {
   }
 
   okModal(){
-    this.props.addFieldGroup(this.props.zone.id, this.state)
+    if(!this.state.address){
+      return simpleToast("Logradouro vazio.")
+    }
+    this.props.addFieldGroup(this.props.zoneIndex, this.state)
     this.dismissModal()
   }
 

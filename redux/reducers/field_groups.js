@@ -10,14 +10,15 @@ export default function reducer(state = initialState, action){
     case field_groups_types.UPDATE_FIELD_GROUPS:
       return { ...state, data: action.data };
     case field_groups_types.PUSH_PUBLIC_AREA:
-      let index = findIndex(action.data.id, state);
-      state.data[index].public_areas.push(action.data.field_group)
+      let { index, field_group } = action.data;
+
+      state
+       .data[index]
+       .public_areas
+       .push(field_group);
+
       return { ...state, data: state.data };
     default:
       return state;
   }
-}
-
-function findIndex(id, state){
-  return _.findIndex(state.data, { id: id })
 }
