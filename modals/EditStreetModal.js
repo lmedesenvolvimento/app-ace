@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View} from 'react-native';
 
 import {
   Header,
@@ -20,6 +20,8 @@ import {
   Picker,
 } from 'native-base';
 
+import { NewStreetModal } from './NewStreetModal';
+
 
 import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
@@ -32,37 +34,36 @@ import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from "../redux/actions";
 
-export class NewStreetModal extends React.Component {
-  state = {
-    address: undefined,
-    neighborhood: {}
-  }
-
+class EditStreetModal extends NewStreetModal {
   constructor(props) {
     super(props);
   }
 
   componentDidMount(){
-    this.setState({ neighborhood: this.props.zone.neighborhood })
+    this.setState({ neighborhood: this.props.zone.neighborhood, address: this.props.street.address })
+  }
+
+  dismissModalBeforeModal(){
+    Actions.pop();
+
+    setTimeout(() => {
+      Actions.refresh({street: this.state});
+    });
   }
 
   okModal(){
     if(!this.state.address){
       return simpleToast("Logradouro vazio.")
     }
-    this.props.addPublicArea(this.props.zoneIndex, this.state)
-    this.dismissModal()
-  }
-
-  dismissModal(){
-    Actions.pop();
+    this.props.editPublicArea(this.props.zoneIndex, this.props.street, this.state)
+    this.dismissModalBeforeModal()
   }
 
   render() {
     return (
       <Container>
         <Content padder>
-          <H1 style={Layout.padding}>Novo Logradouro</H1>
+          <H1 style={Layout.padding}>Atualizar Logradouro</H1>
           <Form>
             <View style={Layout.padding}>
               <Label>Bairro</Label>
@@ -83,7 +84,7 @@ export class NewStreetModal extends React.Component {
           </Left>
           <Right>
             <Button transparent onPress={ () => this.okModal() }>
-              <Text>Novo Logradouro</Text>
+              <Text>Atualizar</Text>
             </Button>
           </Right>
         </Footer>
@@ -105,4 +106,4 @@ function mapDispatchToProps(dispatch, ownProps){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(NewStreetModal);
+export default connect(mapStateToProps, mapDispatchToProps)(EditStreetModal);

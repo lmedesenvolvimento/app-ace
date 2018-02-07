@@ -23,29 +23,50 @@ export function getFieldGroups(){
       // Get in API
       client(gql_get_field_groups)
       .then((response) => {
-        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: response.data.field_groups })
+        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: response.data.field_groups.map(mapFieldGroups) });
         // Update LocalStorage
-        commit(getState)
+        commit(getState);
       }).catch( error => console.log(error))
     } else{
       // Get in Local Storage
-      dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data })
+      dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data });
     }
   }
 }
 
-export function addFieldGroup(index, field_group){
+export function addPublicArea(indexOfFieldGroup, newData){
   return (dispatch, getState) => {
-    dispatch({ type: Types.PUSH_PUBLIC_AREA, data: {index, field_group} })
-    // Update LocalStorage
-    commit(getState)
+    dispatch({ type: Types.PUSH_PUBLIC_AREA, data: { indexOfFieldGroup, newData } });
+    commit(getState);
   }
 }
 
-export function commit(getState){
+export function editPublicArea(indexOfFieldGroup, record, newData){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.EDIT_PUBLIC_AREA, data: { indexOfFieldGroup, record, newData } });
+    commit(getState);
+  }
+}
+
+export function removePublicArea(indexOfFieldGroup, record){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.REMOVE_PUBLIC_AREA, data: { indexOfFieldGroup, record } });
+    commit(getState);
+  }
+}
+
+function commit(getState){
   let state = getState();
   // Update LocalStorage
   Session.Storage.create(state.currentUser.data.email, state.fieldGroups)
+}
+
+function mapFieldGroups(field, index){
+  field.$id = index
+  field.public_areas.forEach((area, index) => {
+    area.$id = index
+  })
+  return field
 }
 
 let gql_get_field_groups = {

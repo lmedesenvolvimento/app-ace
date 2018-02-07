@@ -11,5 +11,5 @@ export default combineReducers({
   auth: auth,
   network: network,
   currentUser: user,
-  fieldGroups: field_groups
+  fieldGroups: field_groups,
 });

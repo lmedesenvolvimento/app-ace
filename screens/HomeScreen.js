@@ -38,7 +38,6 @@ class HomeScreen extends React.Component {
 
   componentDidMount(){
     this.props.getFieldGroups()
-    console.log(this.props)
   }
 
   render() {

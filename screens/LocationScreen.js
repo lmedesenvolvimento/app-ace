@@ -25,7 +25,10 @@ import SearchBar from 'react-native-searchbar';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
+
+import ReduxActions from "../redux/actions";
 
 import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
@@ -38,6 +41,7 @@ import * as _ from "lodash";
 
 class LocationScreen extends React.Component {
   state = {
+    model: {},
     addresses: []
   }
 
@@ -46,7 +50,11 @@ class LocationScreen extends React.Component {
   }
 
   componentDidMount(){
-    this.setState({ addresses: this.props.street.addresses })
+    this.setState({ addresses: this._getPublicArea().addresses })
+  }
+
+  componentWillReceiveProps(){
+    this.setState({ addresses: this._getPublicArea().addresses })
   }
 
   render() {
@@ -61,9 +69,11 @@ class LocationScreen extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>{ this.props.title }</Title>
+            <Title>{ this.props.street.address || "Atualizando..." }</Title>
           </Body>
           <Right>
+            { this.renderEditButton() }
+            { this.renderRemoveButton() }
             <Button transparent onPress={()=> this.searchBar.show()}>
               <Icon android="md-search" ios="ios-search" />
             </Button>
@@ -106,6 +116,36 @@ class LocationScreen extends React.Component {
     );
   }
 
+  renderRemoveButton(){
+    if(!this.props.street.hasOwnProperty('id')){
+      return(
+        <Button transparent onPress={ _=> {
+          this.props.removePublicArea(this.props.parent.zoneIndex, this.props.street)
+          Actions.pop()
+        }}>
+          <Icon android="md-trash" ios="ios-trash" />
+        </Button>
+      )
+    }
+  }
+
+  renderEditButton(){
+    if(!this.props.street.hasOwnProperty('id')){
+      return(
+        <Button transparent onPress={() => {
+          Actions.editStreetModal({
+            hide: false,
+            street: this.props.street,
+            streetIndex: this.props.streetIndex,
+            zone: this.props.parent.zone,
+            zoneIndex: this.props.parent.zoneIndex})
+          }}>
+          <Icon android="md-create" ios="ios-create" />
+        </Button>
+      )
+    }
+  }
+
   _onSearchExit(){
     this.setState({addresses: this.props.addresses});
     this.searchBar.hide()
@@ -116,6 +156,16 @@ class LocationScreen extends React.Component {
     let result = _.filter(this.props.addresses, (i)=> _.isMatch(i.number, q));
     this.setState({addresses:  result})
   }
+
+  _getPublicArea(){
+    let { fieldGroups, parent, streetIndex } = this.props;
+    let { public_areas } = fieldGroups.data[parent.zoneIndex];
+    return _.find(public_areas, (street) => street == this.props.street ) || {} // É nescessário como placeholder equanto as propiedades não está pronta
+  }
 }
 
-export default connect(({currentUser}) => ({currentUser}))(LocationScreen);
+function mapDispatchToProps(dispatch, ownProps){
+  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+}
+
+export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}), mapDispatchToProps)(LocationScreen);

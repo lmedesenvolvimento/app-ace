@@ -22,7 +22,10 @@ import SearchBar from 'react-native-searchbar';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
+
+import ReduxActions from "../redux/actions";
 
 import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
@@ -35,14 +38,20 @@ import * as _ from "lodash";
 
 class StreetScreen extends React.Component {
   state = {
-    items: []
+    public_areas: []
   }
   constructor(props) {
     super(props);
   }
 
   componentDidMount(){
-    this.setState({items: this.props.public_areas})
+    this.setState({public_areas: this._getFieldGroup()});
+  }
+
+  componentWillReceiveProps(){
+    setTimeout(() => {
+      this.setState({public_areas: this._getFieldGroup()});
+    }, 200)
   }
 
   render() {
@@ -66,29 +75,35 @@ class StreetScreen extends React.Component {
           </Right>
           <SearchBar
             ref={(ref) => this.searchBar = ref}
-            data={this.items}
+            data={this.public_areas}
             animate={false}
             placeholder="Pesquisar"
             handleSearch={(q)=> this._handleSearch(q)}
             onBack={ ()=> this._onSearchExit() } />
         </Header>
         <Content padder>
-          <List dataArray={ _.orderBy(this.state.items, ['address']) } renderRow={this.renderItem} style={Layout.listMargin} />
+          <List
+            dataArray={ this.state.public_areas }
+            renderRow={ (item, sectionID, rowID) => this.renderItem(item, sectionID, rowID) }
+            style={Layout.listMargin} />
         </Content>
         <Fab
           direction="up"
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.newZoneModal({hide: false, zone: this.props.zone, zoneIndex: this.props.zoneIndex})}>
+          onPress={() => Actions.newStreetModal({hide: false, zone: this.props.zone, zoneIndex: this.props.zoneIndex})}>
           <MaterialIcons name="location-on" size={24} />
         </Fab>
       </Container>
     );
   }
 
-  renderItem(item){
+  renderItem(item, sectionID, rowID){
     return(
-      <ListItem icon onPress={()=> Actions.location({street: item, title: item.address})} style={Layout.listHeight}>
+      <ListItem
+        icon
+        onPress={()=> Actions.location({street: item, title: item.address, streetIndex: rowID, parent: this.props })}
+        style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
@@ -103,15 +118,20 @@ class StreetScreen extends React.Component {
   }
 
   _onSearchExit(){
-    this.setState({items: this.props.public_areas});
+    this.setState({public_areas: this.props.public_areas});
     this.searchBar.hide()
   }
 
   _handleSearch(q){
-    // Use Lodash regex for get match items
-    let result = _.filter(this.props.public_areas, (i)=> _.isMatch(i.address, q));
-    this.setState({items:  result})
+    // Use Lodash regex for get match public_areas
+    let result = _.filter( this._getFieldGroup() , (i)=> _.isMatch(i.address, q));
+    this.setState({public_areas:  result})
+  }
+
+  _getFieldGroup(){
+    let { fieldGroups, zoneIndex } = this.props;
+    return _.orderBy(fieldGroups.data[zoneIndex].public_areas, ['address'])
   }
 }
 
-export default connect(({currentUser}) => ({currentUser}))(StreetScreen);
+export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}))(StreetScreen);
