@@ -61,7 +61,7 @@ class HomeScreen extends React.Component {
 
   renderItem(item, sectionID, rowID){
     return(
-      <ListItem icon onPress={()=> Actions.zone({zone: item, zoneIndex: rowID, title: item.name, public_areas: item.public_areas})} style={Layout.listHeight}>
+      <ListItem icon onPress={()=> Actions.fieldgroup({zone: item, zoneIndex: rowID, title: item.name, public_areas: item.public_areas})} style={Layout.listHeight}>
         <Left>
           <Icon name='map' size={36} />
         </Left>

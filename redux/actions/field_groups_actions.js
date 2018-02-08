@@ -1,8 +1,8 @@
 import Types from "../types/field_groups_types";
-import { client } from "../../services/ApolloClient";
 import Session from "../../services/Session";
-
 import Store from "../../constants/Store";
+
+import { client } from "../../services/ApolloClient";
 
 export function setFieldGroups(data){
   return {
@@ -23,7 +23,7 @@ export function getFieldGroups(){
       // Get in API
       client(gql_get_field_groups)
       .then((response) => {
-        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: response.data.field_groups.map(mapFieldGroups) });
+        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: response.data.field_groups });
         // Update LocalStorage
         commit(getState);
       }).catch( error => console.log(error))
@@ -37,6 +37,7 @@ export function getFieldGroups(){
 export function addPublicArea(indexOfFieldGroup, newData){
   return (dispatch, getState) => {
     dispatch({ type: Types.PUSH_PUBLIC_AREA, data: { indexOfFieldGroup, newData } });
+    // Update LocalStorage
     commit(getState);
   }
 }
@@ -44,6 +45,7 @@ export function addPublicArea(indexOfFieldGroup, newData){
 export function editPublicArea(indexOfFieldGroup, record, newData){
   return (dispatch, getState) => {
     dispatch({ type: Types.EDIT_PUBLIC_AREA, data: { indexOfFieldGroup, record, newData } });
+    // Update LocalStorage
     commit(getState);
   }
 }
@@ -51,22 +53,14 @@ export function editPublicArea(indexOfFieldGroup, record, newData){
 export function removePublicArea(indexOfFieldGroup, record){
   return (dispatch, getState) => {
     dispatch({ type: Types.REMOVE_PUBLIC_AREA, data: { indexOfFieldGroup, record } });
+    // Update LocalStorage
     commit(getState);
   }
 }
 
 function commit(getState){
   let state = getState();
-  // Update LocalStorage
   Session.Storage.create(state.currentUser.data.email, state.fieldGroups)
-}
-
-function mapFieldGroups(field, index){
-  field.$id = index
-  field.public_areas.forEach((area, index) => {
-    area.$id = index
-  })
-  return field
 }
 
 let gql_get_field_groups = {

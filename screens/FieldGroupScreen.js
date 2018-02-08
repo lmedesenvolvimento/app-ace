@@ -36,7 +36,7 @@ import LogoutButton from '../components/LogoutButton';
 
 import * as _ from "lodash";
 
-class StreetScreen extends React.Component {
+class PublicAreaScreen extends React.Component {
   state = {
     public_areas: []
   }
@@ -45,13 +45,11 @@ class StreetScreen extends React.Component {
   }
 
   componentDidMount(){
-    this.setState({public_areas: this._getFieldGroup()});
+    this.setState({public_areas: this._getPublicAreas()});
   }
 
   componentWillReceiveProps(){
-    setTimeout(() => {
-      this.setState({public_areas: this._getFieldGroup()});
-    }, 200)
+    this.setState({public_areas: this._getPublicAreas()});
   }
 
   render() {
@@ -102,7 +100,7 @@ class StreetScreen extends React.Component {
     return(
       <ListItem
         icon
-        onPress={()=> Actions.location({street: item, title: item.address, streetIndex: rowID, parent: this.props })}
+        onPress={()=> Actions.publicarea({street: item, title: item.address, streetIndex: rowID, parent: this._pickExportParentProps() })}
         style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
@@ -124,14 +122,18 @@ class StreetScreen extends React.Component {
 
   _handleSearch(q){
     // Use Lodash regex for get match public_areas
-    let result = _.filter( this._getFieldGroup() , (i)=> _.isMatch(i.address, q));
+    let result = _.filter( this._getPublicAreas() , (i)=> _.isMatch(i.address, q));
     this.setState({public_areas:  result})
   }
 
-  _getFieldGroup(){
+  _getPublicAreas(){
     let { fieldGroups, zoneIndex } = this.props;
     return _.orderBy(fieldGroups.data[zoneIndex].public_areas, ['address'])
   }
+
+  _pickExportParentProps(){
+    return _.pick(this.props, ['zone', 'zoneIndex'])
+  }
 }
 
-export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}))(StreetScreen);
+export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}))(PublicAreaScreen);

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 
 import {
   Header,
@@ -39,7 +39,7 @@ import LogoutButton from '../components/LogoutButton';
 
 import * as _ from "lodash";
 
-class LocationScreen extends React.Component {
+class FieldGroupScreen extends React.Component {
   state = {
     model: {},
     addresses: []
@@ -119,10 +119,7 @@ class LocationScreen extends React.Component {
   renderRemoveButton(){
     if(!this.props.street.hasOwnProperty('id')){
       return(
-        <Button transparent onPress={ _=> {
-          this.props.removePublicArea(this.props.parent.zoneIndex, this.props.street)
-          Actions.pop()
-        }}>
+        <Button transparent onPress={ () => this._removePublicArea()  }>
           <Icon android="md-trash" ios="ios-trash" />
         </Button>
       )
@@ -144,6 +141,21 @@ class LocationScreen extends React.Component {
         </Button>
       )
     }
+  }
+
+  _removePublicArea(){
+    Alert.alert(
+    'Excluir Logradouro',
+    'Você deseja realmente excluir este Logradouro?',
+      [
+        {text: 'Não', onPress: () => false, style: 'cancel'},
+        {text: 'Sim', onPress: () => {
+          this.props.removePublicArea(this.props.parent.zoneIndex, this.props.street)
+          Actions.pop()
+        }},
+      ],
+      { cancelable: true }
+    );
   }
 
   _onSearchExit(){
@@ -168,4 +180,4 @@ function mapDispatchToProps(dispatch, ownProps){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
-export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}), mapDispatchToProps)(LocationScreen);
+export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}), mapDispatchToProps)(FieldGroupScreen);
