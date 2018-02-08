@@ -20,6 +20,18 @@ export default {
   marginVertical8:{
     marginVertical: 8
   },
+  marginVertical16:{
+    marginVertical: 16
+  },
+  marginVertical36:{
+    marginVertical: 36
+  },
+  marginVertical48:{
+    marginVertical: 48
+  },
+  marginHorizontal: {
+    marginHorizontal: 16
+  },
   listMargin:{
     marginTop: 8,
     marginBottom: 36

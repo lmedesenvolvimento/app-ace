@@ -29,6 +29,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import FieldGroupScreen from '../screens/FieldGroupScreen';
 import NewStreetModal from '../modals/NewStreetModal';
 import EditStreetModal from '../modals/EditStreetModal';
+import FormLocationModal from '../modals/FormLocationModal';
 import PublicAreaScreen from '../screens/PublicAreaScreen';
 
 const RouterWithRedux = connect()(Router);
@@ -105,8 +106,9 @@ class Navigator extends Component {
               </Scene>
 
               {/* MODALS*/}
-              <Scene key="newStreetModal" component={NewStreetModal} modal title="Novo Logradouro" hideNavBar />
+              <Scene key="newStreetModal"  component={NewStreetModal} modal title="Novo Logradouro"  hideNavBar />
               <Scene key="editStreetModal" component={EditStreetModal} modal title="Editar Logradouro" hideNavBar />
+              <Scene key="locationModal"   component={FormLocationModal} modal title="Editar Logradouro" hideNavBar />
               {/* END MODALS*/}
             </Modal>
           </RouterWithRedux>

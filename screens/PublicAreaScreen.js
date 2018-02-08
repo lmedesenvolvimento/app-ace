@@ -86,6 +86,21 @@ class FieldGroupScreen extends React.Component {
             handleSearch={(q)=> this._handleSearch(q)}
             onBack={ ()=> this._onSearchExit() } />
         </Header>
+        { this.renderTabs() }
+        <Fab
+          direction="up"
+          position="bottomRight"
+          style={{ backgroundColor: Colors.accentColor }}
+          onPress={() => Actions.locationModal() }>
+          <Icon android="md-add" ios="ios-add" size={24} />
+        </Fab>
+      </Container>
+    );
+  }
+
+  renderTabs(){
+    if(this.state.addresses && this.state.addresses.length){
+      return (
         <Tabs>
           <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content padder>
@@ -98,8 +113,10 @@ class FieldGroupScreen extends React.Component {
             </Content>
           </Tab>
         </Tabs>
-      </Container>
-    );
+      );
+    } else{
+      return this.renderNotFoundItems()
+    }
   }
 
   renderItem(address){
@@ -113,7 +130,18 @@ class FieldGroupScreen extends React.Component {
           <Text note>{address.complement}</Text>
         </Body>
       </ListItem>
+
     );
+  }
+
+  renderNotFoundItems(){
+    return (
+      <View style={styles.notfoundcontainer}>
+        <Icon android="md-sad" ios="ios-sad-outline" style={styles.notfoundnoteicon}/>
+        <Text style={styles.notfoundtitle}>Oh, não! Você não tem nehuma rua cadastrada.</Text>
+        <Text note style={styles.notfoundnote}>Comece já a adicionar as localizações.</Text>
+      </View>
+    )
   }
 
   renderRemoveButton(){
@@ -172,7 +200,28 @@ class FieldGroupScreen extends React.Component {
   _getPublicArea(){
     let { fieldGroups, parent, streetIndex } = this.props;
     let { public_areas } = fieldGroups.data[parent.zoneIndex];
-    return _.find(public_areas, (street) => street == this.props.street ) || {} // É nescessário como placeholder equanto as propiedades não está pronta
+    return _.find(public_areas, (street) => street == this.props.street ) || {} // É nescessário como placeholder equanto as propriedades não está pronta
+  }
+}
+
+const styles = {
+  notfoundcontainer: {
+    margin: 48,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1
+  },
+  notfoundtitle: {
+    color: Colors.primaryColor,
+    textAlign: 'center',
+    ...Layout.marginVertical8
+  },
+  notfoundnote: {
+    textAlign: 'center'
+  },
+  notfoundnoteicon: {
+    fontSize: 124,
+    color: "#ccc"
   }
 }
 

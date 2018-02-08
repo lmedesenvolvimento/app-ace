@@ -40,6 +40,7 @@ export default class App extends React.Component {
     let user;
 
     await Expo.Font.loadAsync({
+      'Arial': require('./assets/fonts/arial.ttf'),
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
       'Ionicons': require("@expo/vector-icons/fonts/Ionicons.ttf")
