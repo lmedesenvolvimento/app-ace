@@ -35,11 +35,10 @@ import ReduxActions from "../redux/actions";
 
 import { LocationForm } from './forms/location';
 import { InspectionForm } from './forms/location/inspection';
+import { TratamentForm } from './forms/location/tratament';
+import { ObservationForm } from './forms/location/observation';
 
 export class FormLocationModal extends React.Component {
-  state = {
-    name: "Urra"
-  }
   constructor(props) {
     super(props);
   }
@@ -56,13 +55,16 @@ export class FormLocationModal extends React.Component {
         showsPagination={false}
         showsButtons={false}>
         <View style={styles.slide}>
-          <LocationForm {...this.props } scrollBy={this.scrollBy} />
+          <LocationForm {...this.props } scrollBy={this.scrollBy} cancel={this.cancel} />
         </View>
         <View style={styles.slide}>
           <InspectionForm {...this.props } scrollBy={this.scrollBy} />
         </View>
         <View style={styles.slide}>
-          <LocationForm {...this.props } scrollBy={this.scrollBy} />
+          <TratamentForm {...this.props } scrollBy={this.scrollBy} />
+        </View>
+        <View style={styles.slide}>
+          <ObservationForm {...this.props } scrollBy={this.scrollBy} cancel={this.cancel} />
         </View>
       </Swiper>
     );
@@ -77,7 +79,11 @@ export class FormLocationModal extends React.Component {
   }
 
   scrollBy = (index) => {
-    this.swiper.scrollBy(index, false)
+    this.swiper.scrollBy(index)
+  }
+
+  cancel = () => {
+    this.dismissModal()
   }
 
 }

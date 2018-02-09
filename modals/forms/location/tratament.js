@@ -31,11 +31,7 @@ import Layout from '../../../constants/Layout';
 
 import { simpleToast } from '../../../services/Toast';
 
-export class InspectionForm extends React.Component {
-  state = {
-    startDate: moment().format('HH:mm')
-  }
-
+export class TratamentForm extends React.Component {
   constructor(props){
     super(props);
   }
@@ -45,78 +41,35 @@ export class InspectionForm extends React.Component {
       <Container>
         <Content padder>
           <Form>
-            <H2 style={Layout.padding}>Inspeção de coleta de larvas</H2>
-            <Text style={[Layout.marginHorizontal, { color: Colors.primaryColor }]}>Nº de depósitos inspecionados por tipo:</Text>
-
-            <Grid>
-              <Col style={{ width: 64 }}>
-                <Item floatingLabel>
-                  <Label>A1</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-              <Col style={{ width: 64 }}>
-                <Item floatingLabel>
-                  <Label>A2</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-              <Col style={{ width: 64 }}>
-                <Item floatingLabel>
-                  <Label>B</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-              <Col style={{ width: 64 }}>
-                <Item floatingLabel>
-                  <Label>C</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-            </Grid>
-            <Grid>
-              <Col style={{ width: 64 }}>
-                <Item floatingLabel>
-                  <Label>D1</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-              <Col style={{ width: 64 }}>
-                <Item floatingLabel>
-                  <Label>D2</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-              <Col style={{ width: 64 }}>
-                <Item floatingLabel>
-                  <Label>E</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-            </Grid>
+            <H2 style={Layout.padding}>Tratamento focal/perifocal</H2>
+            <Text style={[Layout.marginHorizontal, { color: Colors.primaryColor }]}>Larvicída</Text>
 
             <Grid>
               <Col>
                 <Item floatingLabel>
-                  <Label>Nº de depósitos inspecionados</Label>
+                  <Label>Nº de depósitos tratamentos</Label>
                   <Input keyboardType='numeric'/>
                 </Item>
               </Col>
             </Grid>
-
             <Grid>
               <Col>
                 <Item floatingLabel>
-                  <Label>Nº de amotras coletadas</Label>
+                  <Label>Larvicida gotas</Label>
+                  <Input keyboardType='numeric'/>
+                </Item>
+              </Col>
+              <Col>
+                <Item floatingLabel>
+                  <Label>Larvicida ML</Label>
                   <Input keyboardType='numeric'/>
                 </Item>
               </Col>
             </Grid>
-
             <Grid>
               <Col>
                 <Item floatingLabel>
-                  <Label>Nº de depósitos eliminados</Label>
+                  <Label>Adulticida cargas</Label>
                   <Input keyboardType='numeric'/>
                 </Item>
               </Col>
@@ -141,12 +94,6 @@ export class InspectionForm extends React.Component {
         </Footer>
       </Container>
     );
-  }
-
-  applyStartDateMask(startDate){
-    startDate = startDate.replace(':','')
-    let result = new StringMask("00:00").apply(startDate)
-    this.setState({ startDate: result })
   }
 }
 

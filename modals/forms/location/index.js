@@ -20,6 +20,8 @@ import {
   Picker,
 } from 'native-base';
 
+import { Col, Row, Grid } from "react-native-easy-grid";
+
 import StringMask from 'string-mask';
 import moment from 'moment';
 
@@ -44,38 +46,38 @@ export class LocationForm extends React.Component {
           <Form>
             <H2 style={Layout.padding}>Localização</H2>
 
-            <View style={Layout.row}>
-              <View style={styles.col3}>
+            <Grid>
+              <Col size={66}>
                 <Item floatingLabel>
                   <Label>Logradouro</Label>
                   <Input/>
                 </Item>
-              </View>
-              <View style={styles.container}>
+              </Col>
+              <Col size={33}>
                 <Item floatingLabel>
                   <Label>Número</Label>
                   <Input keyboardType='numeric' />
                 </Item>
-              </View>
-            </View>
+              </Col>
+            </Grid>
 
-            <View style={Layout.row}>
-              <View style={styles.container}>
+            <Grid>
+              <Col size={33}>
                 <Item floatingLabel>
                   <Label>Quarteirão</Label>
                   <Input keyboardType='numeric'/>
                 </Item>
-              </View>
-              <View style={styles.col3}>
+              </Col>
+              <Col size={66}>
                 <Item floatingLabel>
                   <Label>Complemento</Label>
                   <Input />
                 </Item>
-              </View>
-            </View>
+              </Col>
+            </Grid>
 
-            <View style={Layout.row}>
-              <View style={styles.container}>
+            <Grid>
+              <Col size={33}>
                 <Item floatingLabel>
                   <Label>Entrada</Label>
                   <Input
@@ -83,18 +85,17 @@ export class LocationForm extends React.Component {
                     keyboardType='numeric'
                     onChangeText={ (startDate) => this.applyStartDateMask(startDate) } />
                 </Item>
-              </View>
-
-              <View style={styles.col3}>
+              </Col>
+              <Col size={66}>
                 <Item floatingLabel>
                   <Label>Tipo de Imóvel</Label>
                   <Input />
                 </Item>
-              </View>
-            </View>
+              </Col>
+            </Grid>
 
-            <View style={Layout.row}>
-              <View style={[styles.container, Layout.padding]}>
+            <Grid style={Layout.padding}>
+              <Col>
                 <Label>Pendência</Label>
                 <Picker
                   iosHeader="Selecione um"
@@ -102,16 +103,25 @@ export class LocationForm extends React.Component {
                   <Item label="Sim" value='true' />
                   <Item label="Não" value='false' />
                 </Picker>
-              </View>
-            </View>
+              </Col>
+            </Grid>
           </Form>
         </Content>
         <Footer style={{backgroundColor:"white"}} padder>
-          <Right>
-            <Button transparent onPress={ () => this.props.scrollBy(1) }>
-              <Text>Avançar</Text>
-            </Button>
-          </Right>
+          <Grid>
+            <Row style={{ alignItems: 'center' }}>
+              <Col>
+                <Button full transparent onPress={ () => this.props.cancel() }>
+                  <Text>Cancelar</Text>
+                </Button>
+              </Col>
+              <Col style={[styles.col, styles.colLeftBorder]}>
+                <Button full transparent onPress={ () => this.props.scrollBy(1) }>
+                  <Text>Avançar</Text>
+                </Button>
+              </Col>
+            </Row>
+          </Grid>
         </Footer>
       </Container>
     );
@@ -128,7 +138,12 @@ const styles = {
   container: {
     flex: 1
   },
-  col3:{
-    flex: 2.2
+  col:{
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  colLeftBorder:{
+    borderLeftWidth: 1,
+    borderLeftColor: "#eee"
   }
 }
