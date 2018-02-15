@@ -31,6 +31,8 @@ import Layout from '../../../constants/Layout';
 
 import { simpleToast } from '../../../services/Toast';
 
+import { StepBars, Step } from './StepBars';
+
 export class ObservationForm extends React.Component {
   constructor(props){
     super(props);
@@ -41,6 +43,14 @@ export class ObservationForm extends React.Component {
       <Container>
         <Content padder>
           <Form>
+
+            <StepBars>
+              <Step complete={true}></Step>
+              <Step complete={true}></Step>
+              <Step complete={true}></Step>
+              <Step active={true}></Step>
+            </StepBars>
+
             <H2 style={Layout.padding}>Observação</H2>
             <Grid>
               <Col>
@@ -61,7 +71,7 @@ export class ObservationForm extends React.Component {
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent onPress={ () => this.props.cancel() }>
+                <Button full transparent onPress={ () => this.props.onCancel() }>
                   <Text>Concluir</Text>
                 </Button>
               </Col>

@@ -55,7 +55,7 @@ export class FormLocationModal extends React.Component {
         showsPagination={false}
         showsButtons={false}>
         <View style={styles.slide}>
-          <LocationForm {...this.props } scrollBy={this.scrollBy} cancel={this.cancel} />
+          <LocationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} />
         </View>
         <View style={styles.slide}>
           <InspectionForm {...this.props } scrollBy={this.scrollBy} />
@@ -64,7 +64,7 @@ export class FormLocationModal extends React.Component {
           <TratamentForm {...this.props } scrollBy={this.scrollBy} />
         </View>
         <View style={styles.slide}>
-          <ObservationForm {...this.props } scrollBy={this.scrollBy} cancel={this.cancel} />
+          <ObservationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} />
         </View>
       </Swiper>
     );
@@ -82,7 +82,7 @@ export class FormLocationModal extends React.Component {
     this.swiper.scrollBy(index)
   }
 
-  cancel = () => {
+  onCancel = () => {
     this.dismissModal()
   }
 

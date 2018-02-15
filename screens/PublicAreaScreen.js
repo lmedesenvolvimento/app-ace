@@ -91,7 +91,7 @@ class FieldGroupScreen extends React.Component {
           direction="up"
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.locationModal() }>
+          onPress={() => Actions.locationModal({ street: this.props.street }) }>
           <Icon android="md-add" ios="ios-add" size={24} />
         </Fab>
       </Container>

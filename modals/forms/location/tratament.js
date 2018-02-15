@@ -31,6 +31,8 @@ import Layout from '../../../constants/Layout';
 
 import { simpleToast } from '../../../services/Toast';
 
+import { StepBars, Step } from './StepBars';
+
 export class TratamentForm extends React.Component {
   constructor(props){
     super(props);
@@ -41,6 +43,13 @@ export class TratamentForm extends React.Component {
       <Container>
         <Content padder>
           <Form>
+            <StepBars>
+              <Step complete={true}></Step>
+              <Step complete={true}></Step>
+              <Step active={true}></Step>
+              <Step></Step>
+            </StepBars>
+
             <H2 style={Layout.padding}>Tratamento focal/perifocal</H2>
             <Text style={[Layout.marginHorizontal, { color: Colors.primaryColor }]}>Larvicída</Text>
 
