@@ -36,20 +36,20 @@ import { StepBars, Step } from './StepBars';
 
 export class InspectionForm extends React.Component {
   state = {
-    validation: {
-      a1: false,
-      a2: false,
-      b:  false,
-      c:  false,
-      d1: false,
-      d2: false,
-      e:  false,
-    }
+    a1: '0',
+    a2: '0',
+    b:  '0',
+    c:  '0',
+    d1: '0',
+    d2: '0',
+    e:  '0',
+    total_items: '0',
+    collected: '0',
+    removed: '0'
   }
 
   constructor(props){
     super(props);
-    this._focusNextField = this._focusNextField.bind(this);
   }
 
   render(){
@@ -70,55 +70,68 @@ export class InspectionForm extends React.Component {
 
                 <Grid>
                   <Col style={{ width: 64 }}>
-                    <Item floatingLabel error={this.state.validation.a1}>
+                    <Item floatingLabel>
                       <Label>A1</Label>
-                      <Input
-                        ref="a1"
-                        keyboardType='numeric'
-                        value={this.state.a1}
-                        onChangeText={ (a1) =>  this.setState({a1}) } />
+                      <Input keyboardType='numeric' value={this.state.a1} onChangeText={ (a1) => {
+                        this.setState({a1});
+                        this.calcInspectionItens();
+                      }} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
-                    <Item floatingLabel error={this.state.validation.a2}>
+                    <Item floatingLabel>
                       <Label>A2</Label>
-                      <Input
-                        ref="a2"
-                        keyboardType='numeric'
-                        value={this.state.a2}
-                        onChangeText={ (a2) =>  this.setState({a2}) } />
+                      <Input keyboardType='numeric' value={this.state.a2} onChangeText={ (a2) =>  {
+                        this.setState({a2});
+                        this.calcInspectionItens();
+                      }} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
-                    <Item floatingLabel error={this.state.validation.b}>
+                    <Item floatingLabel>
                       <Label>B</Label>
-                      <Input ref="b" keyboardType='numeric' value={this.state.b} onChangeText={ (b) =>  this.setState({b}) } />
+                      <Input ref="b" keyboardType='numeric' value={this.state.b} onChangeText={ (b) =>  {
+                        this.setState({b});
+                        this.calcInspectionItens();
+                      }} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
-                    <Item floatingLabel error={this.state.validation.c}>
+                    <Item floatingLabel>
                       <Label>C</Label>
-                      <Input keyboardType='numeric' value={this.state.c} onChangeText={ (c) =>  this.setState({c}) } />
+                      <Input keyboardType='numeric' value={this.state.c} onChangeText={ (c) =>  {
+                        this.setState({c});
+                        this.calcInspectionItens();
+                      }} />
                     </Item>
                   </Col>
                 </Grid>
                 <Grid>
                   <Col style={{ width: 64 }}>
-                    <Item floatingLabel error={this.state.validation.d1}>
+                    <Item floatingLabel>
                       <Label>D1</Label>
-                      <Input keyboardType='numeric' value={this.state.d1} onChangeText={ (d1) =>  this.setState({d1}) } />
+                      <Input keyboardType='numeric' value={this.state.d1} onChangeText={ (d1) =>  {
+                        this.setState({d1});
+                        this.calcInspectionItens();
+                      }} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
-                    <Item floatingLabel error={this.state.validation.d2}>
+                    <Item floatingLabel>
                       <Label>D2</Label>
-                      <Input keyboardType='numeric' value={this.state.d2} onChangeText={ (d2) =>  this.setState({d2}) } />
+                      <Input keyboardType='numeric' value={this.state.d2} onChangeText={ (d2) => {
+                        this.setState({d2});
+                        this.calcInspectionItens();
+                      }} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
-                    <Item floatingLabel error={this.state.validation.e}>
+                    <Item floatingLabel>
                       <Label>E</Label>
-                      <Input keyboardType='numeric' value={this.state.e} onChangeText={ (e) =>  this.setState({e}) } />
+                      <Input keyboardType='numeric' value={this.state.e} onChangeText={ (e) => {
+                        this.setState({e});
+                        this.calcInspectionItens();
+                      }} />
                     </Item>
                   </Col>
                 </Grid>
@@ -127,7 +140,7 @@ export class InspectionForm extends React.Component {
                   <Col>
                     <Item floatingLabel>
                       <Label>Nº de depósitos inspecionados</Label>
-                      <Input keyboardType='numeric'/>
+                      <Input value={this.state.total_items} keyboardType='numeric' disabled={true}/>
                     </Item>
                   </Col>
                 </Grid>
@@ -136,7 +149,7 @@ export class InspectionForm extends React.Component {
                   <Col>
                     <Item floatingLabel>
                       <Label>Nº de amotras coletadas</Label>
-                      <Input keyboardType='numeric'/>
+                      <Input keyboardType='numeric' value={this.state.collected} onChangeText={(collected) => this.setState({collected})} />
                     </Item>
                   </Col>
                 </Grid>
@@ -145,7 +158,7 @@ export class InspectionForm extends React.Component {
                   <Col>
                     <Item floatingLabel>
                       <Label>Nº de depósitos eliminados</Label>
-                      <Input keyboardType='numeric'/>
+                      <Input keyboardType='numeric' value={this.state.removed} onChangeText={(removed) => this.setState({removed})}/>
                     </Item>
                   </Col>
                 </Grid>
@@ -181,29 +194,26 @@ export class InspectionForm extends React.Component {
   }
 
   isInvalid(){
-    const { a1, a2, b, c, d1, d2, e } = this.state;
-
-    this.state.validation = {
-      a1: _.isEmpty(a1),
-      a2: _.isEmpty(a2),
-      b:  _.isEmpty(b),
-      c:  _.isEmpty(c),
-      d1: _.isEmpty(d1),
-      d2: _.isEmpty(d2),
-      e:  _.isEmpty(e)
-    }
-
-    // Update view
-    this.setState({
-      validation: this.state.validation
-    });
-
     // Verify if all states has present
-    return _.values(this.state.validation).includes(true)
+    return false
   }
 
-  _focusNextField(nextField) {
-    this.refs[nextField].focus()
+  calcInspectionItens(){
+    setTimeout(
+      () => {
+        let { a1, a2, b, c, d1, d2, e } = this.state;
+        let total_items = _.sum([
+          _.toInteger(a1),
+          _.toInteger(a2),
+          _.toInteger(b),
+          _.toInteger(c),
+          _.toInteger(d1),
+          _.toInteger(d2),
+          _.toInteger(e)
+        ]).toString();
+
+        this.setState({total_items});
+    }, 200);
   }
 }
 
