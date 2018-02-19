@@ -36,12 +36,12 @@ import { StepBars, Step } from './StepBars';
 
 export class LocationForm extends React.Component {
   state = {
-    startDate: moment().format('HH:mm'),
+    check_in: moment().format('HH:mm'),
     type: 'normal',
     type_location: 'residential',
     validation: {
       number: false,
-      startDate: false
+      check_in: false
     }
   }
 
@@ -91,12 +91,12 @@ export class LocationForm extends React.Component {
                 </Item>
               </Col>
               <Col size={33}>
-                <Item floatingLabel error={this.state.validation.startDate}>
+                <Item floatingLabel error={this.state.validation.check_in}>
                   <Label>Entrada</Label>
                   <Input
-                    value={this.state.startDate}
+                    value={this.state.check_in}
                     keyboardType='numeric'
-                    onChangeText={ (startDate) => this.applyStartDateMask(startDate) } />
+                    onChangeText={ (check_in) => this.applyStartDateMask(check_in) } />
                 </Item>
               </Col>
             </Grid>
@@ -165,19 +165,19 @@ export class LocationForm extends React.Component {
     }
   }
 
-  applyStartDateMask(startDate){
-    startDate = startDate.replace(':','')
-    let result = new StringMask("00:00").apply(startDate)
+  applyStartDateMask(check_in){
+    check_in = check_in.replace(':','')
+    let result = new StringMask("00:00").apply(check_in)
     // Is nesscessary for clean field
-    this.setState({ startDate: result });
+    this.setState({ check_in: result });
   }
 
   isInvalid(){
-    const { number, startDate } = this.state;
+    const { number, check_in } = this.state;
 
     this.state.validation = {
       number: _.isEmpty(number),
-      startDate: _.isEmpty(startDate),
+      check_in: _.isEmpty(check_in),
     }
 
     // Update view

@@ -1,6 +1,8 @@
 import React from 'react';
 import { View } from 'react-native';
 
+import numeral from 'numeral';
+
 import {
   Header,
   Container,
@@ -34,6 +36,11 @@ import { simpleToast } from '../../../services/Toast';
 import { StepBars, Step } from './StepBars';
 
 export class TratamentForm extends React.Component {
+  state = {
+    quantity: 0.0,
+    adulticida_quantity: 0.0
+  }
+
   constructor(props){
     super(props);
   }
@@ -55,33 +62,39 @@ export class TratamentForm extends React.Component {
 
             <Grid>
               <Col>
-                <Item floatingLabel>
+                <Item floatingLabel >
                   <Label>Nº de depósitos tratamentos</Label>
-                  <Input keyboardType='numeric'/>
+                  <Input 
+                    keyboardType='numeric'
+                    value={this.state.quantity.toString()}
+                    onChangeText={(quantity) => this.setState({quantity})} 
+                    onBlur={this.onBlurNumeralState.bind(this, 'quantity')} />
                 </Item>
+              </Col>
+            </Grid>
+            <Grid style={{ marginHorizontal: 12, marginTop: 16 }}>
+              <Col>
+                <Text note>Tipo</Text>
+                <Picker
+                  selectedValue={this.state.type}
+                  onValueChange={(type) => this.setState({type}) }
+                  supportedOrientations={['portrait','landscape']}
+                  iosHeader="Selecione um"
+                  mode="dropdown">
+                  <Item label="Larvícida" value='larvicida' />                  
+                </Picker>
               </Col>
             </Grid>
             <Grid>
               <Col>
                 <Item floatingLabel>
-                  <Label>Larvicida gotas</Label>
-                  <Input keyboardType='numeric'/>
+                  <Label>Larvicida gramas</Label>
+                  <Input 
+                    keyboardType='numeric'
+                    onChangeText={(adulticida_quantity) => this.setState({adulticida_quantity})} 
+                    onBlur={this.onBlurNumeralState.bind(this, 'adulticida_quantity')} />
                 </Item>
-              </Col>
-              <Col>
-                <Item floatingLabel>
-                  <Label>Larvicida ML</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
-            </Grid>
-            <Grid>
-              <Col>
-                <Item floatingLabel>
-                  <Label>Adulticida cargas</Label>
-                  <Input keyboardType='numeric'/>
-                </Item>
-              </Col>
+              </Col>              
             </Grid>
           </Form>
         </Content>
@@ -103,6 +116,26 @@ export class TratamentForm extends React.Component {
         </Footer>
       </Container>
     );
+  }
+
+  updateQuantity(){
+    number = numeral(this.state.quantity)
+        
+    if(number.value() > 0){
+      this.setState({ quantity: number.value() })  
+    } else{      
+      this.setState({ quantity: ( number.value() * -1 ) })  
+    }
+  }
+
+
+  onBlurNumeralState(key){
+    let number = numeral(this.state[key]).value()
+    let updates = {}
+
+    updates[key] = Math.abs(number)
+
+    this.setState(updates)
   }
 }
 

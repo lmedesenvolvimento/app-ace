@@ -1,6 +1,10 @@
 import React from 'react';
 import { View, Alert } from 'react-native';
 
+import * as _ from 'lodash';
+
+import numeral from 'numeral';
+
 import {
   Header,
   Container,
@@ -36,16 +40,16 @@ import { StepBars, Step } from './StepBars';
 
 export class InspectionForm extends React.Component {
   state = {
-    a1: '0',
-    a2: '0',
-    b:  '0',
-    c:  '0',
-    d1: '0',
-    d2: '0',
-    e:  '0',
-    total_items: '0',
-    collected: '0',
-    removed: '0'
+    a1: 0,
+    a2: 0,
+    b:  0,
+    c:  0,
+    d1: 0,
+    d2: 0,
+    e:  0,
+    total_items: 0,
+    collected: 0,
+    removed: 0
   }
 
   constructor(props){
@@ -72,37 +76,40 @@ export class InspectionForm extends React.Component {
                   <Col style={{ width: 64 }}>
                     <Item floatingLabel>
                       <Label>A1</Label>
-                      <Input keyboardType='numeric' value={this.state.a1} onChangeText={ (a1) => {
-                        this.setState({a1});
-                        this.calcInspectionItens();
-                      }} />
+                      <Input 
+                        keyboardType='numeric' 
+                        value={this.state.a1.toString()} 
+                        onChangeText={(a1) => this.setState({a1})}
+                        onBlur={this.onBlurNumeralState.bind(this,'a1')} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
                     <Item floatingLabel>
                       <Label>A2</Label>
-                      <Input keyboardType='numeric' value={this.state.a2} onChangeText={ (a2) =>  {
-                        this.setState({a2});
-                        this.calcInspectionItens();
-                      }} />
+                      <Input 
+                        keyboardType='numeric' value={this.state.a2.toString()} 
+                        onChangeText={(a2) => this.setState({a2})}
+                        onBlur={this.onBlurNumeralState.bind(this,'a2')} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
                     <Item floatingLabel>
                       <Label>B</Label>
-                      <Input ref="b" keyboardType='numeric' value={this.state.b} onChangeText={ (b) =>  {
-                        this.setState({b});
-                        this.calcInspectionItens();
-                      }} />
+                      <Input 
+                        keyboardType='numeric'
+                        value={this.state.b.toString()}
+                        onChangeText={(b) => this.setState({b})}              
+                        onBlur={this.onBlurNumeralState.bind(this,'b')} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
                     <Item floatingLabel>
                       <Label>C</Label>
-                      <Input keyboardType='numeric' value={this.state.c} onChangeText={ (c) =>  {
-                        this.setState({c});
-                        this.calcInspectionItens();
-                      }} />
+                      <Input 
+                        keyboardType='numeric'
+                        value={this.state.c.toString()}
+                        onChangeText={(c) => this.setState({c})}              
+                        onBlur={this.onBlurNumeralState.bind(this,'c')} />                      
                     </Item>
                   </Col>
                 </Grid>
@@ -110,28 +117,31 @@ export class InspectionForm extends React.Component {
                   <Col style={{ width: 64 }}>
                     <Item floatingLabel>
                       <Label>D1</Label>
-                      <Input keyboardType='numeric' value={this.state.d1} onChangeText={ (d1) =>  {
-                        this.setState({d1});
-                        this.calcInspectionItens();
-                      }} />
+                      <Input 
+                        keyboardType='numeric'
+                        value={this.state.d1.toString()}
+                        onChangeText={(d1) => this.setState({d1})}              
+                        onBlur={this.onBlurNumeralState.bind(this,'d1')} />                      
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
                     <Item floatingLabel>
                       <Label>D2</Label>
-                      <Input keyboardType='numeric' value={this.state.d2} onChangeText={ (d2) => {
-                        this.setState({d2});
-                        this.calcInspectionItens();
-                      }} />
+                      <Input 
+                        keyboardType='numeric'
+                        value={this.state.d2.toString()}
+                        onChangeText={(d2) => this.setState({d2})}              
+                        onBlur={this.onBlurNumeralState.bind(this,'d2')} />
                     </Item>
                   </Col>
                   <Col style={{ width: 64 }}>
                     <Item floatingLabel>
                       <Label>E</Label>
-                      <Input keyboardType='numeric' value={this.state.e} onChangeText={ (e) => {
-                        this.setState({e});
-                        this.calcInspectionItens();
-                      }} />
+                      <Input 
+                        keyboardType='numeric'
+                        value={this.state.e.toString()}
+                        onChangeText={(e) => this.setState({e})}              
+                        onBlur={this.onBlurNumeralState.bind(this,'e')} />
                     </Item>
                   </Col>
                 </Grid>
@@ -140,7 +150,7 @@ export class InspectionForm extends React.Component {
                   <Col>
                     <Item floatingLabel>
                       <Label>Nº de depósitos inspecionados</Label>
-                      <Input value={this.state.total_items} keyboardType='numeric' disabled={true}/>
+                      <Input value={this.state.total_items.toString()} keyboardType='numeric' disabled={true}/>
                     </Item>
                   </Col>
                 </Grid>
@@ -149,7 +159,12 @@ export class InspectionForm extends React.Component {
                   <Col>
                     <Item floatingLabel>
                       <Label>Nº de amotras coletadas</Label>
-                      <Input keyboardType='numeric' value={this.state.collected} onChangeText={(collected) => this.setState({collected})} />
+                      <Input 
+                        keyboardType='numeric' 
+                        value={this.state.collected.toString()} 
+                        onChangeText={(collected) => this.setState({collected} )}
+                        onBlur={this.onBlurNumeralState.bind(this, 'collected')}
+                      />
                     </Item>
                   </Col>
                 </Grid>
@@ -158,7 +173,12 @@ export class InspectionForm extends React.Component {
                   <Col>
                     <Item floatingLabel>
                       <Label>Nº de depósitos eliminados</Label>
-                      <Input keyboardType='numeric' value={this.state.removed} onChangeText={(removed) => this.setState({removed})}/>
+                      <Input 
+                        keyboardType='numeric' 
+                        value={this.state.removed.toString()} 
+                        onChangeText={(removed) => this.setState({removed} )}
+                        onBlur={this.onBlurNumeralState.bind(this, 'removed')}
+                      />
                     </Item>
                   </Col>
                 </Grid>
@@ -193,6 +213,16 @@ export class InspectionForm extends React.Component {
     }
   }
 
+  onBlurNumeralState(key){
+    let number = numeral(this.state[key]).value()
+    let updates = {}
+
+    updates[key] = Math.abs(number)
+
+    this.setState(updates)
+    this.calcInspectionItens();
+  }
+
   isInvalid(){
     // Verify if all states has present
     return false
@@ -210,7 +240,7 @@ export class InspectionForm extends React.Component {
           _.toInteger(d1),
           _.toInteger(d2),
           _.toInteger(e)
-        ]).toString();
+        ]);
 
         this.setState({total_items});
     }, 200);

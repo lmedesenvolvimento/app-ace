@@ -39,6 +39,19 @@ import { TratamentForm } from './forms/location/tratament';
 import { ObservationForm } from './forms/location/observation';
 
 export class FormLocationModal extends React.Component {
+  state = {
+    number: null,
+    complement: null,
+    visit: {
+      type: null,
+      type_location: null,
+      check_in: null,
+      observation: null,
+      inspect: {},
+      treatment: {},
+    }
+  }
+  
   constructor(props) {
     super(props);
   }
@@ -55,16 +68,16 @@ export class FormLocationModal extends React.Component {
         showsPagination={false}
         showsButtons={false}>
         <View style={styles.slide}>
-          <LocationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} />
+          <LocationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onLocationFormSubmit} />
         </View>
         <View style={styles.slide}>
-          <InspectionForm {...this.props } scrollBy={this.scrollBy} />
+          <InspectionForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
         </View>
         <View style={styles.slide}>
-          <TratamentForm {...this.props } scrollBy={this.scrollBy} />
+          <TratamentForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onTratamentFormSubmit} />
         </View>
         <View style={styles.slide}>
-          <ObservationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} />
+          <ObservationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onObservationFormSubmit} />
         </View>
       </Swiper>
     );
@@ -84,6 +97,23 @@ export class FormLocationModal extends React.Component {
 
   onCancel = () => {
     this.dismissModal()
+  }
+
+  // Step responses
+  onLocationFormSubmit(data){
+    console.log(data)
+  }
+
+  onInspectionFormSubmit(data){
+    console.log(data)
+  }
+
+  onTratamentFormSubmit(data){
+    console.log(data)
+  }
+  
+  onObservationFormSubmit(data){
+    console.log(data)
   }
 
 }
