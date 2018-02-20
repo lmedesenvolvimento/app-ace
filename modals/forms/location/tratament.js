@@ -37,6 +37,7 @@ import { StepBars, Step } from './StepBars';
 
 export class TratamentForm extends React.Component {
   state = {
+    type: 'larvicida',
     quantity: 0.0,
     adulticida_quantity: 0.0
   }
@@ -107,7 +108,7 @@ export class TratamentForm extends React.Component {
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent onPress={ () => this.props.scrollBy(1) }>
+                <Button full transparent onPress={this.onSubmit.bind(this)}>
                   <Text>Avançar</Text>
                 </Button>
               </Col>
@@ -136,6 +137,13 @@ export class TratamentForm extends React.Component {
     updates[key] = Math.abs(number)
 
     this.setState(updates)
+  }
+
+  onSubmit(){
+    // Pass form value parent component
+    this.props.onSubmit(this.state)
+    // Next Step
+    this.props.scrollBy(1)
   }
 }
 

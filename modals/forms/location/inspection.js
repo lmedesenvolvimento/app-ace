@@ -209,6 +209,10 @@ export class InspectionForm extends React.Component {
     if(this.isInvalid()){
       Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
     } else{
+      // Pass form value parent component
+      let state = _.omit(this.state,['validation'])
+      this.props.onSubmit(state)
+      // Next step
       this.props.scrollBy(1)
     }
   }

@@ -34,6 +34,10 @@ import { simpleToast } from '../../../services/Toast';
 import { StepBars, Step } from './StepBars';
 
 export class ObservationForm extends React.Component {
+  state = {
+    observation: ''
+  }
+
   constructor(props){
     super(props);
   }
@@ -56,7 +60,7 @@ export class ObservationForm extends React.Component {
               <Col>
                 <Item floatingLabel>
                   <Label>Descrição</Label>
-                  <Input style={styles.textarea} multiline={true} maxHeight={120}/>
+                  <Input value={this.state.observation} onChangeText={(observation) => this.setState({observation})} style={styles.textarea} multiline={true} maxHeight={120}/>
                 </Item>
               </Col>
             </Grid>
@@ -71,7 +75,7 @@ export class ObservationForm extends React.Component {
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent onPress={ () => this.props.onCancel() }>
+                <Button full transparent onPress={this.onSubmit.bind(this)}>
                   <Text>Concluir</Text>
                 </Button>
               </Col>
@@ -80,6 +84,12 @@ export class ObservationForm extends React.Component {
         </Footer>
       </Container>
     );
+  }
+
+  onSubmit(){
+    // Pass form value parent component
+    let state = _.omit(this.state,['validation'])
+    this.props.onSubmit(state)
   }
 }
 

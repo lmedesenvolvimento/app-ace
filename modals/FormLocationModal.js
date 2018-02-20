@@ -99,23 +99,56 @@ export class FormLocationModal extends React.Component {
     this.dismissModal()
   }
 
-  // Step responses
-  onLocationFormSubmit(data){
-    console.log(data)
-  }
+  // step-step responses
+  onLocationFormSubmit = (data) => {
+    let updates = {
+      number: data.number,
+      complement: data.complement,
+      visit: this.state.visit
+    }
 
-  onInspectionFormSubmit(data){
-    console.log(data)
-  }
+    updates.visit.type = data.type
+    updates.visit.check_in = data.check_in
+    updates.visit.type_location = data.type_location    
 
-  onTratamentFormSubmit(data){
-    console.log(data)
+    this.setState(updates)
+
+    console.log(this.state)
   }
   
-  onObservationFormSubmit(data){
-    console.log(data)
-  }
+  onInspectionFormSubmit = (data) => {
+    let updates = {
+      visit: this.state.visit
+    }
+    
+    updates.visit.inspect = data
+    
+    this.setState(updates)
 
+    console.log(this.state)
+  }
+  
+  onTratamentFormSubmit = (data) => {
+    let updates = {
+      treatment: this.state.treatment
+    }
+    
+    updates.visit.treatment = data
+    
+    this.setState(updates)
+
+    console.log(this.state)
+  }
+  
+  onObservationFormSubmit = (data) => {
+    let updates = {
+      observation: data.observation
+    }
+
+    this.setState(updates)
+  
+    console.log(this.state)
+  }
 }
 
 const styles = {

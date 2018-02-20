@@ -36,6 +36,7 @@ import { StepBars, Step } from './StepBars';
 
 export class LocationForm extends React.Component {
   state = {
+    number: null,
     check_in: moment().format('HH:mm'),
     type: 'normal',
     type_location: 'residential',
@@ -160,7 +161,11 @@ export class LocationForm extends React.Component {
   onSubmit(){
     if(this.isInvalid()){
       Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
-    } else{
+    } else {
+      // Pass form value parent component
+      let state = _.omit(this.state,['validation'])
+      this.props.onSubmit(state)
+      // Next step
       this.props.scrollBy(1)
     }
   }
