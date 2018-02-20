@@ -217,6 +217,7 @@ class FieldGroupScreen extends React.Component {
   _getPublicArea(){
     let { fieldGroups, parent, streetIndex } = this.props;
     let { public_areas } = fieldGroups.data[parent.zoneIndex];
+    console.log(this.props)
     return _.find(public_areas, (street) => street == this.props.street ) || {} // É nescessário como placeholder equanto as propriedades não está pronta
   }
 

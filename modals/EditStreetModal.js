@@ -35,16 +35,21 @@ import { Actions } from 'react-native-router-flux';
 import ReduxActions from "../redux/actions";
 
 class EditStreetModal extends NewStreetModal {
+  state = {
+    address: undefined,
+    neighborhood: {},
+  }
+
   constructor(props) {
     super(props);
   }
 
   componentDidMount(){
-    this.setState({ neighborhood: this.props.zone.neighborhood, address: this.props.street.address })
+    this.setState({ neighborhood: this.props.zone.neighborhood, ...this.props.street })
   }
 
   dismissModalBeforeModal(){
-    Actions.pop();
+    Actions.pop({street: this.state});
 
     setTimeout(() => {
       Actions.refresh({street: this.state});

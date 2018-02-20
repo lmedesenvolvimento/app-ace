@@ -23,7 +23,8 @@ export function getFieldGroups(){
       // Get in API
       client(gql_get_field_groups)
       .then((response) => {
-        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: response.data.field_groups });
+        let field_groups = response.data.field_groups.map(createUniqueIdsForFieldGroups);
+        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
         // Update LocalStorage
         commit(getState);
       }).catch( error => console.log(error))
@@ -64,6 +65,33 @@ export function addLocationInPublicArea(indexOfFieldGroup, indexOfPublicArea, ne
     // Update LocalStorage
     commit(getState);
   }
+}
+
+export function updateLocationInPublicArea(indexOfFieldGroup, indexOfPublicArea, record, newData){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.PUSH_LOCATION, data: { indexOfFieldGroup, indexOfPublicArea, record, newData } });
+    // Update LocalStorage
+    commit(getState);
+  }
+}
+
+function createUniqueIdsForFieldGroups(data){
+  return data.map( (field_group) => {
+    field_group.$id = _.uniqueId('field_group_')
+    field_group.public_areas.map(createUniqueIdsForPublicAreas)
+    return field_group
+  })
+}
+
+function createUniqueIdsForPublicAreas(public_area){
+  public_area.$id = _.uniqueId('public_area_')
+  public_area.addresses.map(createUniqueIdsForPublicAreas)
+  return public_area
+}
+
+function createUniqueIdsForAddresses(address){
+  address.$id = _.uniqueId('address_')
+  return address
 }
 
 function commit(getState){

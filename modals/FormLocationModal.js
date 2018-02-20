@@ -109,9 +109,7 @@ export class FormLocationModal extends React.Component {
     updates.visit.check_in = data.check_in
     updates.visit.type_location = data.type_location    
 
-    this.setState(updates)
-
-    console.log(this.state)
+    this.setState(updates);
   }
   
   onInspectionFormSubmit = (data) => {
@@ -121,9 +119,7 @@ export class FormLocationModal extends React.Component {
     
     updates.visit.inspect = data
     
-    this.setState(updates)
-
-    console.log(this.state)
+    this.setState(updates);
   }
   
   onTratamentFormSubmit = (data) => {
@@ -133,9 +129,7 @@ export class FormLocationModal extends React.Component {
     
     updates.visit.treatment = data
     
-    this.setState(updates)
-
-    console.log(this.state)
+    this.setState(updates);
   }
   
   onObservationFormSubmit = (data) => {
@@ -147,9 +141,12 @@ export class FormLocationModal extends React.Component {
 
     this.setState(updates)
 
-    this.props.addLocationInPublicArea(this.props.zoneIndex, this.props.publicAreaIndex, this.state)
-  
-    console.log(this.state)
+    if(this.props.address){
+      this.props.updateLocationInPublicArea(this.props.zoneIndex, this.props.publicAreaIndex, this.props.address, this.state)
+    } else{
+      this.props.addLocationInPublicArea(this.props.zoneIndex, this.props.publicAreaIndex, this.state)
+    }
+
 
     this.onCancel()
   }

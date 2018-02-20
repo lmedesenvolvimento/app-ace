@@ -17,17 +17,18 @@ export default function reducer(state = initialState, action){
        .push(action.data.newData);
 
       return { ...state, data: state.data };
+
     case field_groups_types.EDIT_PUBLIC_AREA:
-      var { indexOfFieldGroup, newData } = action.data;
+      var { indexOfFieldGroup, record, newData } = action.data;
       var index = getPublicAreaIndex(state, action);
-      var publicArea = getPublicArea(state, action, index);
 
       // Mesclando informações do Logradouro
       state
         .data[action.data.indexOfFieldGroup]
-        .public_areas[index] = { ...publicArea, ...newData };
+        .public_areas[index] = { ...record, ...newData };
 
       return { ...state, data: state.data };
+
     case field_groups_types.REMOVE_PUBLIC_AREA:
       var { indexOfFieldGroup } = action.data;
       var index = getPublicAreaIndex(state, action)
@@ -44,11 +45,23 @@ export default function reducer(state = initialState, action){
       // Criando um Array para novas visitas
       newData.visits = [newData.visit]
       
-      // Adicionando novo Endereço
+      // Adicionando nova Localização e Visita
       state
         .data[indexOfFieldGroup]
         .public_areas[indexOfPublicArea]
         .addresses.push( _.omit(newData, ['visit']) ) 
+
+      return { ...state, data: state.data }
+
+    case field_groups_types.EDIT_LOCATION:
+      var { indexOfFieldGroup, indexOfPublicArea, record, newData } = action.data;
+      var index = getLocationIndex(state, action)
+
+      // Atualizando Localização e Visita
+      state
+        .data[indexOfFieldGroup]
+        .public_areas[indexOfPublicArea]
+        .addresses[index] = { ...record, ...newData };
 
       return { ...state, data: state.data }
       
@@ -57,7 +70,7 @@ export default function reducer(state = initialState, action){
   }
 }
 
-
+// Queries for Public Area
 function getPublicAreaIndex(state, action){
   let { indexOfFieldGroup, record } = action.data;
   let { public_areas } = state.data[indexOfFieldGroup];
@@ -67,4 +80,11 @@ function getPublicAreaIndex(state, action){
 function getPublicArea(state, action, index){
   let { indexOfFieldGroup } = action.data;
   return state.data[indexOfFieldGroup].public_areas[index];
+}
+
+// Queries for Location
+function getLocationIndex(state, action){
+  let { indexOfFieldGroup, indexOfPublicArea, record } = action.data;
+  let { addresses } = state.data[indexOfFieldGroup].public_areas[indexOfPublicArea];
+  return _.findIndex(addresses, (address) => address === record);
 }
