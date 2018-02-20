@@ -54,9 +54,7 @@ export class FormLocationModal extends React.Component {
   
   constructor(props) {
     super(props);
-  }
-
-  componentDidMount(){}
+  }  
 
   render() {
     return (
@@ -130,7 +128,7 @@ export class FormLocationModal extends React.Component {
   
   onTratamentFormSubmit = (data) => {
     let updates = {
-      treatment: this.state.treatment
+      visit: this.state.visit
     }
     
     updates.visit.treatment = data
@@ -142,12 +140,18 @@ export class FormLocationModal extends React.Component {
   
   onObservationFormSubmit = (data) => {
     let updates = {
-      observation: data.observation
+      visit: this.state.visit
     }
 
+    updates.visit.observation = data.observation
+
     this.setState(updates)
+
+    this.props.addLocationInPublicArea(this.props.zoneIndex, this.props.publicAreaIndex, this.state)
   
     console.log(this.state)
+
+    this.onCancel()
   }
 }
 

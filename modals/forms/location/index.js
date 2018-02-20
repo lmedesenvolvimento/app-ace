@@ -44,14 +44,27 @@ export class LocationForm extends React.Component {
       number: false,
       check_in: false
     }
-  }
-
-  componentDidMount(){
-    this.setState({ address: this.props.street.address})
-  }
+  }  
 
   constructor(props){
     super(props);
+  }
+
+  componentDidMount(){
+    let updates = {
+      address: this.props.street.address
+    }
+
+    if(this.props.address){
+      let { address } = this.props
+
+      updates.number = address.number
+      updates.type = address.visit.type
+      updates.type_location = address.visit.type_location
+      updates.check_in = address.visit.check_in
+    }
+
+    this.setState(updates)
   }
 
   render(){
@@ -59,7 +72,6 @@ export class LocationForm extends React.Component {
       <Container>
         <Content padder>
           <Form>
-
             <StepBars>
               <Step active={true}></Step>
               <Step></Step>

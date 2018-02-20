@@ -58,6 +58,14 @@ export function removePublicArea(indexOfFieldGroup, record){
   }
 }
 
+export function addLocationInPublicArea(indexOfFieldGroup, indexOfPublicArea, newData){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.PUSH_LOCATION, data: { indexOfFieldGroup, indexOfPublicArea, newData } });
+    // Update LocalStorage
+    commit(getState);
+  }
+}
+
 function commit(getState){
   let state = getState();
   Session.Storage.create(state.currentUser.data.email, state.fieldGroups)

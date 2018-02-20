@@ -35,7 +35,8 @@ import ReduxActions from "../redux/actions";
 export class NewStreetModal extends React.Component {
   state = {
     address: undefined,
-    neighborhood: {}
+    neighborhood: {},
+    addresses: []
   }
 
   constructor(props) {

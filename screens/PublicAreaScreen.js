@@ -91,7 +91,13 @@ class FieldGroupScreen extends React.Component {
           direction="up"
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.locationModal({ street: this.props.street }) }>
+          onPress={() => {
+            Actions.locationModal({ 
+              street: this.props.street, 
+              publicAreaIndex: this._getPublicAreaIndex(), 
+              zoneIndex: this.props.parent.zoneIndex 
+            });
+          }}>
           <Icon android="md-add" ios="ios-add" size={24} />
         </Fab>
       </Container>
@@ -104,12 +110,12 @@ class FieldGroupScreen extends React.Component {
         <Tabs>
           <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content padder>
-              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => !obj.visits.length )} renderRow={this.renderItem} />
+              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => !obj.visits.length )} renderRow={this.renderItem.bind(this)} />
             </Content>
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
             <Content padder>
-              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => obj.visits.length)} renderRow={this.renderItem} />
+              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => obj.visits.length)} renderRow={this.renderItem.bind(this)} />
             </Content>
           </Tab>
         </Tabs>
@@ -120,8 +126,19 @@ class FieldGroupScreen extends React.Component {
   }
 
   renderItem(address){
+    address.visit = _.last(address.visits)
     return(
-      <ListItem icon onPress={()=> false} style={Layout.listHeight}>
+      <ListItem 
+        icon 
+        style={Layout.listHeight}
+        onPress={()=> {
+          Actions.locationModal({ 
+            address: address,
+            street: this.props.street, 
+            publicAreaIndex: this._getPublicAreaIndex(), 
+            zoneIndex: this.props.parent.zoneIndex 
+          });
+        }} >
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
@@ -201,6 +218,12 @@ class FieldGroupScreen extends React.Component {
     let { fieldGroups, parent, streetIndex } = this.props;
     let { public_areas } = fieldGroups.data[parent.zoneIndex];
     return _.find(public_areas, (street) => street == this.props.street ) || {} // É nescessário como placeholder equanto as propriedades não está pronta
+  }
+
+  _getPublicAreaIndex(){
+    let { fieldGroups, parent, streetIndex } = this.props;
+    let { public_areas } = fieldGroups.data[parent.zoneIndex];
+    return _.findIndex(public_areas, (street) => street == this.props.street )
   }
 }
 

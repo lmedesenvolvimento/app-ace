@@ -42,6 +42,12 @@ export class ObservationForm extends React.Component {
     super(props);
   }
 
+  componentDidMount(){    
+    if(this.props.address){
+      this.setState({observation: this.props.address.visit.observation})
+    }
+  }
+
   render(){
     return (
       <Container>

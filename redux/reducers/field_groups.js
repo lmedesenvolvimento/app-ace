@@ -10,6 +10,7 @@ export default function reducer(state = initialState, action){
     case field_groups_types.UPDATE_FIELD_GROUPS:
       return { ...state, data: action.data };
     case field_groups_types.PUSH_PUBLIC_AREA:
+      // Adicionando novo Logradouro
       state
        .data[action.data.indexOfFieldGroup]
        .public_areas
@@ -36,6 +37,21 @@ export default function reducer(state = initialState, action){
         .public_areas.splice(index, 1);
 
       return { ...state, data: state.data };
+
+    case field_groups_types.PUSH_LOCATION:
+      var { indexOfFieldGroup, indexOfPublicArea, newData } = action.data;
+
+      // Criando um Array para novas visitas
+      newData.visits = [newData.visit]
+      
+      // Adicionando novo Endereço
+      state
+        .data[indexOfFieldGroup]
+        .public_areas[indexOfPublicArea]
+        .addresses.push( _.omit(newData, ['visit']) ) 
+
+      return { ...state, data: state.data }
+      
     default:
       return state;
   }
@@ -50,5 +66,5 @@ function getPublicAreaIndex(state, action){
 
 function getPublicArea(state, action, index){
   let { indexOfFieldGroup } = action.data;
-  return state .data[indexOfFieldGroup].public_areas[index];
+  return state.data[indexOfFieldGroup].public_areas[index];
 }
