@@ -23,69 +23,70 @@ export function getFieldGroups(){
       // Get in API
       client(gql_get_field_groups)
       .then((response) => {
+        console.log(response.data.field_groups)
+        // Criando ids únicos para todas as entidades recebidos
         let field_groups = response.data.field_groups.map(createUniqueIdsForFieldGroups);
+        // Enviando para Store
         dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
-        // Update LocalStorage
+        // Guardando Alterações no Banco
         commit(getState);
       }).catch( error => console.log(error))
     } else{
-      // Get in Local Storage
+      // Resgatando do Cache
       dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data });
     }
   }
 }
 
-export function addPublicArea(indexOfFieldGroup, newData){
+export function addPublicArea(fieldGroupId, newData){
   return (dispatch, getState) => {
-    dispatch({ type: Types.PUSH_PUBLIC_AREA, data: { indexOfFieldGroup, newData } });
+    dispatch({ type: Types.PUSH_PUBLIC_AREA, data: { fieldGroupId, newData } });
+    // Guardando Alterações no Banco
+    commit(getState);
+  }
+}
+
+export function editPublicArea(fieldGroupId, record, newData){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.EDIT_PUBLIC_AREA, data: { fieldGroupId, record, newData } });
+    // Guardando Alterações no Banco
+    commit(getState);
+  }
+}
+
+export function removePublicArea(fieldGroupId, record){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.REMOVE_PUBLIC_AREA, data: { fieldGroupId, record } });
+    // Guardando Alterações no Banco
+    commit(getState);
+  }
+}
+
+export function addLocationInPublicArea(fieldGroupId, publicareaId, newData){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.PUSH_LOCATION, data: { fieldGroupId, publicareaId, newData } });
     // Update LocalStorage
     commit(getState);
   }
 }
 
-export function editPublicArea(indexOfFieldGroup, record, newData){
+export function updateLocationInPublicArea(fieldGroupId, publicareaId, record, newData){
   return (dispatch, getState) => {
-    dispatch({ type: Types.EDIT_PUBLIC_AREA, data: { indexOfFieldGroup, record, newData } });
+    dispatch({ type: Types.EDIT_LOCATION, data: { fieldGroupId, publicareaId, record, newData } });
     // Update LocalStorage
     commit(getState);
   }
 }
 
-export function removePublicArea(indexOfFieldGroup, record){
-  return (dispatch, getState) => {
-    dispatch({ type: Types.REMOVE_PUBLIC_AREA, data: { indexOfFieldGroup, record } });
-    // Update LocalStorage
-    commit(getState);
-  }
-}
-
-export function addLocationInPublicArea(indexOfFieldGroup, indexOfPublicArea, newData){
-  return (dispatch, getState) => {
-    dispatch({ type: Types.PUSH_LOCATION, data: { indexOfFieldGroup, indexOfPublicArea, newData } });
-    // Update LocalStorage
-    commit(getState);
-  }
-}
-
-export function updateLocationInPublicArea(indexOfFieldGroup, indexOfPublicArea, record, newData){
-  return (dispatch, getState) => {
-    dispatch({ type: Types.PUSH_LOCATION, data: { indexOfFieldGroup, indexOfPublicArea, record, newData } });
-    // Update LocalStorage
-    commit(getState);
-  }
-}
-
-function createUniqueIdsForFieldGroups(data){
-  return data.map( (field_group) => {
-    field_group.$id = _.uniqueId('field_group_')
-    field_group.public_areas.map(createUniqueIdsForPublicAreas)
-    return field_group
-  })
+function createUniqueIdsForFieldGroups(field_group){
+  field_group.$id = _.uniqueId('field_group_')
+  field_group.public_areas.map(createUniqueIdsForPublicAreas)
+  return field_group
 }
 
 function createUniqueIdsForPublicAreas(public_area){
   public_area.$id = _.uniqueId('public_area_')
-  public_area.addresses.map(createUniqueIdsForPublicAreas)
+  public_area.addresses.map(createUniqueIdsForAddresses)
   return public_area
 }
 

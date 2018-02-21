@@ -142,9 +142,10 @@ export class FormLocationModal extends React.Component {
     this.setState(updates)
 
     if(this.props.address){
-      this.props.updateLocationInPublicArea(this.props.zoneIndex, this.props.publicAreaIndex, this.props.address, this.state)
+      console.log("HERE", this.props.address)
+      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, this.state)
     } else{
-      this.props.addLocationInPublicArea(this.props.zoneIndex, this.props.publicAreaIndex, this.state)
+      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.state)
     }
 
 

@@ -69,7 +69,7 @@ class FieldGroupScreen extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>{ this.props.street.address || "Atualizando..." }</Title>
+            <Title>{ this.props.publicarea.address || "Atualizando..." }</Title>
           </Body>
           <Right>
             { this.renderEditButton() }
@@ -93,9 +93,8 @@ class FieldGroupScreen extends React.Component {
           style={{ backgroundColor: Colors.accentColor }}
           onPress={() => {
             Actions.locationModal({ 
-              street: this.props.street, 
-              publicAreaIndex: this._getPublicAreaIndex(), 
-              zoneIndex: this.props.parent.zoneIndex 
+              publicarea: this.props.publicarea, 
+              fieldgroup: this.props.fieldgroup
             });
           }}>
           <Icon android="md-add" ios="ios-add" size={24} />
@@ -110,12 +109,16 @@ class FieldGroupScreen extends React.Component {
         <Tabs>
           <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content padder>
-              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => !obj.visits.length )} renderRow={this.renderItem.bind(this)} />
+              <List 
+                dataArray={ _.chain(this.state.addresses).filter((obj, key, array) => !obj.visits.length ).orderBy(['number']).value()} 
+                renderRow={this.renderItem.bind(this)} />
             </Content>
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
             <Content padder>
-              <List dataArray={_.filter(this.state.addresses, (obj, key, array) => obj.visits.length)} renderRow={this.renderItem.bind(this)} />
+              <List 
+                dataArray={_.chain(this.state.addresses).filter((obj, key, array) => obj.visits.length).orderBy(['number']).value()} 
+                renderRow={this.renderItem.bind(this)} />
             </Content>
           </Tab>
         </Tabs>
@@ -134,9 +137,8 @@ class FieldGroupScreen extends React.Component {
         onPress={()=> {
           Actions.locationModal({ 
             address: address,
-            street: this.props.street, 
-            publicAreaIndex: this._getPublicAreaIndex(), 
-            zoneIndex: this.props.parent.zoneIndex 
+            publicarea: this.props.publicarea,
+            fieldgroup: this.props.fieldgroup
           });
         }} >
         <Left>
@@ -162,7 +164,7 @@ class FieldGroupScreen extends React.Component {
   }
 
   renderRemoveButton(){
-    if(!this.props.street.hasOwnProperty('id')){
+    if(!this.props.publicarea.hasOwnProperty('id')){
       return(
         <Button transparent onPress={ () => this._removePublicArea()  }>
           <Icon android="md-trash" ios="ios-trash" />
@@ -172,16 +174,15 @@ class FieldGroupScreen extends React.Component {
   }
 
   renderEditButton(){
-    if(!this.props.street.hasOwnProperty('id')){
+    if(!this.props.publicarea.hasOwnProperty('id')){
       return(
         <Button transparent onPress={() => {
           Actions.editStreetModal({
             hide: false,
-            street: this.props.street,
-            streetIndex: this.props.streetIndex,
-            zone: this.props.parent.zone,
-            zoneIndex: this.props.parent.zoneIndex})
-          }}>
+            publicarea: this.props.publicarea,
+            fieldgroup: this.props.parent,
+          })
+        }}>
           <Icon android="md-create" ios="ios-create" />
         </Button>
       )
@@ -195,7 +196,7 @@ class FieldGroupScreen extends React.Component {
       [
         {text: 'Não', onPress: () => false, style: 'cancel'},
         {text: 'Sim', onPress: () => {
-          this.props.removePublicArea(this.props.parent.zoneIndex, this.props.street)
+          this.props.removePublicArea(this.props.fieldgroup.$id, this.props.publicarea)
           Actions.pop()
         }},
       ],
@@ -204,28 +205,25 @@ class FieldGroupScreen extends React.Component {
   }
 
   _onSearchExit(){
-    this.setState({addresses: this.props.addresses});
+    this.setState({ addresses: this._getPublicArea().addresses});
     this.searchBar.hide()
   }
 
   _handleSearch(q){
     // Use Lodash regex for get match locations
-    let result = _.filter(this.props.addresses, (i)=> _.isMatch(i.number, q));
+    let result = _.filter(this._getPublicArea().addresses, (i)=> _.isMatch(i.number, q));
     this.setState({addresses:  result})
   }
 
   _getPublicArea(){
-    let { fieldGroups, parent, streetIndex } = this.props;
-    let { public_areas } = fieldGroups.data[parent.zoneIndex];
-    console.log(this.props)
-    return _.find(public_areas, (street) => street == this.props.street ) || {} // É nescessário como placeholder equanto as propriedades não está pronta
-  }
+    let { fieldGroups, fieldgroup, publicarea } = this.props;
+    let result = _.chain(fieldGroups.data)
+      .find(['$id', fieldgroup.$id])
+      .get("public_areas")
+      .find(['$id', publicarea.$id]).value();
 
-  _getPublicAreaIndex(){
-    let { fieldGroups, parent, streetIndex } = this.props;
-    let { public_areas } = fieldGroups.data[parent.zoneIndex];
-    return _.findIndex(public_areas, (street) => street == this.props.street )
-  }
+    return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta
+  }  
 }
 
 const styles = {

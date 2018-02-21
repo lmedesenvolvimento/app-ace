@@ -89,7 +89,7 @@ class PublicAreaScreen extends React.Component {
           direction="up"
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
-          onPress={() => Actions.newStreetModal({hide: false, zone: this.props.zone, zoneIndex: this.props.zoneIndex})}>
+          onPress={() => Actions.newStreetModal({ hide: false, fieldgroup: this.props.fieldgroup })}>
           <MaterialIcons name="location-on" size={24} />
         </Fab>
       </Container>
@@ -100,7 +100,7 @@ class PublicAreaScreen extends React.Component {
     return(
       <ListItem
         icon
-        onPress={()=> Actions.publicarea({street: item, title: item.address, streetIndex: rowID, parent: this._pickExportParentProps() })}
+        onPress={() => Actions.publicarea({ publicarea: item, title: item.address, fieldgroup: this.props.fieldgroup })}
         style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
@@ -127,13 +127,10 @@ class PublicAreaScreen extends React.Component {
   }
 
   _getPublicAreas(){
-    let { fieldGroups, zoneIndex } = this.props;
-    return _.orderBy(fieldGroups.data[zoneIndex].public_areas, ['address'])
-  }
-
-  _pickExportParentProps(){
-    return _.pick(this.props, ['zone', 'zoneIndex'])
-  }
+    let { fieldGroups, fieldgroup } = this.props;
+    let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
+    return _.orderBy(result.public_areas, ['address']);
+  }  
 }
 
 export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}))(PublicAreaScreen);

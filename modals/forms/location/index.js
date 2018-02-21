@@ -51,8 +51,9 @@ export class LocationForm extends React.Component {
   }
 
   componentDidMount(){
+    console.log("LOCATION FORM", this.props)
     let updates = {
-      address: this.props.street.address
+      address: this.props.publicarea.address
     }
 
     if(this.props.address){

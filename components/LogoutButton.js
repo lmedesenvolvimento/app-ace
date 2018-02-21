@@ -18,9 +18,11 @@ class LogoutButton extends React.Component {
   }
 
   destroySession(){
-    // Clear Database
+    // Clear Credential
     Session.Credential.destroy()
+    // Clear Storage
     Session.Storage.destroy(this.props.currentUser.email)
+    Session.Storage.cache = null
     // Return to login screen
     Actions.unauthorized({type: ActionConst.RESET})
   }

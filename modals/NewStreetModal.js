@@ -44,14 +44,14 @@ export class NewStreetModal extends React.Component {
   }
 
   componentDidMount(){
-    this.setState({ neighborhood: this.props.zone.neighborhood })
+    this.setState({ neighborhood: this.props.fieldgroup.neighborhood })
   }
 
   okModal(){
     if(!this.state.address){
       return simpleToast("Logradouro vazio.")
     }
-    this.props.addPublicArea(this.props.zoneIndex, this.state)
+    this.props.addPublicArea(this.props.fieldgroup.$id, this.state)
     this.dismissModal()
   }
 

@@ -45,14 +45,14 @@ class EditStreetModal extends NewStreetModal {
   }
 
   componentDidMount(){
-    this.setState({ neighborhood: this.props.zone.neighborhood, ...this.props.street })
+    this.setState({ neighborhood: this.props.fieldgroup.neighborhood, ...this.props.publicarea })
   }
 
   dismissModalBeforeModal(){
-    Actions.pop({street: this.state});
+    Actions.pop({publicarea: this.state});
 
     setTimeout(() => {
-      Actions.refresh({street: this.state});
+      Actions.refresh({publicarea: this.state});
     });
   }
 
@@ -60,7 +60,11 @@ class EditStreetModal extends NewStreetModal {
     if(!this.state.address){
       return simpleToast("Logradouro vazio.")
     }
-    this.props.editPublicArea(this.props.zoneIndex, this.props.street, this.state)
+
+    console.log(this.props.publicarea)
+    
+    this.props.editPublicArea(this.props.fieldgroup.$id, this.props.publicarea, this.state)
+
     this.dismissModalBeforeModal()
   }
 
