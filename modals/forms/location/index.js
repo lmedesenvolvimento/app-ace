@@ -51,7 +51,6 @@ export class LocationForm extends React.Component {
   }
 
   componentDidMount(){
-    console.log("LOCATION FORM", this.props)
     let updates = {
       address: this.props.publicarea.address
     }
@@ -62,7 +61,7 @@ export class LocationForm extends React.Component {
       updates.number = address.number
       updates.type = address.visit.type
       updates.type_location = address.visit.type_location
-      updates.check_in = address.visit.check_in
+      updates.check_in = address.visit.type == 'closed' ? moment().format('HH:mm') : address.visit.check_in
     }
 
     this.setState(updates)

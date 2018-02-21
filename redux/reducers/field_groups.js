@@ -38,7 +38,8 @@ export default function reducer(state = initialState, action){
 
       var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId])
       var indexOfPublicArea = getPublicAreaIndex(state, action, record.$id)
-
+      
+      // Deletando Logradouro
       state
         .data[indexOfFieldGroup]
         .public_areas.splice(indexOfPublicArea, 1);
@@ -70,11 +71,32 @@ export default function reducer(state = initialState, action){
       var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
       var indexOfAddress = getLocationIndex(state, action, record.$id)
 
+      // Se a visita for fechada ou se a visita anterior for fechada adiciona mais uma visita ao endereço
+      if( newData.visit.type == 'closed' || _.last(record.visits).type == 'closed' ){
+        newData.visits = _.clone(record.visits)
+        newData.visits.push(newData.visit)
+      }
+
       // Atualizando Localização e Visita
       state
         .data[indexOfFieldGroup]
         .public_areas[indexOfPublicArea]
-        .addresses[indexOfAddress] = { ...record, ...newData };
+        .addresses[indexOfAddress] = { ..._.omit(record,  ['visit']), ..._.omit(newData, ['visit']) };
+
+      return { ...state, data: state.data }
+
+    case field_groups_types.REMOVE_LOCATION:
+      var { fieldGroupId, publicareaId, record } = action.data;
+
+      var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId])
+      var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
+      var indexOfAddress = getLocationIndex(state, action, record.$id)
+      
+      // Deletando Endereço
+      state
+        .data[indexOfFieldGroup]
+        .public_areas[indexOfPublicArea]
+        .addresses.splice(indexOfAddress, 1)
 
       return { ...state, data: state.data }
       

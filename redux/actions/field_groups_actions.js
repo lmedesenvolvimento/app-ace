@@ -23,7 +23,6 @@ export function getFieldGroups(){
       // Get in API
       client(gql_get_field_groups)
       .then((response) => {
-        console.log(response.data.field_groups)
         // Criando ids únicos para todas as entidades recebidos
         let field_groups = response.data.field_groups.map(createUniqueIdsForFieldGroups);
         // Enviando para Store
@@ -73,6 +72,14 @@ export function addLocationInPublicArea(fieldGroupId, publicareaId, newData){
 export function updateLocationInPublicArea(fieldGroupId, publicareaId, record, newData){
   return (dispatch, getState) => {
     dispatch({ type: Types.EDIT_LOCATION, data: { fieldGroupId, publicareaId, record, newData } });
+    // Update LocalStorage
+    commit(getState);
+  }
+}
+
+export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.REMOVE_LOCATION, data: { fieldGroupId, publicareaId, record } });
     // Update LocalStorage
     commit(getState);
   }

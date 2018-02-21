@@ -133,16 +133,16 @@ export class FormLocationModal extends React.Component {
   }
   
   onObservationFormSubmit = (data) => {
+    let { address } = this.props;    
     let updates = {
       visit: this.state.visit
-    }
+    };
 
     updates.visit.observation = data.observation
 
     this.setState(updates)
 
-    if(this.props.address){
-      console.log("HERE", this.props.address)
+    if(address){
       this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, this.state)
     } else{
       this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.state)

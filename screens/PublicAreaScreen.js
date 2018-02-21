@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { View, Alert, ListView } from 'react-native';
 
 import {
   Header,
@@ -33,7 +33,8 @@ import ReduxActions from "../redux/actions";
 import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
-import Session from '../services/Session';
+
+import { simpleToast } from '../services/Toast';
 
 import LogoutButton from '../components/LogoutButton';
 
@@ -58,7 +59,7 @@ class FieldGroupScreen extends React.Component {
   }
 
   render() {
-    let { currentUser } = this.props;
+    let { currentUser } = this.props;    
 
     return (
       <Container>
@@ -104,21 +105,37 @@ class FieldGroupScreen extends React.Component {
   }
 
   renderTabs(){
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
     if(this.state.addresses && this.state.addresses.length){
       return (
-        <Tabs>
+        <Tabs locked={true}>
           <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content padder>
               <List 
-                dataArray={ _.chain(this.state.addresses).filter((obj, key, array) => !obj.visits.length ).orderBy(['number']).value()} 
-                renderRow={this.renderItem.bind(this)} />
+                dataSource={ ds.cloneWithRows(this._getAddressNotVisited())}
+                renderRow={this.renderItem.bind(this)}
+                renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
+                renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                enableEmptySections={true}
+                onRowOpen={false}
+                leftOpenValue={0}
+                rightOpenValue={-75}
+                />
             </Content>
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
             <Content padder>
               <List 
-                dataArray={_.chain(this.state.addresses).filter((obj, key, array) => obj.visits.length).orderBy(['number']).value()} 
-                renderRow={this.renderItem.bind(this)} />
+                dataSource={ ds.cloneWithRows(this._getAddressVisited())}
+                renderRow={this.renderItem.bind(this)}
+                renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
+                renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                enableEmptySections={true}
+                onRowOpen={false}
+                leftOpenValue={0}
+                rightOpenValue={-75}
+                 />
             </Content>
           </Tab>
         </Tabs>
@@ -128,13 +145,17 @@ class FieldGroupScreen extends React.Component {
     }
   }
 
-  renderItem(address){
+  renderItem(address, secId, rowId, rowMap){
     address.visit = _.last(address.visits)
     return(
       <ListItem 
         icon 
         style={Layout.listHeight}
+        onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
         onPress={()=> {
+          if(address.hasOwnProperty('id')){
+            return false;
+          }
           Actions.locationModal({ 
             address: address,
             publicarea: this.props.publicarea,
@@ -160,6 +181,26 @@ class FieldGroupScreen extends React.Component {
         <Text style={styles.notfoundtitle}>Oh, não! Você não tem nehuma rua cadastrada.</Text>
         <Text note style={styles.notfoundnote}>Comece já a adicionar as localizações.</Text>
       </View>
+    )
+  }
+
+  renderRightHiddenRow(data, secId, rowId, rowMap){
+    if(data.hasOwnProperty("id")){
+      return(
+        <View></View>
+      )
+    } else{
+      return (
+        <Button danger onPress={ ()=> this._removeLocation(data, secId, rowId, rowMap) }>
+          <Icon active name="trash" />
+        </Button>
+      )
+    }
+  }
+
+  renderLeftHiddenRow(data, secId, rowId, rowMap){
+    return (
+      <View></View>
     )
   }
 
@@ -189,6 +230,12 @@ class FieldGroupScreen extends React.Component {
     }
   }
 
+  alertIfSyncAddress(){
+    return simpleToast("Endereço já sincronizados.")
+  }
+
+  // DELETE ACTIONS
+
   _removePublicArea(){
     Alert.alert(
     'Excluir Logradouro',
@@ -204,6 +251,29 @@ class FieldGroupScreen extends React.Component {
     );
   }
 
+  _removeLocation(address, secId, rowId, rowMap){
+    if(address.hasOwnProperty('id')){
+      return this.alertIfSyncAddress();
+    }
+
+    Alert.alert(
+      'Excluir Endereço',
+      'Você deseja realmente excluir este endereço? Suas visitas serão apagadas.',
+      [
+        {text: 'Não', onPress: () => false, style: 'cancel'},
+        {text: 'Sim', onPress: () => {
+          // Force close animate Row
+          rowMap[`${secId}${rowId}`].props.closeRow();          
+          // Dispatch Action
+          this.props.removeLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, address)
+        }},
+      ],
+      { cancelable: true }
+    )
+  }
+
+  // SEARCH BAR
+
   _onSearchExit(){
     this.setState({ addresses: this._getPublicArea().addresses});
     this.searchBar.hide()
@@ -215,6 +285,8 @@ class FieldGroupScreen extends React.Component {
     this.setState({addresses:  result})
   }
 
+  // Helpers Queries 
+
   _getPublicArea(){
     let { fieldGroups, fieldgroup, publicarea } = this.props;
     let result = _.chain(fieldGroups.data)
@@ -223,7 +295,28 @@ class FieldGroupScreen extends React.Component {
       .find(['$id', publicarea.$id]).value();
 
     return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta
-  }  
+  }
+
+  _getAddressVisited(){
+    let result = 
+      _.chain(this.state.addresses).filter((obj, key, array) => {
+        var lastVisit = _.chain(obj.visits).last().value()
+        return lastVisit && lastVisit.type != 'closed'
+      }).orderBy(['number']).value()
+      
+      return result
+    }
+    
+  _getAddressNotVisited(){
+    let result = 
+    _.chain(this.state.addresses)
+    .filter((obj, key, array) => {
+      var lastVisit = _.chain(obj.visits).last().value()
+      return ( lastVisit && lastVisit.type == 'closed' ) || _.isUndefined(lastVisit)
+    }).orderBy(['number']).value()
+
+    return result
+  }
 }
 
 const styles = {

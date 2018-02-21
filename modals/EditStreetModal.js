@@ -60,8 +60,6 @@ class EditStreetModal extends NewStreetModal {
     if(!this.state.address){
       return simpleToast("Logradouro vazio.")
     }
-
-    console.log(this.props.publicarea)
     
     this.props.editPublicArea(this.props.fieldgroup.$id, this.props.publicarea, this.state)
 
