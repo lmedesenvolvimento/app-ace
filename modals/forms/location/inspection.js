@@ -56,7 +56,7 @@ export class InspectionForm extends React.Component {
     super(props);
   }
 
-  componentDidMount(){    
+  componentWillMount(){    
     if(this.props.address){
       this.setState({ ...this.props.address.visit.inspect })
     }

@@ -221,7 +221,7 @@ class FieldGroupScreen extends React.Component {
           Actions.editStreetModal({
             hide: false,
             publicarea: this.props.publicarea,
-            fieldgroup: this.props.parent,
+            fieldgroup: this.props.fieldgroup,
           })
         }}>
           <Icon android="md-create" ios="ios-create" />

@@ -50,7 +50,7 @@ export class LocationForm extends React.Component {
     super(props);
   }
 
-  componentDidMount(){
+  componentWillMount(){
     let updates = {
       address: this.props.publicarea.address
     }

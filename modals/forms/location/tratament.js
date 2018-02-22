@@ -46,7 +46,7 @@ export class TratamentForm extends React.Component {
     super(props);
   }
 
-  componentDidMount(){    
+  componentWillMount(){    
     if(this.props.address){
       this.setState({...this.props.address.visit.treatment})
     }
@@ -98,6 +98,7 @@ export class TratamentForm extends React.Component {
                   <Label>Larvicida gramas</Label>
                   <Input 
                     keyboardType='numeric'
+                    value={this.state.adulticida_quantity.toString()}
                     onChangeText={(adulticida_quantity) => this.setState({adulticida_quantity})} 
                     onBlur={this.onBlurNumeralState.bind(this, 'adulticida_quantity')} />
                 </Item>
