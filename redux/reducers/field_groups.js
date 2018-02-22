@@ -1,6 +1,8 @@
 import * as _ from "lodash";
 import field_groups_types from '../types/field_groups_types';
 
+import { genSecureHex } from "../../services/SecureRandom";
+
 const initialState = {
   data: []
 }
@@ -13,7 +15,7 @@ export default function reducer(state = initialState, action){
       var { fieldGroupId, newData } = action.data;
 
       // Criando Id para novo Logradouro
-      newData.$id = _.uniqueId('public_area_')
+      newData.$id = genSecureHex()
       
       // Adicionando novo Logradouro
       _.find(state.data, ['$id', fieldGroupId]).public_areas.push(newData)
@@ -53,7 +55,7 @@ export default function reducer(state = initialState, action){
       var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
 
       // Criando um Array para novas visitas
-      newData.$id = _.uniqueId('address_')
+      newData.$id = genSecureHex()
       newData.visits = [newData.visit]
       
       // Adicionando nova Localização e Visita

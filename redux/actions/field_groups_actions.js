@@ -3,6 +3,8 @@ import Session from "../../services/Session";
 import Store from "../../constants/Store";
 
 import { client } from "../../services/ApolloClient";
+import { genSecureHex } from "../../services/SecureRandom";
+
 
 export function setFieldGroups(data){
   return {
@@ -86,19 +88,19 @@ export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
 }
 
 function createUniqueIdsForFieldGroups(field_group){
-  field_group.$id = _.uniqueId('field_group_')
+  field_group.$id = genSecureHex()
   field_group.public_areas.map(createUniqueIdsForPublicAreas)
   return field_group
 }
 
 function createUniqueIdsForPublicAreas(public_area){
-  public_area.$id = _.uniqueId('public_area_')
+  public_area.$id = genSecureHex()
   public_area.addresses.map(createUniqueIdsForAddresses)
   return public_area
 }
 
 function createUniqueIdsForAddresses(address){
-  address.$id = _.uniqueId('address_')
+  address.$id = genSecureHex()
   return address
 }
 

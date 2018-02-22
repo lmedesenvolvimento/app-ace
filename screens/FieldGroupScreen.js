@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, ListView } from 'react-native';
 
 import {
   Header,
@@ -54,6 +54,7 @@ class PublicAreaScreen extends React.Component {
 
   render() {
     let { currentUser } = this.props;
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
     return (
       <Container>
@@ -73,17 +74,18 @@ class PublicAreaScreen extends React.Component {
           </Right>
           <SearchBar
             ref={(ref) => this.searchBar = ref}
-            data={this.public_areas}
+            dataSource={this.public_areas}
             animate={false}
             placeholder="Pesquisar"
             handleSearch={(q)=> this._handleSearch(q)}
             onBack={ ()=> this._onSearchExit() } />
         </Header>
         <Content padder>
-          <List
-            dataArray={ this.state.public_areas }
-            renderRow={ (item, sectionID, rowID) => this.renderItem(item, sectionID, rowID) }
-            style={Layout.listMargin} />
+          <List style={Layout.listMargin}>
+            <ListView
+              dataSource={ ds.cloneWithRows(this.state.public_areas)}
+              renderRow={this.renderItem.bind(this) }/>
+          </List>
         </Content>
         <Fab
           direction="up"
