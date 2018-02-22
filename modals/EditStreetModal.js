@@ -20,6 +20,8 @@ import {
   Picker,
 } from 'native-base';
 
+import { Col, Row, Grid } from "react-native-easy-grid";
+
 import { NewStreetModal } from './NewStreetModal';
 
 
@@ -84,19 +86,47 @@ class EditStreetModal extends NewStreetModal {
           </Form>
         </Content>
         <Footer style={{backgroundColor:"white"}} padder>
-          <Left>
-            <Button transparent onPress={this.dismissModal}>
-              <Text>Cancelar</Text>
-            </Button>
-          </Left>
-          <Right>
-            <Button transparent onPress={ () => this.okModal() }>
-              <Text>Atualizar</Text>
-            </Button>
-          </Right>
+          <Grid>
+            <Row style={{ alignItems: 'center' }}>
+              <Col style={styles.col}>
+                <Button full transparent onPress={this.dismissModal}>
+                  <Text>Cancelar</Text>
+                </Button>
+              </Col>
+              <Col style={[styles.col, styles.colLeftBorder]}>
+                <Button full transparent onPress={ () => this.okModal() }>
+                  <Text>Atualizar</Text>
+                </Button>
+              </Col>
+            </Row>
+          </Grid>          
         </Footer>
       </Container>
     );
+  }
+}
+
+const styles = {
+  col:{
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  colLeftBorder:{
+    borderLeftWidth: 1,
+    borderLeftColor: "#eee"
+  },
+  progressItem:{
+    width: 32,
+    height: 16,
+    backgroundColor: 'grey'
+  },
+  progressItemActive: {
+    ...this.progressItem,
+    backgroundColor: 'orange'
+  },
+  progressItemComplete: {
+    ...this.progressItem,
+    backgroundColor: 'red'
   }
 }
 

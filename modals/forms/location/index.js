@@ -37,6 +37,7 @@ import { StepBars, Step } from './StepBars';
 export class LocationForm extends React.Component {
   state = {
     number: null,
+    complement: null,
     check_in: moment().format('HH:mm'),
     type: 'normal',
     type_location: 'residential',
@@ -59,6 +60,7 @@ export class LocationForm extends React.Component {
       let { address } = this.props
 
       updates.number = address.number
+      updates.complement = address.complement
       updates.type = address.visit.type
       updates.type_location = address.visit.type_location
       updates.check_in = address.visit.type == 'closed' ? moment().format('HH:mm') : address.visit.check_in
@@ -184,7 +186,7 @@ export class LocationForm extends React.Component {
 
   applyStartDateMask(check_in){
     check_in = check_in.replace(':','')
-    let result = new StringMask("00:00").apply(check_in)
+    let result = new ("00:00").apply(check_in)
     // Is nesscessary for clean field
     this.setState({ check_in: result });
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, View } from 'react-native';
 
 import {
   Header,
@@ -22,7 +22,7 @@ import {
 
 import Swiper from 'react-native-swiper';
 
-import Theme from '../constants/Theme';
+import Colors from '../constants/Layout';
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
@@ -40,6 +40,7 @@ import { ObservationForm } from './forms/location/observation';
 
 export class FormLocationModal extends React.Component {
   state = {
+    isReady: false,
     number: null,
     complement: null,
     visit: {
@@ -56,29 +57,42 @@ export class FormLocationModal extends React.Component {
     super(props);
   }  
 
+  componentDidMount(){
+    // Melhora a peformace do Swiper
+    setTimeout( () => this.setState({ isReady: true }), 600 )
+  }
+
   render() {
-    return (
-      <Swiper
-        ref={ (component) => this.swiper = component }
-        loop={false}
-        style={styles.wrapper}
-        scrollEnabled={false}
-        showsPagination={false}
-        showsButtons={false}>
-        <View style={styles.slide}>
-          <LocationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onLocationFormSubmit} />
+    if(this.state.isReady){
+      return (
+        <Swiper
+          ref={ (component) => this.swiper = component }
+          loop={false}
+          style={styles.wrapper}
+          scrollEnabled={false}
+          showsPagination={false}
+          showsButtons={false}>
+          <View style={styles.slide}>
+            <LocationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onLocationFormSubmit} />
+          </View>
+          <View style={styles.slide}>
+            <InspectionForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
+          </View>
+          <View style={styles.slide}>
+            <TratamentForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onTratamentFormSubmit} />
+          </View>
+          <View style={styles.slide}>
+            <ObservationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onObservationFormSubmit} />
+          </View>
+        </Swiper>
+      );
+    } else{
+      return (
+        <View style={styles.spinnerContainer}>
+          <ActivityIndicator size={64} color={Colors.accentColor} />
         </View>
-        <View style={styles.slide}>
-          <InspectionForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
-        </View>
-        <View style={styles.slide}>
-          <TratamentForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onTratamentFormSubmit} />
-        </View>
-        <View style={styles.slide}>
-          <ObservationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onObservationFormSubmit} />
-        </View>
-      </Swiper>
-    );
+      )
+    }
   }
 
   okModal(){
@@ -142,10 +156,12 @@ export class FormLocationModal extends React.Component {
 
     this.setState(updates)
 
+    let newData = _.omit(this.state, ['isReady'])
+
     if(address){
-      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, this.state)
+      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData)
     } else{
-      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.state)
+      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData)
     }
 
 
@@ -157,6 +173,12 @@ const styles = {
   wrapper: {},
   slide: {
     flex: 1
+  },
+  spinnerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    padding: 8
   }
 }
 
