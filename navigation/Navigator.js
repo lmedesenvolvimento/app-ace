@@ -32,6 +32,9 @@ import EditStreetModal from '../modals/EditStreetModal';
 import FormLocationModal from '../modals/FormLocationModal';
 import PublicAreaScreen from '../screens/PublicAreaScreen';
 
+// Sync Flux
+import SynchronizeModal from '../modals/SynchronizeModal';
+
 const RouterWithRedux = connect()(Router);
 
 Store.instance = configureStore()
@@ -48,7 +51,12 @@ class Navigator extends Component {
     if (this.whitelistExitApp.includes(Actions.currentScene) && Actions.state.index === 0) {
       return false;
     }
-    Actions.pop();
+    else if (Actions.currentScene == "syncModal"){
+      return false;
+    } 
+    else{
+      Actions.pop();
+    }
     return true;
   }
 
@@ -106,8 +114,9 @@ class Navigator extends Component {
               </Scene>
 
               {/* MODALS*/}
-              <Scene key="newStreetModal"  component={NewStreetModal} modal title="Novo Logradouro"  hideNavBar />
-              <Scene key="editStreetModal" component={EditStreetModal} modal title="Editar Logradouro" hideNavBar />
+              <Scene key="syncDataModal" component={SynchronizeModal} modal title="Sincronizando Informações" hideNavBar />
+              <Scene key="newStreetModal"  component={NewStreetModal}    modal title="Novo Logradouro"   hideNavBar />
+              <Scene key="editStreetModal" component={EditStreetModal}   modal title="Editar Logradouro" hideNavBar />
               <Scene key="locationModal"   component={FormLocationModal} modal title="Editar Logradouro" hideNavBar />
               {/* END MODALS*/}
             </Modal>

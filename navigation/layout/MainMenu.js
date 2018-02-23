@@ -57,6 +57,7 @@ class MainMenu extends Component {
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
               </Body>
             </ListItem>
+            { this._renderSyncItem() }
           </List>
         </Content>
       </Container>
@@ -68,6 +69,18 @@ class MainMenu extends Component {
   }
   _defineItemTextStyle(key){
     return this.props.activeItemKey == key ? styles.listItemActiveText : styles.listItemText
+  }
+
+  _renderSyncItem(){
+    if (this.props.state.network.isConnected){
+      return(
+        <ListItem style={this._defineItemStyle('about')} last onPress={_ => Actions.syncDataModal()}>
+          <Body>
+            <Text style={this._defineItemTextStyle('about')}>Sincronizar Informações</Text>
+          </Body>
+        </ListItem>
+      );
+    }
   }
 }
 
@@ -110,3 +123,16 @@ function mapDispatchToProps(dispatch, ownProps){
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainMenu)
+
+
+// {
+//   this.props.state.network.isConnected ? (
+//     <ListItem style={this._defineItemStyle('about')} last onPress={_ => Actions.syncDataModal()}>
+//       <Body>
+//         <Text style={this._defineItemTextStyle('about')}>Sincronizar Informações</Text>
+//       </Body>
+//     </ListItem>
+//   ) : (
+//     false
+//   )
+// }
