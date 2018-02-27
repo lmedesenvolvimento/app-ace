@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 import field_groups_types from '../types/field_groups_types';
-
 import { genSecureHex } from "../../services/SecureRandom";
+import { VisitType, VisitTypeLocation } from "../../types/visit";
 
 const initialState = {
   data: []
@@ -74,9 +74,13 @@ export default function reducer(state = initialState, action){
       var indexOfAddress = getLocationIndex(state, action, record.$id)
 
       // Se a visita for fechada ou se a visita anterior for fechada adiciona mais uma visita ao endereço
-      if( newData.visit.type == 'closed' || _.last(record.visits).type == 'closed' ){
+      if( newData.visit.type == VisitType.closed || _.last(record.visits).type == VisitType.closed ){
         newData.visits = _.clone(record.visits)
         newData.visits.push(newData.visit)
+      } else{
+        // Mesclando alterações da última visíta
+        var lastVisitIndex = _.findLastIndex(record.visits)
+        record.visits[lastVisitIndex] = newData.visit
       }
 
       // Atualizando Localização e Visita

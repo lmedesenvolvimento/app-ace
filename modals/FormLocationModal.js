@@ -121,7 +121,7 @@ export class FormLocationModal extends React.Component {
 
     updates.visit.type = data.type
     updates.visit.check_in = data.check_in
-    updates.visit.type_location = data.type_location    
+    updates.visit.type_location = data.type_location   
 
     this.setState(updates);
   }
@@ -163,7 +163,6 @@ export class FormLocationModal extends React.Component {
     } else{
       this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData)
     }
-
 
     this.onCancel()
   }

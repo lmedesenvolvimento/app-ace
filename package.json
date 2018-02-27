@@ -22,6 +22,7 @@
     "apollo-client": "^2.2.0",
     "apollo-fetch": "^0.7.0",
     "expo": "^23.0.4",
+    "moment-timezone": "^0.5.14",
     "native-base": "^2.3.5",
     "numeral": "^2.0.6",
     "react": "16.0.0",

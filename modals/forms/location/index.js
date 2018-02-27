@@ -26,6 +26,7 @@ import { Col, Row, Grid } from "react-native-easy-grid";
 
 import StringMask from 'string-mask';
 import moment from 'moment';
+import momentTimezone from "moment-timezone";
 
 import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
@@ -34,21 +35,24 @@ import { simpleToast } from '../../../services/Toast';
 
 import { StepBars, Step } from './StepBars';
 
+import { VisitType, VisitTypeLocation } from '../../../types/visit';
+
 export class LocationForm extends React.Component {
   state = {
     number: null,
     complement: null,
-    check_in: moment().format('HH:mm'),
-    type: 'normal',
+    check_in: moment(),
+    type: VisitType.normal,
     type_location: 'residential',
     validation: {
       number: false,
-      check_in: false
+      check_in_translate: false
     }
   }  
 
   constructor(props){
     super(props);
+    this.state.check_in_translate = this.state.check_in.format('HH:mm')
   }
 
   componentWillMount(){
@@ -63,7 +67,8 @@ export class LocationForm extends React.Component {
       updates.complement = address.complement
       updates.type = address.visit.type
       updates.type_location = address.visit.type_location
-      updates.check_in = address.visit.type == 'closed' ? moment().format('HH:mm') : address.visit.check_in
+      updates.check_in = address.visit.type == VisitType.closed ? moment() : moment(address.visit.check_in)
+      updates.check_in_translate = updates.check_in.format('HH:mm')
     }
 
     this.setState(updates)
@@ -106,12 +111,12 @@ export class LocationForm extends React.Component {
                 </Item>
               </Col>
               <Col size={33}>
-                <Item floatingLabel error={this.state.validation.check_in}>
+                <Item floatingLabel error={this.state.validation.check_in_translate}>
                   <Label>Entrada</Label>
                   <Input
-                    value={this.state.check_in}
+                    value={this.state.check_in_translate}
                     keyboardType='numeric'
-                    onChangeText={ (check_in) => this.applyStartDateMask(check_in) } />
+                    onChangeText={ this.applyStartDateMask.bind(this) } />
                 </Item>
               </Col>
             </Grid>
@@ -125,11 +130,11 @@ export class LocationForm extends React.Component {
                   supportedOrientations={['portrait','landscape']}
                   iosHeader="Selecione um"
                   mode="dropdown">
-                  <Item label="Residencial" value='residential' />
-                  <Item label="Comércio" value='commerce' />
-                  <Item label="Terreno baldio" value='wasteland' />
-                  <Item label="Ponto Estratégico" value='strategic_point' />
-                  <Item label="Outros" value='others' />
+                  <Item label="Residencial" value={VisitTypeLocation.residential} />
+                  <Item label="Comércio" value={VisitTypeLocation.commerce} />
+                  <Item label="Terreno baldio" value={VisitTypeLocation.wasteland} />
+                  <Item label="Ponto Estratégico" value={VisitTypeLocation.strategic_point} />
+                  <Item label="Outros" value={VisitTypeLocation.others} />
                 </Picker>
               </Col>
             </Grid>
@@ -143,10 +148,10 @@ export class LocationForm extends React.Component {
                   supportedOrientations={['portrait','landscape']}
                   iosHeader="Selecione um"
                   mode="dropdown">
-                  <Item label="Normal" value='normal' />
-                  <Item label="Recuperada" value='recovered' />
-                  <Item label="Fechada" value='closed' />
-                  <Item label="Recusada" value='refused' />
+                  <Item label="Normal" value={VisitType.normal} />
+                  <Item label="Recuperada" value={VisitType.recovered} />
+                  <Item label="Fechada" value={VisitType.closed} />
+                  <Item label="Recusada" value={VisitType.refused} />
                 </Picker>
               </Col>
             </Grid>
@@ -176,27 +181,37 @@ export class LocationForm extends React.Component {
     if(this.isInvalid()){
       Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
     } else {
+      // Covert check_in string to Timestamp
+      time = this.state.check_in_translate.split(':')
+      
+      this.state.check_in.set({
+        h: time[0],
+        m: time[1]
+      })
+
+      this.state.check_in = momentTimezone.tz(this.state.check_in, "America/Sao_paulo").format()
+
       // Pass form value parent component
-      let state = _.omit(this.state,['validation'])
+      let state = _.omit(this.state,['validation','check_in_translate'])
       this.props.onSubmit(state)
       // Next step
       this.props.scrollBy(1)
     }
   }
 
-  applyStartDateMask(check_in){
-    check_in = check_in.replace(':','')
-    let result = new ("00:00").apply(check_in)
+  applyStartDateMask(check_in_translate){
+    check_in_translate = check_in_translate.replace(':','')
+    let result = new StringMask("00:00").apply(check_in_translate)
     // Is nesscessary for clean field
-    this.setState({ check_in: result });
+    this.setState({ check_in_translate: result });
   }
 
   isInvalid(){
-    const { number, check_in } = this.state;
+    const { number, check_in_translate } = this.state;
 
     this.state.validation = {
       number: _.isEmpty(number),
-      check_in: _.isEmpty(check_in),
+      check_in_translate: _.isEmpty(check_in_translate),
     }
 
     // Update view
