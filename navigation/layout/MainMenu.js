@@ -57,11 +57,6 @@ class MainMenu extends Component {
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
               </Body>
             </ListItem>
-            <ListItem last onPress={this.shareCurrentState.bind(this)}>
-              <Body>
-                <Text style={this._defineItemTextStyle('about')}>Compartilhar Estado da Aplicação</Text>
-              </Body>
-            </ListItem>
             { this._renderSyncItem() }
           </List>
         </Content>
@@ -86,9 +81,9 @@ class MainMenu extends Component {
   _renderSyncItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('about')} last onPress={_ => Actions.syncDataModal()}>
+        <ListItem style={this._defineItemStyle('syncDataModal')} last onPress={_ => Actions.syncDataModal()}>
           <Body>
-            <Text style={this._defineItemTextStyle('about')}>Sincronizar Informações</Text>
+            <Text style={this._defineItemTextStyle('syncDataModal')}>Sincronizar Informações</Text>
           </Body>
         </ListItem>
       );

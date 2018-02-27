@@ -84,6 +84,7 @@ class PublicAreaScreen extends React.Component {
           <List style={Layout.listMargin}>
             <ListView
               dataSource={ ds.cloneWithRows(this.state.public_areas)}
+              enableEmptySections={true}
               renderRow={this.renderItem.bind(this) }/>
           </List>
         </Content>

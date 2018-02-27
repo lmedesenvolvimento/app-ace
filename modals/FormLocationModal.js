@@ -59,7 +59,7 @@ export class FormLocationModal extends React.Component {
 
   componentDidMount(){
     // Melhora a peformace do Swiper
-    setTimeout( () => this.setState({ isReady: true }), 600 )
+    setTimeout( () => this.setState({ isReady: true }), 200 )
   }
 
   render() {

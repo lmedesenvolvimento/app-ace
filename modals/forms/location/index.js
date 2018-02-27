@@ -43,7 +43,7 @@ export class LocationForm extends React.Component {
     complement: null,
     check_in: moment(),
     type: VisitType.normal,
-    type_location: 'residential',
+    type_location: VisitTypeLocation.residential,
     validation: {
       number: false,
       check_in_translate: false

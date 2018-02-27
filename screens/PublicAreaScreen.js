@@ -117,6 +117,7 @@ class FieldGroupScreen extends React.Component {
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                enableEmptySections={true}
                 onRowOpen={false}
                 leftOpenValue={0}
                 rightOpenValue={-75}

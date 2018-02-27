@@ -35,9 +35,11 @@ import { simpleToast } from '../../../services/Toast';
 
 import { StepBars, Step } from './StepBars';
 
+import { TreatmentType } from "../../../types/treatment";
+
 export class TratamentForm extends React.Component {
   state = {
-    type: 'larvicida',
+    type: TreatmentType.larvicida,
     quantity: 0.0,
     adulticida_quantity: 0.0
   }
@@ -88,7 +90,7 @@ export class TratamentForm extends React.Component {
                   supportedOrientations={['portrait','landscape']}
                   iosHeader="Selecione um"
                   mode="dropdown">
-                  <Item label="Larvícida" value='larvicida' />                  
+                  <Item label="Larvícida" value={TreatmentType.larvicida} />                  
                 </Picker>
               </Col>
             </Grid>
