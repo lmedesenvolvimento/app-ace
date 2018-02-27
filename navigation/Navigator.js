@@ -51,8 +51,8 @@ class Navigator extends Component {
     if (this.whitelistExitApp.includes(Actions.currentScene) && Actions.state.index === 0) {
       return false;
     }
-    else if (Actions.currentScene == "syncModal"){
-      return false;
+    else if (Actions.currentScene == "syncDataModal"){
+      Actions.pop();
     } 
     else{
       Actions.pop();
@@ -114,10 +114,10 @@ class Navigator extends Component {
               </Scene>
 
               {/* MODALS*/}
-              <Scene key="syncDataModal" component={SynchronizeModal} modal title="Sincronizando Informações" hideNavBar />
-              <Scene key="newStreetModal"  component={NewStreetModal}    modal title="Novo Logradouro"   hideNavBar />
-              <Scene key="editStreetModal" component={EditStreetModal}   modal title="Editar Logradouro" hideNavBar />
-              <Scene key="locationModal"   component={FormLocationModal} modal title="Editar Logradouro" hideNavBar />
+              <Scene key="syncDataModal"   component={ SynchronizeModal }  modal title="Sincronizando Informações" hideNavBar />
+              <Scene key="newStreetModal"  component={ NewStreetModal }    modal title="Novo Logradouro"   hideNavBar />
+              <Scene key="editStreetModal" component={ EditStreetModal }   modal title="Editar Logradouro" hideNavBar />
+              <Scene key="locationModal"   component={ FormLocationModal } modal title="Editar Logradouro" hideNavBar />
               {/* END MODALS*/}
             </Modal>
           </RouterWithRedux>

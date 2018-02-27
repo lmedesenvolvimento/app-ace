@@ -1,6 +1,6 @@
+import { MaterialIcons } from '@expo/vector-icons';
 import React from 'react';
-import { Platform, ProgressBarAndroid, ProgressViewIOS } from 'react-native';
-import { View } from 'react-native-animatable';
+import { View, Platform } from 'react-native';
 
 import {
     Header,
@@ -17,31 +17,21 @@ import {
     Label,
     Item,
     Input,
-    Icon,
     Body,
     Button,
     Picker,
 } from 'native-base';
 
-import Colors from '../constants/Layout';
-import Layout from '../constants/Layout';
+import Colors from '../../constants/Layout';
+import Layout from '../../constants/Layout';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
+import ReduxActions from "../../redux/actions";
 
-import AwaitStatus from "./synchronize-status/AwaitStatus";
-import OkStatus from "./synchronize-status/OkStatus";
-import FailStatus from "./synchronize-status/FailStatus";
-import SynchronizingStatus from "./synchronize-status/SynchronizingStatus";
-
-export class SynchronizeModal extends React.Component {
-    state = {
-      progress: 0.3
-    }
-
+class FailStatus extends React.Component {
     constructor(props){
       super(props);
     }
@@ -49,14 +39,22 @@ export class SynchronizeModal extends React.Component {
     render(){
       return(
         <Container>
-          <Content>
-            <AwaitStatus />
-            <SynchronizingStatus progress={this.state.progress} />
-            <FailStatus />
-            <OkStatus />
-          </Content>
-        </Container>
-    )
+          <View style={styles.container}>
+            <View style={styles.statusContainer}>
+              <H1 style={styles.textCenter}>Falha Sincronização</H1>
+            </View>
+            <View>
+              <MaterialIcons name="cloud-off" style={styles.syncIcon} />
+            </View>
+            <View style={styles.statusContainer}>
+              <Text style={styles.textCenter} note>Não foi possível terminar sua sincronização por favor tente novamente.</Text>
+              <Button light full style={Layout.marginVertical} onPress={Actions.pop.bind(this)}>
+                <Text>Tentar novamente</Text>
+              </Button>
+            </View>            
+          </View>
+      </Container>
+    );
   }
 }
 
@@ -103,7 +101,7 @@ const styles = {
 function mapStateToProps(state) {
     return {
         state: {
-            currentUser: state.currentUser,
+            network: state.net,
             fieldGroups: state.fieldGroups
         }
     }
@@ -113,4 +111,4 @@ function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SynchronizeModal);
+export default connect(({network}) => ({network}))(FailStatus)

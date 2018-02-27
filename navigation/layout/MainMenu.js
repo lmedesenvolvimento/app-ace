@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Share } from 'react-native';
 import { Actions } from "react-native-router-flux";
 
 import { bindActionCreators } from "redux";
@@ -46,15 +46,20 @@ class MainMenu extends Component {
               </Body>
             </ListItem>
 
-            <ListItem style={this._defineItemStyle('profile')} last onPress={_=> Actions.profile()}>
+            <ListItem style={this._defineItemStyle('profile')}  onPress={_=> Actions.profile()}>
               <Body>
                 <Text style={this._defineItemTextStyle('profile')}>Perfil</Text>
               </Body>
             </ListItem>
 
-            <ListItem style={this._defineItemStyle('about')} last onPress={_=> Actions.about()}>
+            <ListItem style={this._defineItemStyle('about')} onPress={_=> Actions.about()}>
               <Body>
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
+              </Body>
+            </ListItem>
+            <ListItem last onPress={this.shareCurrentState.bind(this)}>
+              <Body>
+                <Text style={this._defineItemTextStyle('about')}>Compartilhar Estado da Aplicação</Text>
               </Body>
             </ListItem>
             { this._renderSyncItem() }
@@ -62,6 +67,13 @@ class MainMenu extends Component {
         </Content>
       </Container>
     );
+  }
+
+  shareCurrentState(){
+    Share.share({
+      title: "Estado da Aplicação",
+      message: JSON.stringify(this.props.state.fieldGroups.data)
+    })
   }
 
   _defineItemStyle(key){
@@ -113,6 +125,7 @@ function mapStateToProps(state) {
   return {
     state: {
       currentUser: state.currentUser,
+      fieldGroups: state.fieldGroups,
       network: state.network
     }
   }
@@ -123,16 +136,3 @@ function mapDispatchToProps(dispatch, ownProps){
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainMenu)
-
-
-// {
-//   this.props.state.network.isConnected ? (
-//     <ListItem style={this._defineItemStyle('about')} last onPress={_ => Actions.syncDataModal()}>
-//       <Body>
-//         <Text style={this._defineItemTextStyle('about')}>Sincronizar Informações</Text>
-//       </Body>
-//     </ListItem>
-//   ) : (
-//     false
-//   )
-// }

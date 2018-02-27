@@ -28,7 +28,7 @@ function configCredentials(credential, callback){
     Session.Storage.get(credential.email).then((response)=>{
       // If Storage is empty
       if(!response){
-        Session.Storage.create(credential.email, Session.Storage.initialState).then(()=>{
+        Session.Storage.create(credential.email, Session.Storage.initialState).then(() => {
           return callback ? callback() : false
         })
       } else{

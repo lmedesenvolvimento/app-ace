@@ -1,6 +1,6 @@
 import React from 'react';
-import { Platform, ProgressBarAndroid, ProgressViewIOS } from 'react-native';
-import { View } from 'react-native-animatable';
+import { View, Platform } from 'react-native';
+
 
 import {
     Header,
@@ -23,25 +23,18 @@ import {
     Picker,
 } from 'native-base';
 
-import Colors from '../constants/Layout';
-import Layout from '../constants/Layout';
+import { Col, Row, Grid } from "react-native-easy-grid";
+
+import Colors from '../../constants/Layout';
+import Layout from '../../constants/Layout';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
+import ReduxActions from "../../redux/actions";
 
-import AwaitStatus from "./synchronize-status/AwaitStatus";
-import OkStatus from "./synchronize-status/OkStatus";
-import FailStatus from "./synchronize-status/FailStatus";
-import SynchronizingStatus from "./synchronize-status/SynchronizingStatus";
-
-export class SynchronizeModal extends React.Component {
-    state = {
-      progress: 0.3
-    }
-
+class AwaitStatus extends React.Component {
     constructor(props){
       super(props);
     }
@@ -49,14 +42,24 @@ export class SynchronizeModal extends React.Component {
     render(){
       return(
         <Container>
-          <Content>
-            <AwaitStatus />
-            <SynchronizingStatus progress={this.state.progress} />
-            <FailStatus />
-            <OkStatus />
-          </Content>
-        </Container>
-    )
+          <View style={styles.container}>
+            <View style={styles.statusContainer}>
+              <H3 style={[styles.textCenter, Layout.marginVertical16]}>Deseja sincronizar suas informações?</H3>
+              <Text style={styles.textCenter} note>Este processo pode levar alguns minutos</Text>
+              <Grid style={[{ maxHeight: 200 },Layout.marginVertical]}>
+                <Col>
+                  <Button full onPress={Actions.pop.bind(this)}>
+                    <Text>Sincronizar Agora</Text>
+                  </Button>
+                  <Button light full style={Layout.marginVertical} onPress={Actions.pop.bind(this)}>
+                    <Text>Voltar</Text>
+                  </Button>
+                </Col>
+              </Grid>              
+            </View>            
+          </View>
+      </Container>
+    );
   }
 }
 
@@ -103,7 +106,7 @@ const styles = {
 function mapStateToProps(state) {
     return {
         state: {
-            currentUser: state.currentUser,
+            network: state.net,
             fieldGroups: state.fieldGroups
         }
     }
@@ -113,4 +116,4 @@ function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(SynchronizeModal);
+export default connect(({network}) => ({network}))(AwaitStatus)
