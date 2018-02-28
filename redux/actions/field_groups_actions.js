@@ -26,7 +26,7 @@ export function getFieldGroups(){
       client(gql_get_field_groups)
       .then((response) => {
         // Criando ids únicos para todas as entidades recebidos
-        let field_groups = response.data.field_groups.map(createUniqueIdsForFieldGroups);
+        let field_groups = response.data.field_groups.map(createUniqueIds);
         // Enviando para Store
         dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
         // Guardando Alterações no Banco
@@ -87,9 +87,11 @@ export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
   }
 }
 
-function createUniqueIdsForFieldGroups(field_group){
+function createUniqueIds(mapping){
+  let { field_group } = mapping
   field_group.$id = genSecureHex()
-  field_group.public_areas.map(createUniqueIdsForPublicAreas)
+  field_group.mapping_id = mapping.id
+  field_group.public_areas.map(createUniqueIdsForPublicAreas.bind(this))
   return field_group
 }
 
@@ -111,23 +113,27 @@ function commit(getState){
 
 let gql_get_field_groups = {
   query:`query {
-    field_groups {
+    mappings{
       id,
-      name,
-    	neighborhood {
-        name
-      },
-      public_areas {
+      cycle_id,
+      field_group {
         id,
-      	address,
-        addresses,
-        {
+        name,
+        neighborhood {
+          name
+        },
+        public_areas {
           id,
-          number,
-          complement,
-          visits{
-            type,
-            check_in
+          address,
+          addresses,
+          {
+            id,
+            number,
+            complement,
+            visits{
+              type,
+              check_in
+            }
           }
         }
       }
