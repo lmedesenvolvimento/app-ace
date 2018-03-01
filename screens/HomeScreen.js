@@ -60,14 +60,19 @@ class HomeScreen extends React.Component {
   }
 
   renderItem(item, sectionID, rowID){
+    let { field_group } = item
+    
+    // Pass item id for field_group
+    field_group.$id = item.$id
+
     return(
-      <ListItem icon onPress={()=> Actions.fieldgroup({fieldgroup: item, title: item.name, public_areas: item.public_areas})} style={Layout.listHeight}>
+      <ListItem icon onPress={()=> Actions.fieldgroup({fieldgroup: field_group, title: field_group.name, public_areas: field_group.public_areas})} style={Layout.listHeight}>
         <Left>
           <Icon name='map' size={36} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>{item.name}</Text>
-          <Text note>{ item.neighborhood.name }</Text>
+          <Text>{field_group.name}</Text>
+          <Text note>{ field_group.neighborhood.name }</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />

@@ -26,7 +26,7 @@ export function getFieldGroups(){
       client(gql_get_field_groups)
       .then((response) => {
         // Criando ids únicos para todas as entidades recebidos
-        let field_groups = response.data.field_groups.map(createUniqueIds);
+        let field_groups = response.data.mappings.map(createUniqueIds);
         // Enviando para Store
         dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
         // Guardando Alterações no Banco
@@ -89,10 +89,12 @@ export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
 
 function createUniqueIds(mapping){
   let { field_group } = mapping
-  field_group.$id = genSecureHex()
+
+  mapping.$id = genSecureHex()
+  
   field_group.mapping_id = mapping.id
   field_group.public_areas.map(createUniqueIdsForPublicAreas.bind(this))
-  return field_group
+  return mapping
 }
 
 function createUniqueIdsForPublicAreas(public_area){

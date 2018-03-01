@@ -18,7 +18,7 @@ export default function reducer(state = initialState, action){
       newData.$id = genSecureHex()
       
       // Adicionando novo Logradouro
-      _.find(state.data, ['$id', fieldGroupId]).public_areas.push(newData)
+      _.find(state.data, ['$id', fieldGroupId]).field_group.public_areas.push(newData)
 
       return { ...state, data: state.data };
 
@@ -31,6 +31,7 @@ export default function reducer(state = initialState, action){
       
       state
       .data[indexOfFieldGroup]
+      .field_group
       .public_areas[indexOfPublicArea] = { ...record, ...newData };
       
       return { ...state, data: state.data };
@@ -44,6 +45,7 @@ export default function reducer(state = initialState, action){
       // Deletando Logradouro
       state
         .data[indexOfFieldGroup]
+        .field_group
         .public_areas.splice(indexOfPublicArea, 1);
 
       return { ...state, data: state.data };
@@ -64,6 +66,7 @@ export default function reducer(state = initialState, action){
       // Adicionando nova Localização e Visita
       state
         .data[indexOfFieldGroup]
+        .field_group
         .public_areas[indexOfPublicArea]
         .addresses.push( _.omit(newData, ['visit']) )       
 
@@ -92,6 +95,7 @@ export default function reducer(state = initialState, action){
       // Atualizando Localização e Visita
       state
         .data[indexOfFieldGroup]
+        .field_group
         .public_areas[indexOfPublicArea]
         .addresses[indexOfAddress] = { ..._.omit(record,  ['visit']), ..._.omit(newData, ['visit']) };
 
@@ -107,6 +111,7 @@ export default function reducer(state = initialState, action){
       // Deletando Endereço
       state
         .data[indexOfFieldGroup]
+        .field_group
         .public_areas[indexOfPublicArea]
         .addresses.splice(indexOfAddress, 1)
 
@@ -123,7 +128,7 @@ function getPublicAreaIndex(state, action, index){
   
   let result = _.chain(state.data)
     .find(['$id', fieldGroupId])
-    .get('public_areas')
+    .get('field_group.public_areas')
     .findIndex(['$id', index])
     .value()
 
@@ -136,7 +141,7 @@ function getLocationIndex(state, action, index){
   
   let result = _.chain(state.data)
     .find(['$id', fieldGroupId])
-    .get('public_areas')
+    .get('field_group.public_areas')
     .find(['$id', publicareaId])
     .get('addresses')
     .findIndex(['$id', index])

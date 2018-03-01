@@ -290,7 +290,7 @@ class FieldGroupScreen extends React.Component {
     let { fieldGroups, fieldgroup, publicarea } = this.props;
     let result = _.chain(fieldGroups.data)
       .find(['$id', fieldgroup.$id])
-      .get("public_areas")
+      .get("field_group.public_areas")
       .find(['$id', publicarea.$id]).value();
 
     return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta

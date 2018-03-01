@@ -181,9 +181,13 @@ export class LocationForm extends React.Component {
     if(this.isInvalid()){
       Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
     } else {
+      // Force instance momment
+      this.state.check_in = moment(this.state.check_in)
+      
       // Covert check_in string to Timestamp
       time = this.state.check_in_translate.split(':')
-      
+    
+      // set for translate check_i date
       this.state.check_in.set({
         h: time[0],
         m: time[1]

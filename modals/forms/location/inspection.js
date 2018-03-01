@@ -49,7 +49,9 @@ export class InspectionForm extends React.Component {
     e:  0,
     total_items: 0,
     collected: 0,
-    removed: 0
+    removed: 0,
+    start_number: '',
+    end_number: ''
   }
 
   constructor(props){
@@ -155,35 +157,49 @@ export class InspectionForm extends React.Component {
                 <Grid>
                   <Col>
                     <Item floatingLabel>
-                      <Label>Nº de depósitos inspecionados</Label>
+                      <Label>Inspecionados</Label>
                       <Input value={this.state.total_items.toString()} keyboardType='numeric' disabled={true}/>
+                    </Item>
+                  </Col>
+                  <Col>
+                    <Item floatingLabel>
+                      <Label>Eliminados</Label>
+                      <Input 
+                        keyboardType='numeric' 
+                        value={this.state.removed.toString()} 
+                        onChangeText={(removed) => this.setState({removed} )}
+                        onBlur={this.onBlurNumeralState.bind(this, 'removed')}
+                      />
                     </Item>
                   </Col>
                 </Grid>
 
                 <Grid>
                   <Col>
+                    <Text style={[Layout.marginHorizontal, { color: Colors.primaryColor, marginTop: 16 }]}>Amostras</Text>
+                  </Col>
+                </Grid>                           
+
+                <Grid>
+                  <Col>
                     <Item floatingLabel>
-                      <Label>Nº de amotras coletadas</Label>
+                      <Label>Início</Label>
                       <Input 
                         keyboardType='numeric' 
-                        value={this.state.collected.toString()} 
-                        onChangeText={(collected) => this.setState({collected} )}
-                        onBlur={this.onBlurNumeralState.bind(this, 'collected')}
+                        value={this.state.start_number.toString()} 
+                        onChangeText={(start_number) => this.setState({start_number} )}
+                        onBlur={this.onBlurNumeralState.bind(this, 'start_number')}
                       />
                     </Item>
                   </Col>
-                </Grid>
-
-                <Grid style={styles.lastField}>
                   <Col>
                     <Item floatingLabel>
-                      <Label>Nº de depósitos eliminados</Label>
+                      <Label>Fim</Label>
                       <Input 
                         keyboardType='numeric' 
-                        value={this.state.removed.toString()} 
-                        onChangeText={(removed) => this.setState({removed} )}
-                        onBlur={this.onBlurNumeralState.bind(this, 'removed')}
+                        value={this.state.end_number.toString()} 
+                        onChangeText={(end_number) => this.setState({end_number} )}
+                        onBlur={this.onBlurNumeralState.bind(this, 'end_number')}
                       />
                     </Item>
                   </Col>
