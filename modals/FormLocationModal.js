@@ -48,6 +48,7 @@ export class FormLocationModal extends React.Component {
       type_location: null,
       check_in: null,
       observation: null,
+      sample: {},
       inspect: {},
       treatment: {},
     }
@@ -121,7 +122,7 @@ export class FormLocationModal extends React.Component {
 
     updates.visit.type = data.type
     updates.visit.check_in = data.check_in
-    updates.visit.type_location = data.type_location   
+    updates.visit.type_location = data.type_location    
 
     this.setState(updates);
   }
@@ -131,7 +132,12 @@ export class FormLocationModal extends React.Component {
       visit: this.state.visit
     }
     
-    updates.visit.inspect = data
+    updates.visit.inspect = _.omit(data, ['start_number', 'end_number'])
+    
+    updates.visit.sample = {
+      end_number: data.end_number,
+      start_number: data.start_number
+    }
     
     this.setState(updates);
   }
@@ -141,7 +147,7 @@ export class FormLocationModal extends React.Component {
       visit: this.state.visit
     }
     
-    updates.visit.treatment = data
+    updates.visit.treatment = data    
     
     this.setState(updates);
   }

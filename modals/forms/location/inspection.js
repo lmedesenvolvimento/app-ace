@@ -50,8 +50,12 @@ export class InspectionForm extends React.Component {
     total_items: 0,
     collected: 0,
     removed: 0,
-    start_number: '',
-    end_number: ''
+    start_number: null,
+    end_number: null,
+    validation:{
+      start_number: false,
+      end_number: false
+    }
   }
 
   constructor(props){
@@ -182,22 +186,22 @@ export class InspectionForm extends React.Component {
 
                 <Grid>
                   <Col>
-                    <Item floatingLabel>
+                    <Item floatingLabel error={this.state.validation.start_number}>
                       <Label>Início</Label>
                       <Input 
                         keyboardType='numeric' 
-                        value={this.state.start_number.toString()} 
+                        value={ this.state.start_number ? this.state.start_number.toString() : undefined } 
                         onChangeText={(start_number) => this.setState({start_number} )}
                         onBlur={this.onBlurNumeralState.bind(this, 'start_number')}
                       />
                     </Item>
                   </Col>
                   <Col>
-                    <Item floatingLabel>
+                    <Item floatingLabel error={this.state.validation.end_number}>
                       <Label>Fim</Label>
                       <Input 
                         keyboardType='numeric' 
-                        value={this.state.end_number.toString()} 
+                        value={ this.state.end_number ? this.state.end_number.toString() : undefined}  
                         onChangeText={(end_number) => this.setState({end_number} )}
                         onBlur={this.onBlurNumeralState.bind(this, 'end_number')}
                       />
@@ -250,8 +254,20 @@ export class InspectionForm extends React.Component {
   }
 
   isInvalid(){
+    const { start_number, end_number } = this.state;
+
+    this.state.validation = {
+      start_number: _.isEmpty(start_number.toString()),
+      end_number: _.isEmpty(end_number.toString())
+    }
+
+    // Update view
+    this.setState({
+      validation: this.state.validation
+    });
+
     // Verify if all states has present
-    return false
+    return _.values(this.state.validation).includes(true)
   }
 
   calcInspectionItens(){

@@ -57,7 +57,7 @@ export default function reducer(state = initialState, action){
       var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
 
       // Adicionando MappingId a visita
-      newData.visit.mapping_id = state.data[indexOfFieldGroup].mapping_id
+      newData.visit.mapping_id = state.data[indexOfFieldGroup].id
 
       // Criando um Array para novas visitas
       newData.$id = genSecureHex()
@@ -80,7 +80,7 @@ export default function reducer(state = initialState, action){
       var indexOfAddress = getLocationIndex(state, action, record.$id)
 
       // Adicionando MappingId a visita
-      newData.visit.mapping_id = state.data[indexOfFieldGroup].mapping_id
+      newData.visit.mapping_id = state.data[indexOfFieldGroup].id
 
       // Se a visita for fechada ou se a visita anterior for fechada adiciona mais uma visita ao endereço
       if( newData.visit.type == VisitType.closed || _.last(record.visits).type == VisitType.closed ){
