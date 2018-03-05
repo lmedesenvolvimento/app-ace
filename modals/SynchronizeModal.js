@@ -25,6 +25,7 @@ import {
 
 import Colors from '../constants/Layout';
 import Layout from '../constants/Layout';
+import Http from '../services/Http';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
@@ -35,11 +36,22 @@ import ReduxActions from "../redux/actions";
 import AwaitStatus from "./synchronize-status/AwaitStatus";
 import OkStatus from "./synchronize-status/OkStatus";
 import FailStatus from "./synchronize-status/FailStatus";
+import OfflineStatus from "./synchronize-status/OfflineStatus";
 import SynchronizingStatus from "./synchronize-status/SynchronizingStatus";
+
+import Session from '../services/Session';
+
+const SynchronizeStatus = {
+  wait: 1,
+  syncing: 2,
+  fail: 3,
+  done: 4,
+}
 
 export class SynchronizeModal extends React.Component {
     state = {
-      progress: 0.3
+      status: SynchronizeStatus.wait,
+      progress: 0.0
     }
 
     constructor(props){
@@ -47,33 +59,105 @@ export class SynchronizeModal extends React.Component {
     }
 
     render(){
-      return(
+      let { network } = this.props.state;
+
+      if(network.isConnected){
+        switch (this.state.status) {
+          case SynchronizeStatus.wait:
+            return(
+              <Container>
+                <Content>
+                  <AwaitStatus onStartSync={this.onStartSync} />
+                </Content>
+              </Container>
+            )          
+          case SynchronizeStatus.syncing:
+            return(
+              <Container>
+                <Content>
+                  <SynchronizingStatus progress={this.state.progress} />
+                </Content>
+              </Container>
+            )
+          case SynchronizeStatus.fail:
+            return(
+              <Container>
+                <Content>
+                  <FailStatus onBackButton={this.toAwaitStatus} />
+                </Content>
+              </Container>
+            )
+          case SynchronizeStatus.done:
+            return(
+              <Container>
+                <Content>
+                  <OkStatus onBackButton={this.toAwaitStatus} />
+                </Content>
+              </Container>
+            )
+          default:
+            return(
+              <Container>
+                <Content>
+                  <AwaitStatus onStartSync={this.onStartSync} />
+                </Content>
+              </Container>
+          )
+      }
+    } else{
+      return (
         <Container>
           <Content>
-            <AwaitStatus />
-            <SynchronizingStatus progress={this.state.progress} />
-            <FailStatus />
-            <OkStatus />
+            <OfflineStatus />
           </Content>
         </Container>
-    )
+      );
+    }
+  }  
+  onStartSync = () => {
+    this.setState({status: SynchronizeStatus.syncing})    
+
+    Http({
+      url: "/api/data/sync.json",
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-User-Email': this.props.state.currentUser.data.email,
+        'X-User-Token': this.props.state.currentUser.data.authentication_token
+      },
+      data: {
+        data: this.props.state.fieldGroups.data
+      },
+      onUploadProgress: (e, position, total, completed) => {
+        this.setState({ progress: completed })
+      }
+    }).then(this.onStartSyncSuccess.bind(this)).catch(this.onStartSyncFail.bind(this));
+  }
+
+  onStartSyncSuccess(response){
+    let { currentUser } = this.props.state;
+    let emptyArray = []
+    
+    // Limpando Storage
+    Session.Storage.destroy(currentUser.data.email)
+    // Limpando States
+    this.props.setFieldGroups(emptyArray)
+    // Carregando novo estado da Aplicação
+    this.props.getFieldGroups()
+
+    this.setState({status: SynchronizeStatus.done})
+  }
+
+  onStartSyncFail(error){
+    console.log(error.response.data)
+    this.setState({status: SynchronizeStatus.fail})
+  }
+
+  toAwaitStatus = () => {
+    this.setState({status: SynchronizeStatus.wait})
   }
 }
-
-const fadeInOut = {
-  0: {
-    opacity: 1,
-    rotate: '0deg',
-  },
-  0.5: {
-    opacity: 0,
-    rotate: '-180deg'
-  },
-  1: {
-    opacity: 1,
-    rotate: '-360deg',
-  },
-};
 
 const styles = {
   container: {
@@ -102,15 +186,16 @@ const styles = {
 
 function mapStateToProps(state) {
     return {
-        state: {
-            currentUser: state.currentUser,
-            fieldGroups: state.fieldGroups
-        }
+      state: {
+        network: state.network,
+        currentUser: state.currentUser,
+        fieldGroups: state.fieldGroups
+      }
     }
-}
-
-function mapDispatchToProps(dispatch, ownProps) {
+  }
+  
+  function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(SynchronizeModal);
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(SynchronizeModal);

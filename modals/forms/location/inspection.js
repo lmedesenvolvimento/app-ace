@@ -50,8 +50,8 @@ export class InspectionForm extends React.Component {
     total_items: 0,
     collected: 0,
     removed: 0,
-    start_number: null,
-    end_number: null,
+    start_number: '',
+    end_number: '',
     validation:{
       start_number: false,
       end_number: false

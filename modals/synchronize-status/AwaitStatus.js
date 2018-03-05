@@ -39,6 +39,7 @@ class AwaitStatus extends React.Component {
       super(props);
     }
 
+
     render(){
       return(
         <Container>
@@ -48,7 +49,7 @@ class AwaitStatus extends React.Component {
               <Text style={styles.textCenter} note>Este processo pode levar alguns minutos</Text>
               <Grid style={[{ maxHeight: 200 },Layout.marginVertical]}>
                 <Col>
-                  <Button full onPress={Actions.pop.bind(this)}>
+                  <Button full onPress={this.props.onStartSync.bind(this)}>
                     <Text>Sincronizar Agora</Text>
                   </Button>
                   <Button light full style={Layout.marginVertical} onPress={Actions.pop.bind(this)}>
@@ -62,21 +63,6 @@ class AwaitStatus extends React.Component {
     );
   }
 }
-
-const fadeInOut = {
-  0: {
-    opacity: 1,
-    rotate: '0deg',
-  },
-  0.5: {
-    opacity: 0,
-    rotate: '-180deg'
-  },
-  1: {
-    opacity: 1,
-    rotate: '-360deg',
-  },
-};
 
 const styles = {
   container: {

@@ -31,7 +31,7 @@ import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from "../../redux/actions";
 
-class FailStatus extends React.Component {
+class OfflineStatus extends React.Component {
     constructor(props){
       super(props);
     }
@@ -41,14 +41,14 @@ class FailStatus extends React.Component {
         <Container>
           <View style={styles.container}>
             <View style={styles.statusContainer}>
-              <H1 style={styles.textCenter}>Falha Sincronização</H1>
+              <H1 style={styles.textCenter}>Sem Rede</H1>
             </View>
             <View>
-              <MaterialIcons name="cloud-off" style={styles.syncIcon} />
+              <MaterialIcons name="signal-wifi-off" style={styles.syncIcon} />
             </View>
             <View style={styles.statusContainer}>
-              <Text style={styles.textCenter} note>Não foi possível terminar sua sincronização por favor tente novamente.</Text>
-              <Button light full style={Layout.marginVertical} onPress={this.props.onBackButton.bind(this)}>
+              <Text style={styles.textCenter} note>Não foi possível estabelecer uma conexão de rede. Por favor conecte seu dispotivo a internet e tente novamente</Text>
+              <Button light full style={Layout.marginVertical} onPress={Actions.pop.bind(this)}>
                 <Text>Tentar novamente</Text>
               </Button>
             </View>            
@@ -57,21 +57,6 @@ class FailStatus extends React.Component {
     );
   }
 }
-
-const fadeInOut = {
-  0: {
-    opacity: 1,
-    rotate: '0deg',
-  },
-  0.5: {
-    opacity: 0,
-    rotate: '-180deg'
-  },
-  1: {
-    opacity: 1,
-    rotate: '-360deg',
-  },
-};
 
 const styles = {
   container: {
@@ -111,4 +96,4 @@ function mapDispatchToProps(dispatch, ownProps) {
     return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
-export default connect(({network}) => ({network}))(FailStatus)
+export default connect(({network}) => ({network}))(OfflineStatus)

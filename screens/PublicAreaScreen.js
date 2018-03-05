@@ -34,6 +34,8 @@ import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
+import { VisitType, VisitTypeLocation } from '../types/visit';
+
 import { simpleToast } from '../services/Toast';
 
 import LogoutButton from '../components/LogoutButton';
@@ -131,6 +133,7 @@ class FieldGroupScreen extends React.Component {
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                enableEmptySections={true}
                 onRowOpen={false}
                 leftOpenValue={0}
                 rightOpenValue={-75}
@@ -152,7 +155,7 @@ class FieldGroupScreen extends React.Component {
         style={Layout.listHeight}
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
         onPress={()=> {
-          if(address.hasOwnProperty('id')){
+          if(address.hasOwnProperty("id") && this._hasVisit(address)){
             return false;
           }
           Actions.locationModal({ 
@@ -296,11 +299,15 @@ class FieldGroupScreen extends React.Component {
     return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta
   }
 
+  _hasVisit(address){
+    return !_.chain(address.visits).last().isUndefined().value();
+  }
+
   _getAddressVisited(){
     let result = 
       _.chain(this.state.addresses).filter((obj, key, array) => {
         var lastVisit = _.chain(obj.visits).last().value()
-        return lastVisit && lastVisit.type != 'closed'
+        return lastVisit && lastVisit.type != VisitType.closed
       }).orderBy(['number']).value()
       
       return result
@@ -311,7 +318,7 @@ class FieldGroupScreen extends React.Component {
     _.chain(this.state.addresses)
     .filter((obj, key, array) => {
       var lastVisit = _.chain(obj.visits).last().value()
-      return ( lastVisit && lastVisit.type == 'closed' ) || _.isUndefined(lastVisit)
+      return ( lastVisit && lastVisit.type == VisitType.closed ) || _.isUndefined(lastVisit)
     }).orderBy(['number']).value()
 
     return result

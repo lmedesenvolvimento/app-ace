@@ -21,21 +21,23 @@ export function getFieldGroups(){
       return false;
     }
 
-    if(Session.Storage.cache == null || Session.Storage.cache.data == null){
-      // Get in API
-      client(gql_get_field_groups)
-      .then((response) => {
-        // Criando ids únicos para todas as entidades recebidos
-        let field_groups = response.data.mappings.map(createUniqueIds);
-        // Enviando para Store
-        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
-        // Guardando Alterações no Banco
-        commit(getState);
-      }).catch( error => console.log(error))
-    } else{
-      // Resgatando do Cache
-      dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data });
-    }
+    Session.Storage.get(state.currentUser.data.email).then(() => {
+      if(Session.Storage.cache == null || Session.Storage.cache.data == null){
+        // Get in API
+        client(gql_get_field_groups)
+        .then((response) => {
+          // Criando ids únicos para todas as entidades recebidos
+          let field_groups = response.data.mappings.map(createUniqueIds);
+          // Enviando para Store
+          dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
+          // Guardando Alterações no Banco
+          commit(getState);
+        }).catch( error => console.log(error))
+      } else{
+        // Resgatando do Cache
+        dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data });
+      }
+    })
   }
 }
 
@@ -133,6 +135,7 @@ let gql_get_field_groups = {
             number,
             complement,
             visits{
+              id,
               type,
               check_in
             }

@@ -55,6 +55,8 @@ let Session = {
     destroy: async (key) => {
       try {
         await AsyncStorage.removeItem(key)
+        // Limpando dados na memória
+        Session.Storage.cache = null
       } catch (e) {
         console.warn(e)
       }

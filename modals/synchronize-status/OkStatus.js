@@ -58,21 +58,6 @@ class OkStatus extends React.Component {
   }
 }
 
-const fadeInOut = {
-  0: {
-    opacity: 1,
-    rotate: '0deg',
-  },
-  0.5: {
-    opacity: 0,
-    rotate: '-180deg'
-  },
-  1: {
-    opacity: 1,
-    rotate: '-360deg',
-  },
-};
-
 const styles = {
   container: {
     flex: 1,
