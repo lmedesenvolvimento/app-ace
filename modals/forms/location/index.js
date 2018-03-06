@@ -67,7 +67,7 @@ export class LocationForm extends React.Component {
       updates.complement = address.complement
       updates.type = address.visit.type
       updates.type_location = address.visit.type_location
-      updates.check_in = address.visit.type == VisitType.closed ? moment() : moment(address.visit.check_in)
+      updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in)
       updates.check_in_translate = updates.check_in.format('HH:mm')
     }
 
@@ -199,7 +199,9 @@ export class LocationForm extends React.Component {
       let state = _.omit(this.state,['validation','check_in_translate'])
       this.props.onSubmit(state)
       // Next step
-      this.props.scrollBy(1)
+      isVisitClosedOrRefused(this.state.type) 
+      ? this.toObservation()
+      : this.props.scrollBy(1)      
     }
   }
 
@@ -225,6 +227,10 @@ export class LocationForm extends React.Component {
 
     // Verify if all states has present
     return _.values(this.state.validation).includes(true)
+  }
+
+  toObservation(){
+    return this.props.scrollBy(3)
   }
 
   _renderProgress(){
@@ -266,4 +272,9 @@ const styles = {
     ...this.progressItem,
     backgroundColor: 'red'
   }
+}
+
+// Checks
+function isVisitClosedOrRefused(type){
+  return [VisitType.closed, VisitType.refused].includes(type)
 }

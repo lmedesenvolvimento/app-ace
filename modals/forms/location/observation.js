@@ -30,6 +30,7 @@ import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
 
 import { simpleToast } from '../../../services/Toast';
+import { VisitType } from '../../../types/visit';
 
 import { StepBars, Step } from './StepBars';
 
@@ -76,7 +77,7 @@ export class ObservationForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent onPress={ () => this.props.scrollBy(-1) }>
+                <Button full transparent onPress={this.onBack.bind(this)}>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
@@ -90,6 +91,13 @@ export class ObservationForm extends React.Component {
         </Footer>
       </Container>
     );
+  }
+
+  onBack(){
+    let { visit } = this.props
+    isVisitClosedOrRefused(visit.type)
+    ? this.props.scrollBy(-3)
+    : this.props.scrollBy(-1)
   }
 
   onSubmit(){
@@ -114,4 +122,8 @@ const styles = {
   textarea: {
     height: 200
   }
+}
+
+function isVisitClosedOrRefused(type){
+  return [VisitType.closed, VisitType.refused].includes(type)
 }

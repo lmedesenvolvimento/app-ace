@@ -83,7 +83,7 @@ export class FormLocationModal extends React.Component {
             <TratamentForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onTratamentFormSubmit} />
           </View>
           <View style={styles.slide}>
-            <ObservationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onObservationFormSubmit} />
+            <ObservationForm {...this.props } visit={this.state.visit} scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onObservationFormSubmit} />
           </View>
         </Swiper>
       );

@@ -83,7 +83,7 @@ export default function reducer(state = initialState, action){
       newData.visit.mapping_id = state.data[indexOfFieldGroup].id
 
       // Se a visita for fechada ou se a visita anterior for fechada adiciona mais uma visita ao endereço
-      if( newData.visit.type == VisitType.closed || _.last(record.visits).type == VisitType.closed ){
+      if( isVisitClosedORefused(newData.visit.type) || isVisitClosedORefused(_.last(record.visits).type) ){
         newData.visits = _.clone(record.visits)
         newData.visits.push(newData.visit)
       } else{
@@ -148,4 +148,9 @@ function getLocationIndex(state, action, index){
     .value()
 
   return result  
+}
+
+// Checks
+function isVisitClosedORefused(type){
+  return [VisitType.closed, VisitType.refused].includes(type)
 }

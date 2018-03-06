@@ -300,14 +300,14 @@ class FieldGroupScreen extends React.Component {
   }
 
   _SyncAddressHasVisit(address){
-    return _.last(address.visits).type != VisitType.closed
+    return !isVisitClosedOrRefused(address.visit.type)
   }
 
   _getAddressVisited(){
     let result = 
       _.chain(this.state.addresses).filter((obj, key, array) => {
         var lastVisit = _.chain(obj.visits).last().value()
-        return lastVisit && lastVisit.type != VisitType.closed
+        return lastVisit && !isVisitClosedOrRefused(lastVisit.type)
       }).orderBy(['number']).value()
       
       return result
@@ -318,7 +318,7 @@ class FieldGroupScreen extends React.Component {
     _.chain(this.state.addresses)
     .filter((obj, key, array) => {
       var lastVisit = _.chain(obj.visits).last().value()
-      return ( lastVisit && lastVisit.type == VisitType.closed ) || _.isUndefined(lastVisit)
+      return ( lastVisit && isVisitClosedOrRefused(lastVisit.type) ) || _.isUndefined(lastVisit)
     }).orderBy(['number']).value()
 
     return result
@@ -344,6 +344,10 @@ const styles = {
     fontSize: 124,
     color: "#ccc"
   }
+}
+
+function isVisitClosedOrRefused(type){
+  return [VisitType.closed, VisitType.refused].includes(type)
 }
 
 function mapDispatchToProps(dispatch, ownProps){
