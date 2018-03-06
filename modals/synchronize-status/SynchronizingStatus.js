@@ -51,14 +51,7 @@ class SynchronizingStatus extends React.Component {
             </View>
             <View style={styles.statusContainer}>
               <Text style={styles.textCenter} note>Por favor aguarde alguns minutos</Text>
-            </View>
-            {
-              (Platform.OS === 'android')
-              ?
-              (<ProgressBarAndroid styleAttr="Horizontal" style={styles.progress} progress={this.props.progress} indeterminate={false} /> )
-              :
-              (<ProgressViewIOS style={styles.progress} progress={this.props.progress} /> )
-            }
+            </View>            
         </View>
       </Container>
     );

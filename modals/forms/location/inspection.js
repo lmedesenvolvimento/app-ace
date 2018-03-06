@@ -233,7 +233,10 @@ export class InspectionForm extends React.Component {
 
   onSubmit(){
     if(this.isInvalid()){
-      Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
+      this.state.validation.end_number
+        ? Alert.alert('Falha na Validação', 'O número fim não pode ser menor que o número início.')
+        : Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
+      
     } else{
       // Pass form value parent component
       let state = _.omit(this.state,['validation'])
@@ -258,7 +261,7 @@ export class InspectionForm extends React.Component {
 
     this.state.validation = {
       start_number: _.isEmpty(start_number.toString()),
-      end_number: _.isEmpty(end_number.toString())
+      end_number: this.isInvalidEndNumber(start_number, end_number)
     }
 
     // Update view
@@ -286,6 +289,10 @@ export class InspectionForm extends React.Component {
 
         this.setState({total_items});
     }, 200);
+  }
+
+  isInvalidEndNumber(start_number, end_number){
+    return _.isEmpty(start_number) && _.isEmpty(end_number) && (start_number >= end_number)
   }
 }
 

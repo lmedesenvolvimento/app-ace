@@ -155,7 +155,7 @@ class FieldGroupScreen extends React.Component {
         style={Layout.listHeight}
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
         onPress={()=> {
-          if(address.hasOwnProperty("id") && this._hasVisit(address)){
+          if( _.last(address.visits).hasOwnProperty("id") && this._SyncAddressHasVisit(address)){
             return false;
           }
           Actions.locationModal({ 
@@ -299,8 +299,8 @@ class FieldGroupScreen extends React.Component {
     return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta
   }
 
-  _hasVisit(address){
-    return !_.chain(address.visits).last().isUndefined().value();
+  _SyncAddressHasVisit(address){
+    return _.last(address.visits).type != VisitType.closed
   }
 
   _getAddressVisited(){
