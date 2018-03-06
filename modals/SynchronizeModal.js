@@ -40,6 +40,7 @@ import OfflineStatus from "./synchronize-status/OfflineStatus";
 import SynchronizingStatus from "./synchronize-status/SynchronizingStatus";
 
 import Session from '../services/Session';
+import { simpleToast } from '../services/Toast';
 
 const SynchronizeStatus = {
   wait: 1,
@@ -115,30 +116,19 @@ export class SynchronizeModal extends React.Component {
     }
   }  
   onStartSync = () => {
-    this.setState({status: SynchronizeStatus.syncing})    
+    this.setState({status: SynchronizeStatus.syncing, progress: 0})
 
-    Http({
-      url: "/api/data/sync.json",
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'X-User-Email': this.props.state.currentUser.data.email,
-        'X-User-Token': this.props.state.currentUser.data.authentication_token
-      },
-      data: {
-        data: this.props.state.fieldGroups.data
-      },
-      onUploadProgress: (e, position, total, completed) => {
-        this.setState({ progress: completed })
-      }
-    }).then(this.onStartSyncSuccess.bind(this)).catch(this.onStartSyncFail.bind(this));
+    setTimeout(() => {
+      this.setState({ progress: 1 })
+    }, 400)
+
+    setTimeout(this.startSync.bind(this), 1400);
   }
 
   onStartSyncSuccess(response){
     let { currentUser } = this.props.state;
     let emptyArray = []
-    
+      
     // Limpando Storage
     Session.Storage.destroy(currentUser.data.email)
     // Limpando States
@@ -147,40 +137,36 @@ export class SynchronizeModal extends React.Component {
     this.props.getFieldGroups()
 
     this.setState({status: SynchronizeStatus.done})
+    
   }
 
-  onStartSyncFail(error){
-    console.log(error.response.data)
+  onStartSyncFail(_error){
+    let { msg, err, error } = _error.response.data;
+    console.log(_error.response.data)
+    simpleToast(msg || error)
     this.setState({status: SynchronizeStatus.fail})
   }
 
   toAwaitStatus = () => {
     this.setState({status: SynchronizeStatus.wait})
   }
-}
 
-const styles = {
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 16,
-    paddingHorizontal: 48
-  },
-  statusContainer: {    
-    paddingVertical: 16
-  },
-  progress: {
-    width: 248
-  },
-  syncIcon: {
-    fontSize: 98, 
-    color: '#aaa',
-    paddingVertical: 12
-  },
-  textCenter: {
-    textAlign: 'center',
-    marginVertical: 2
+  startSync = () => {
+    Http({
+      url: "/api/data/sync.json",
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'X-User-Email': this.props.state.currentUser.data.email,
+        'X-User-Token': this.props.state.currentUser.data.authentication_token
+      },
+      data: {
+        data: this.props.state.fieldGroups.data
+      }
+    })
+      .then(this.onStartSyncSuccess.bind(this))
+      .catch(this.onStartSyncFail.bind(this));
   }
 }
 

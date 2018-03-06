@@ -29,6 +29,8 @@ import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 import Session from '../services/Session';
 
+import { Col, Row, Grid } from "react-native-easy-grid";
+
 import LogoutButton from '../components/LogoutButton';
 
 class HomeScreen extends React.Component {
@@ -42,21 +44,40 @@ class HomeScreen extends React.Component {
 
   render() {
     let { currentUser, fieldGroups } = this.props.state;
-
     let items = fieldGroups.data;
 
-    return (
-      <Container>
-        <Header>
-          <Left>
-            <Title>Quadras</Title>
-          </Left>
-        </Header>
-        <Content padder>
-          <List dataArray={items} renderRow={this.renderItem} />
-        </Content>
-      </Container>
-    );
+    if(items.length){
+      return (
+        <Container>
+          <Header>
+            <Left>
+              <Title>Quadras</Title>
+            </Left>
+          </Header>
+          <Content padder>
+            <List dataArray={items} renderRow={this.renderItem} />
+          </Content>
+        </Container>
+      );
+    } else {
+      return(
+        <Container>
+          <Header>
+            <Left>
+              <Title>Quadras</Title>
+            </Left>
+          </Header>
+          <Grid>
+            <Col style={[{marginHorizontal: 24}, Layout.marginVertical36]}>
+              <Text style={[Layout.marginVertical8, {textAlign: 'center'}]}>Você não possui nenhuma quadra Mapeada.</Text>
+              <Button block light style={Layout.marginVertical8} onPress={Actions.syncDataModal.bind(this)}>
+                <Text>Sincronizar Informações</Text>
+              </Button>
+            </Col>
+          </Grid>
+        </Container>
+      );
+    }
   }
 
   renderItem(item, sectionID, rowID){

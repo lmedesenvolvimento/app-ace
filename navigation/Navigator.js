@@ -52,7 +52,7 @@ class Navigator extends Component {
       return false;
     }
     else if (Actions.currentScene == "syncDataModal"){
-      Actions.pop();
+      return true;
     } 
     else{
       Actions.pop();
@@ -92,7 +92,7 @@ class Navigator extends Component {
                   <Scene
                     key="about"
                     component={AboutScreen}
-                    title="About" />
+                    title="Sobre o App" />
                   <Scene
                     key="profile"
                     component={ProfileScreen}

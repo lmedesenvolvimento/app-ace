@@ -41,6 +41,8 @@ function configCredentials(credential, callback){
   // Config Next Requests
   Http.defaults.headers.common['X-User-Email'] = credential.email;
   Http.defaults.headers.common['X-User-Token'] = credential.authentication_token;
+  Http.defaults.headers.post['X-User-Email'] = credential.email;
+  Http.defaults.headers.post['X-User-Token'] = credential.authentication_token;
   // Create ApolloClient
   applyApolloMiddleware(credential)
 }

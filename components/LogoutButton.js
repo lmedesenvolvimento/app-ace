@@ -24,16 +24,22 @@ class LogoutButton extends React.Component {
     let emptyArray = [];
     // Clear Credential
     Session.Credential.destroy();
-    // Clear States
-    this.props.setFieldGroups(emptyArray);
+    // Force Clear -- use in development
+    // Session.Storage.destroy(this.props.currentUser.data.email);
     // Return to login screen
     Actions.unauthorized({type: ActionConst.RESET});
+    // Clear States
+    this.props.actions.setUser({});
+    this.props.actions.setFieldGroups(emptyArray);
   }
 }
 
 
 function mapDispatchToProps(dispatch, ownProps){
-  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+  let { userActions, fieldGroupsActions } = ReduxActions;
+  return {
+    actions: bindActionCreators(Object.assign({}, userActions, fieldGroupsActions), dispatch)
+  };
 }
 
 

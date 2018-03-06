@@ -1,6 +1,6 @@
 import user_types from '../types/user_types';
 
-export default function reducer(state = { data: null }, action){
+export default function reducer(state = { data: {} }, action){
   switch (action.type) {
     case user_types.UPDATE_LOCAL_PROFILE:
       return { ...state, data: action.data };
