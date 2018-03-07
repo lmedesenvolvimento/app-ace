@@ -8,9 +8,10 @@ import { StyleProvider, Button, Text, getTheme } from 'native-base';
 import Theme from './constants/Theme';
 import Store, { configureStore } from './constants/Store';
 
-import Auth from './services/Auth';
+import Auth    from './services/Auth';
 import Session from './services/Session';
 import Network from './services/Network';
+import { getLocationAsync }    from './services/Permissions';
 
 import Navigator from './navigation/Navigator';
 
@@ -46,6 +47,9 @@ export default class App extends React.Component {
       'Ionicons': require("@expo/vector-icons/fonts/Ionicons.ttf"),
       'MaterialIcons': require("@expo/vector-icons/fonts/MaterialIcons.ttf")
     });
+    
+    // Permissions
+    await getLocationAsync();
 
     Session.Credential.get().then((user) => {
       if(user){

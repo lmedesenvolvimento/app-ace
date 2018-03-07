@@ -63,6 +63,7 @@ export class LocationForm extends React.Component {
     if(this.props.address){
       let { address } = this.props
 
+      updates.id = address.id
       updates.number = address.number
       updates.complement = address.complement
       updates.type = address.visit.type
@@ -98,7 +99,7 @@ export class LocationForm extends React.Component {
               <Col size={33}>
                 <Item floatingLabel error={this.state.validation.number}>
                   <Label>Número</Label>
-                  <Input value={this.state.number} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
+                  <Input disabled={this.state.id} value={this.state.number} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
                 </Item>
               </Col>
             </Grid>
@@ -107,7 +108,7 @@ export class LocationForm extends React.Component {
               <Col size={66} style={{ justifyContent: 'flex-end' }}>
                 <Item floatingLabel>
                   <Label>Complemento</Label>
-                  <Input value={this.state.complement} onChangeText={(complement) => this.setState({complement})} />
+                  <Input disabled={this.state.id} value={this.state.complement} onChangeText={(complement) => this.setState({complement})} />
                 </Item>
               </Col>
               <Col size={33}>

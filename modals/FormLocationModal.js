@@ -26,6 +26,7 @@ import Colors from '../constants/Layout';
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
+import { getLocationAsync } from '../services/Permissions';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
@@ -122,9 +123,15 @@ export class FormLocationModal extends React.Component {
 
     updates.visit.type = data.type
     updates.visit.check_in = data.check_in
-    updates.visit.type_location = data.type_location    
+    updates.visit.type_location = data.type_location
 
     this.setState(updates);
+
+    // Save Current Geo Location
+    getLocationAsync().then((data) => {
+      let { latitude, longitude } = data.coords;
+      this.setState({ latitude, longitude })
+    })
   }
   
   onInspectionFormSubmit = (data) => {
@@ -161,6 +168,8 @@ export class FormLocationModal extends React.Component {
     updates.visit.observation = data.observation
 
     this.setState(updates)
+
+    console.log(this.state)
 
     let newData = _.omit(this.state, ['isReady'])
 
