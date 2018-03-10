@@ -7,9 +7,9 @@ const initialState = {
 export default function reducer(state = initialState, action){
   switch (action.type) {
   case network_types.CONNECTED:
-    return { ...state, isConnected: true }
+    return { ...state, isConnected: true };
   case network_types.NOTCONNECTED:
-    return { ...state, isConnected: false }
+    return { ...state, isConnected: false };
   default:
     return state;
   }

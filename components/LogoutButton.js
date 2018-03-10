@@ -14,7 +14,7 @@ import { simpleToast } from '../services/Toast';
 class LogoutButton extends React.Component {
   render(){
     return (
-      <Button danger onPress={ _=> this.destroySession() } style={Layout.marginVertical}>
+      <Button danger disabled={!this.props.network.isConnected} onPress={ _=> this.destroySession() } style={Layout.marginVertical}>
         <Text>Logout</Text>
       </Button>
     );

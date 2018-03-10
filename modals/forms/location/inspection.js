@@ -50,8 +50,8 @@ export class InspectionForm extends React.Component {
     total_items: 0,
     collected: 0,
     removed: 0,
-    start_number: '',
-    end_number: '',
+    start_number: 0,
+    end_number: 0,
     validation:{
       end_number: false
     }
@@ -291,10 +291,11 @@ export class InspectionForm extends React.Component {
   }
 
   isInvalidEndNumber(start_number, end_number){
-    if (!_.isEmpty(start_number) || !_.isEmpty(end_number)){
-      return _.isEmpty(start_number) && _.isEmpty(end_number) && (start_number >= end_number)
+    if (!start_number && !end_number){
+      return false;
     } else{
-      return false
+      // If not has start number or end number and start_number is minor end_number
+      return !end_number || !start_number || (start_number > end_number);
     }
   }
 }
