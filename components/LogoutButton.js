@@ -5,11 +5,11 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions, ActionConst } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
+import ReduxActions from '../redux/actions';
 
-import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
 import Session from '../services/Session';
+import { simpleToast } from '../services/Toast';
 
 class LogoutButton extends React.Component {
   render(){
@@ -21,21 +21,26 @@ class LogoutButton extends React.Component {
   }
 
   destroySession(){
-    let emptyArray = [];
-    // Clear Credential
-    Session.Credential.destroy();
-    // Force Clear -- use in development
-    // Session.Storage.destroy(this.props.currentUser.data.email);
-    // Return to login screen
-    Actions.unauthorized({type: ActionConst.RESET});
-    // Clear States
-    this.props.actions.setUser({});
-    this.props.actions.setFieldGroups(emptyArray);
+    let { network } = this.props;
+    if (network.isConnected){
+      let emptyArray = [];
+      // Clear Credential
+      Session.Credential.destroy();
+      // Force Clear -- use in development
+      // Session.Storage.destroy(this.props.currentUser.data.email);
+      // Return to login screen
+      Actions.unauthorized({type: ActionConst.RESET});
+      // Clear States
+      this.props.actions.setUser({});
+      this.props.actions.setFieldGroups(emptyArray);
+    } else{
+      simpleToast('Para deslogar da sua conta é nescessário estar conectado a internet');
+    }
   }
 }
 
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   let { userActions, fieldGroupsActions } = ReduxActions;
   return {
     actions: bindActionCreators(Object.assign({}, userActions, fieldGroupsActions), dispatch)
@@ -43,4 +48,4 @@ function mapDispatchToProps(dispatch, ownProps){
 }
 
 
-export default connect(({currentUser}) => ({currentUser}), mapDispatchToProps)(LogoutButton)
+export default connect(({ currentUser, network }) => ({ currentUser, network}), mapDispatchToProps)(LogoutButton)

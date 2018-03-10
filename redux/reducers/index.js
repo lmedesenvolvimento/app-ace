@@ -1,7 +1,6 @@
 import { combineReducers } from 'redux';
 
 import auth from './auth';
-import routes from './routes';
 import network from './network';
 // Models
 import user from './user';

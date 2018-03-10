@@ -53,7 +53,6 @@ export class InspectionForm extends React.Component {
     start_number: '',
     end_number: '',
     validation:{
-      start_number: false,
       end_number: false
     }
   }
@@ -261,7 +260,6 @@ export class InspectionForm extends React.Component {
     const { start_number, end_number } = this.state;
 
     this.state.validation = {
-      start_number: _.isEmpty(start_number.toString()),
       end_number: this.isInvalidEndNumber(start_number, end_number)
     }
 
@@ -293,7 +291,11 @@ export class InspectionForm extends React.Component {
   }
 
   isInvalidEndNumber(start_number, end_number){
-    return _.isEmpty(start_number) && _.isEmpty(end_number) && (start_number >= end_number)
+    if (!_.isEmpty(start_number) || !_.isEmpty(end_number)){
+      return _.isEmpty(start_number) && _.isEmpty(end_number) && (start_number >= end_number)
+    } else{
+      return false
+    }
   }
 }
 

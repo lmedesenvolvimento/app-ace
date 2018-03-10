@@ -46,6 +46,9 @@ export class TratamentForm extends React.Component {
 
   constructor(props){
     super(props);
+    this.props.state = {
+      
+    }
   }
 
   componentWillMount(){    
