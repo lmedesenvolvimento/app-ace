@@ -49,12 +49,7 @@ export class InspectionForm extends React.Component {
     e:  0,
     total_items: 0,
     collected: 0,
-    removed: 0,
-    start_number: 0,
-    end_number: 0,
-    validation:{
-      end_number: false
-    }
+    removed: 0
   }
 
   constructor(props){
@@ -77,6 +72,7 @@ export class InspectionForm extends React.Component {
                 <StepBars>
                   <Step complete={true}></Step>
                   <Step active={true}></Step>
+                  <Step></Step>
                   <Step></Step>
                   <Step></Step>
                 </StepBars>
@@ -177,37 +173,6 @@ export class InspectionForm extends React.Component {
                     </Item>
                   </Col>
                 </Grid>
-
-                <Grid>
-                  <Col>
-                    <Text style={[Layout.marginHorizontal, { color: Colors.primaryColor, marginTop: 16 }]}>Amostras</Text>
-                  </Col>
-                </Grid>                           
-
-                <Grid>
-                  <Col>
-                    <Item floatingLabel error={this.state.validation.start_number}>
-                      <Label>Início</Label>
-                      <Input 
-                        keyboardType='numeric' 
-                        value={ this.state.start_number ? this.state.start_number.toString() : undefined } 
-                        onChangeText={(start_number) => this.setState({start_number} )}
-                        onBlur={this.onBlurNumeralState.bind(this, 'start_number')}
-                      />
-                    </Item>
-                  </Col>
-                  <Col>
-                    <Item floatingLabel error={this.state.validation.end_number}>
-                      <Label>Fim</Label>
-                      <Input 
-                        keyboardType='numeric' 
-                        value={ this.state.end_number ? this.state.end_number.toString() : undefined}  
-                        onChangeText={(end_number) => this.setState({end_number} )}
-                        onBlur={this.onBlurNumeralState.bind(this, 'end_number')}
-                      />
-                    </Item>
-                  </Col>
-                </Grid>
               </Form>
           </Content>
         </KeyboardAwareScrollView>
@@ -231,19 +196,12 @@ export class InspectionForm extends React.Component {
     );
   }
 
-  onSubmit(){
-    if(this.isInvalid()){
-      this.state.validation.end_number
-        ? Alert.alert('Falha na Validação', 'O número fim não pode ser menor que o número início.')
-        : Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
-      
-    } else{
-      // Pass form value parent component
-      let state = _.omit(this.state,['validation'])
-      this.props.onSubmit(state)
-      // Next step
-      this.props.scrollBy(1)
-    }
+  onSubmit(){    
+    // Pass form value parent component
+    let state = _.omit(this.state,['validation'])
+    this.props.onSubmit(state)
+    // Next step
+    this.props.scrollBy(1)
   }
 
   onBlurNumeralState(key){
@@ -254,23 +212,7 @@ export class InspectionForm extends React.Component {
 
     this.setState(updates)
     this.calcInspectionItens();
-  }
-
-  isInvalid(){
-    const { start_number, end_number } = this.state;
-
-    this.state.validation = {
-      end_number: this.isInvalidEndNumber(start_number, end_number)
-    }
-
-    // Update view
-    this.setState({
-      validation: this.state.validation
-    });
-
-    // Verify if all states has present
-    return _.values(this.state.validation).includes(true)
-  }
+  }  
 
   calcInspectionItens(){
     setTimeout(
@@ -288,16 +230,7 @@ export class InspectionForm extends React.Component {
 
         this.setState({total_items});
     }, 200);
-  }
-
-  isInvalidEndNumber(start_number, end_number){
-    if (!start_number && !end_number){
-      return false;
-    } else{
-      // If not has start number or end number and start_number is minor end_number
-      return !end_number || !start_number || (start_number > end_number);
-    }
-  }
+  }  
 }
 
 const styles = {

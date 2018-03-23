@@ -62,9 +62,6 @@ class LoginScreen extends React.Component {
               { !this.state.passwordValid ? <Icon name='close-circle' /> : null }
             </Item>
           </Form>
-          <View style={Layout.padding}>
-
-          </View>
         </Content>
         <Button iconLeft block onPress={ _=> this.login() } disabled={auth.waiting}>
           <Left>

@@ -65,6 +65,7 @@ export class TratamentForm extends React.Component {
             <StepBars>
               <Step complete={true}></Step>
               <Step complete={true}></Step>
+              <Step complete={true}></Step>
               <Step active={true}></Step>
               <Step></Step>
             </StepBars>

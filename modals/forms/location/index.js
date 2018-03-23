@@ -85,6 +85,7 @@ export class LocationForm extends React.Component {
               <Step></Step>
               <Step></Step>
               <Step></Step>
+              <Step></Step>
             </StepBars>
 
             <H2 style={Layout.padding}>Localização</H2>
@@ -231,7 +232,7 @@ export class LocationForm extends React.Component {
   }
 
   toObservation(){
-    return this.props.scrollBy(3)
+    return this.props.scrollBy(4)
   }
 
   _renderProgress(){

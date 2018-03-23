@@ -36,6 +36,7 @@ import ReduxActions from "../redux/actions";
 
 import { LocationForm } from './forms/location';
 import { InspectionForm } from './forms/location/inspection';
+import { SamplesForm } from './forms/location/samples';
 import { TratamentForm } from './forms/location/tratament';
 import { ObservationForm } from './forms/location/observation';
 
@@ -79,6 +80,9 @@ export class FormLocationModal extends React.Component {
           </View>
           <View style={styles.slide}>
             <InspectionForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
+          </View>
+          <View style={styles.slide}>
+            <SamplesForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
           </View>
           <View style={styles.slide}>
             <TratamentForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onTratamentFormSubmit} />

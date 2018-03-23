@@ -59,6 +59,7 @@ export class ObservationForm extends React.Component {
               <Step complete={true}></Step>
               <Step complete={true}></Step>
               <Step complete={true}></Step>
+              <Step complete={true}></Step>
               <Step active={true}></Step>
             </StepBars>
 
@@ -96,7 +97,7 @@ export class ObservationForm extends React.Component {
   onBack(){
     let { visit } = this.props
     isVisitClosedOrRefused(visit.type)
-    ? this.props.scrollBy(-3)
+    ? this.props.scrollBy(-4)
     : this.props.scrollBy(-1)
   }
 
