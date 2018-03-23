@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, Platform } from 'react-native';
 
 import numeral from 'numeral';
 
@@ -85,17 +85,14 @@ export class TratamentForm extends React.Component {
                 </Item>
               </Col>
             </Grid>
-            <Grid style={{ marginHorizontal: 12, marginTop: 16 }}>
+            <Grid>
               <Col>
-                <Text note>Tipo</Text>
-                <Picker
-                  selectedValue={this.state.type}
-                  onValueChange={(type) => this.setState({type}) }
-                  supportedOrientations={['portrait','landscape']}
-                  iosHeader="Selecione um"
-                  mode="dropdown">
-                  <Item label="Larvícida" value={TreatmentType.larvicida} />                  
-                </Picker>
+                <Item floatingLabel >
+                  <Label>Tipo</Label>
+                  <Input 
+                    value='Larvícida'
+                    disabled={true}/>
+                </Item>                
               </Col>
             </Grid>
             <Grid>
@@ -157,6 +154,21 @@ export class TratamentForm extends React.Component {
     this.props.onSubmit(this.state)
     // Next Step
     this.props.scrollBy(1)
+  }
+
+  _renderPickerHeader(backAction){
+    return(
+      <Header>
+        <Left style={styles.container}>
+          <Button transparent onPress={backAction}>
+            <Text>Voltar</Text>
+          </Button>
+        </Left>
+        <Body style={{flex: 2}}>
+          <Title style={{textAlign: 'center'}}>Selecione um</Title>
+        </Body>
+      </Header>
+    )
   }
 }
 

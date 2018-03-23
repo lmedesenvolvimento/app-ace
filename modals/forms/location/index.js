@@ -130,7 +130,7 @@ export class LocationForm extends React.Component {
                   selectedValue={this.state.type_location}
                   onValueChange={(type_location) => this.setState({type_location}) }
                   supportedOrientations={['portrait','landscape']}
-                  iosHeader="Selecione um"
+                  renderHeader={this._renderPickerHeader.bind(this)}
                   mode="dropdown">
                   <Item label="Residencial" value={VisitTypeLocation.residential} />
                   <Item label="Comércio" value={VisitTypeLocation.commerce} />
@@ -148,7 +148,7 @@ export class LocationForm extends React.Component {
                   selectedValue={this.state.type}
                   onValueChange={(type) => this.setState({type}) }
                   supportedOrientations={['portrait','landscape']}
-                  iosHeader="Selecione um"
+                  renderHeader={this._renderPickerHeader.bind(this)}
                   mode="dropdown">
                   <Item label="Normal" value={VisitType.normal} />
                   <Item label="Recuperada" value={VisitType.recovered} />
@@ -246,6 +246,21 @@ export class LocationForm extends React.Component {
         </Row>
       </Grid>
     );
+  }
+
+  _renderPickerHeader(backAction){
+    return(
+      <Header>
+        <Left style={styles.container}>
+          <Button transparent onPress={backAction}>
+            <Text>Voltar</Text>
+          </Button>
+        </Left>
+        <Body style={{flex: 2}}>
+          <Title style={{textAlign: 'center'}}>Selecione um</Title>
+        </Body>
+      </Header>
+    )
   }
 }
 

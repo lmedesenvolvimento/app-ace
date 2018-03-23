@@ -1,5 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, View, Picker, Platform } from 'react-native';
 
 import {
   Header,
@@ -13,11 +13,10 @@ import {
   Footer,
   Form,
   Label,
-  Item,
   Input,
   Body,
   Button,
-  Picker,
+  Spinner
 } from 'native-base';
 
 import Swiper from 'react-native-swiper';
@@ -95,7 +94,7 @@ export class FormLocationModal extends React.Component {
     } else{
       return (
         <View style={styles.spinnerContainer}>
-          <ActivityIndicator size={64} color={Colors.accentColor} />
+          <ActivityIndicator size={Platform.OS == 'ios' ? 1 : 64} color={Colors.accentColor} />
         </View>
       )
     }
