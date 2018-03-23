@@ -1,0 +1,8 @@
+Tela Coleta de Amostra
+Renomear Quantidade Item para Nº da Amostra
+Renomear Tipo para Código
+
+NewSample = {
+	number: Integer
+	type: ['a1','a2'....]
+}
