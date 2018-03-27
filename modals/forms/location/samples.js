@@ -44,27 +44,14 @@ import { StepBars, Step } from './StepBars';
 import { SampleType } from '../../../types/sample';
 
 const initialItem = {
-  value: 0,
+  number: 0,
   type: SampleType.a1
 }
 
 export class SamplesForm extends React.Component {
   state = {
     newItem: _.clone(initialItem),
-    data: [
-      {
-        value: 2,
-        type: SampleType.a1
-      },
-      {
-        value: 4,
-        type: SampleType.a2
-      },
-      {
-        value: 5,
-        type: SampleType.b
-      }
-    ]
+    data: []
   }
 
   constructor(props){
@@ -72,10 +59,10 @@ export class SamplesForm extends React.Component {
   }
 
   componentWillMount(){    
-    // let { address } = this.props;
-    // if(address){
-    //   this.setState({ data: address.samples })
-    // }
+    let { address } = this.props;
+    if (address && address.visit.samples){
+      this.setState({ data: address.visit.samples })
+    }
   }
 
   render(){
@@ -93,7 +80,7 @@ export class SamplesForm extends React.Component {
                   <Step></Step>
                   <Step></Step>
                 </StepBars>
-                <H2 style={Layout.padding}>Inspeção de coleta de larvas 2</H2>                
+                <H2 style={Layout.padding}>Coleta de Amostra</H2>                
                 <Grid>
                   <Row>
                     <Col>
@@ -116,15 +103,16 @@ export class SamplesForm extends React.Component {
                   <Row style={{ alignItems: 'flex-end' }}>
                     <Col>
                       <Item floatingLabel>
-                        <Label>Quantidade de Itens</Label>
+                        <Label> Nº da Amostra</Label>
                         <Input
-                          value={this.state.newItem.value.toString()}
+                          value={this.state.newItem.number.toString()}
                           keyboardType='numeric'
-                          onChangeText={ (value) => this.setState({ newItem: { ...this.state.newItem, value: value } }) }
-                          onBlur={this.onBlurNumeralState.bind(this, 'value')} />
+                          onChangeText={ (number) => this.setState({ newItem: { ...this.state.newItem, number: number } }) }
+                          onBlur={this.onBlurNumeralState.bind(this, 'number')} />
                       </Item>
                     </Col>
                     <Col>
+                      <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
                       <Picker
                         selectedValue={this.state.newItem.type}
                         onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type} })}
@@ -172,16 +160,17 @@ export class SamplesForm extends React.Component {
   }
 
   onSubmit(){
-    this.props.scrollBy(1)
+    this.props.scrollBy(1);
+    this.props.onSubmit(this.state.data);
   }
 
   onBlurNumeralState(key){
-    let number = numeral(this.state.newItem.value).value()
+    let number = numeral(this.state.newItem.number).value()
     let updates = { 
       newItem: { ...this.state.newItem } 
     }
 
-    updates.newItem.value = Math.abs(number)
+    updates.newItem.number = Math.abs(number)
 
     this.setState(updates)
   }
@@ -190,7 +179,7 @@ export class SamplesForm extends React.Component {
     return(
       <ListItem>
         <Body>
-          <Text>{ `${item.value} ${ item.value > 1 ? "itens" : "itens" } coletado` }</Text>
+          <Text>{ `${item.number} ${ item.number > 1 ? "itens" : "itens" } coletado` }</Text>
           <Text note> Tipo da coleta: { Object.keys(SampleType)[item.type].toUpperCase() }</Text>
         </Body>
       </ListItem>

@@ -49,7 +49,7 @@ export class FormLocationModal extends React.Component {
       type_location: null,
       check_in: null,
       observation: null,
-      sample: {},
+      samples: [],
       inspect: {},
       treatment: {},
     }
@@ -81,7 +81,7 @@ export class FormLocationModal extends React.Component {
             <InspectionForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
           </View>
           <View style={styles.slide}>
-            <SamplesForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
+            <SamplesForm {...this.props} scrollBy={this.scrollBy} onSubmit={this.onSamplesFormSubmit} />
           </View>
           <View style={styles.slide}>
             <TratamentForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onTratamentFormSubmit} />
@@ -142,13 +142,18 @@ export class FormLocationModal extends React.Component {
       visit: this.state.visit
     }
     
-    updates.visit.inspect = _.omit(data, ['start_number', 'end_number'])
+    updates.visit.inspect = _.omit(data, ['start_number', 'end_number'])      
     
-    updates.visit.sample = {
-      end_number: data.end_number,
-      start_number: data.start_number
+    this.setState(updates);
+  }
+
+  onSamplesFormSubmit = (data) => {
+    let updates = {
+      visit: this.state.visit
     }
-    
+
+    updates.visit.samples = data
+
     this.setState(updates);
   }
   
