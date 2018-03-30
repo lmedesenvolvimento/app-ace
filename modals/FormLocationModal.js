@@ -39,6 +39,8 @@ import { SamplesForm } from './forms/location/samples';
 import { TratamentForm } from './forms/location/tratament';
 import { ObservationForm } from './forms/location/observation';
 
+import { VisitType, VisitTypeLocation } from '../types/visit';
+
 export class FormLocationModal extends React.Component {
   state = {
     isReady: false,
@@ -100,8 +102,9 @@ export class FormLocationModal extends React.Component {
     }
   }
 
-  okModal(){
-    this.dismissModal()
+  okModal(targetTab){
+    Actions.pop();
+    setTimeout(() => Actions.refresh({ activeTab: targetTab }), 200);
   }
 
   dismissModal(){
@@ -177,17 +180,19 @@ export class FormLocationModal extends React.Component {
 
     this.setState(updates)
 
-    console.log(this.state)
-
     let newData = _.omit(this.state, ['isReady'])
 
     if(address){
       this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData)
+      simpleToast("Endereço foi atualizado!");
     } else{
       this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData)
+      simpleToast("Endereço adicionado com sucesso!");
     }
 
-    this.onCancel()
+    let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1
+    
+    this.okModal(targetTab)
   }
 }
 
@@ -202,6 +207,10 @@ const styles = {
     justifyContent: 'space-around',
     padding: 8
   }
+}
+
+function isVisitClosedOrRefused(type) {
+  return [VisitType.closed, VisitType.refused].includes(type)
 }
 
 function mapStateToProps(state) {

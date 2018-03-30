@@ -20,6 +20,7 @@ import {
   Fab
 } from 'native-base';
 
+import { DefaultTabBar } from 'react-native-scrollable-tab-view';
 import SearchBar from 'react-native-searchbar';
 
 import { MaterialIcons } from '@expo/vector-icons';
@@ -27,6 +28,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
+
 
 import ReduxActions from "../redux/actions";
 
@@ -111,8 +113,8 @@ class FieldGroupScreen extends React.Component {
 
     if(this.state.addresses && this.state.addresses.length){
       return (
-        <Tabs locked={true}>
-          <Tab heading={ <TabHeading><Text>A VISITAR</Text></TabHeading>}>
+        <Tabs locked={true} initialPage={this.props.activeTab || 0} page={this.props.activeTab}>
+          <Tab heading={<TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content padder>
               <List 
                 dataSource={ ds.cloneWithRows(this._getAddressNotVisited())}
