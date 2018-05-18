@@ -54,7 +54,8 @@ export class FormLocationModal extends React.Component {
       samples: [],
       inspect: {},
       treatment: {},
-    }
+    },
+    census: {}
   }
   
   constructor(props) {

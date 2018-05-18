@@ -123,7 +123,7 @@ class FieldGroupScreen extends React.Component {
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
                 enableEmptySections={true}
                 onRowOpen={false}
-                leftOpenValue={0}
+                leftOpenValue={75}
                 rightOpenValue={-75}
                 />
             </Content>
@@ -137,7 +137,7 @@ class FieldGroupScreen extends React.Component {
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
                 enableEmptySections={true}
                 onRowOpen={false}
-                leftOpenValue={0}
+                leftOpenValue={75}
                 rightOpenValue={-75}
                  />
             </Content>
@@ -204,8 +204,16 @@ class FieldGroupScreen extends React.Component {
 
   renderLeftHiddenRow(data, secId, rowId, rowMap){
     return (
-      <View></View>
-    )
+      <Button full onPress={() => {
+        Actions.censoModal({
+          address: data,
+          publicarea: this.props.publicarea,
+          fieldgroup: this.props.fieldgroup
+        })
+      }}>
+        <Icon active size={28} name = "md-list-box" />
+      </Button>
+    );
   }
 
   renderRemoveButton(){

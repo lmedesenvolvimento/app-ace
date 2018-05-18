@@ -1,9 +1,9 @@
-import Types from "../types/field_groups_types";
-import Session from "../../services/Session";
-import Store from "../../constants/Store";
+import Types from '../types/field_groups_types';
+import Session from '../../services/Session';
 
-import { client } from "../../services/ApolloClient";
-import { genSecureHex } from "../../services/SecureRandom";
+import { client } from '../../services/ApolloClient';
+import { genSecureHex } from '../../services/SecureRandom';
+import { simpleToast } from '../../services/Toast';
 
 
 export function setFieldGroups(data){
@@ -25,14 +25,14 @@ export function getFieldGroups(){
       if(Session.Storage.cache == null || Session.Storage.cache.data == null){
         // Get in API
         client(gql_get_field_groups)
-        .then((response) => {
-          // Criando ids únicos para todas as entidades recebidos
-          let field_groups = response.data.mappings.map(createUniqueIds);
-          // Enviando para Store
-          dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
-          // Guardando Alterações no Banco
-          commit(getState);
-        }).catch( error => console.log(error))
+          .then((response) => {
+            // Criando ids únicos para todas as entidades recebidos
+            let field_groups = response.data.mappings.map(createUniqueIds);
+            // Enviando para Store
+            dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
+            // Guardando Alterações no Banco
+            commit(getState);
+          }).catch(error => simpleToast(error));
       } else{
         // Resgatando do Cache
         dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data });
@@ -90,24 +90,24 @@ export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
 }
 
 function createUniqueIds(mapping){
-  let { field_group } = mapping
+  let { field_group } = mapping;
 
-  mapping.$id = genSecureHex()
+  mapping.$id = genSecureHex();
   
-  field_group.mapping_id = mapping.id
-  field_group.public_areas.map(createUniqueIdsForPublicAreas.bind(this))
-  return mapping
+  field_group.mapping_id = mapping.id;
+  field_group.public_areas.map(createUniqueIdsForPublicAreas.bind(this));
+  return mapping;
 }
 
 function createUniqueIdsForPublicAreas(public_area){
-  public_area.$id = genSecureHex()
-  public_area.addresses.map(createUniqueIdsForAddresses)
-  return public_area
+  public_area.$id = genSecureHex();
+  public_area.addresses.map(createUniqueIdsForAddresses);
+  return public_area;
 }
 
 function createUniqueIdsForAddresses(address){
-  address.$id = genSecureHex()
-  return address
+  address.$id = genSecureHex();
+  return address;
 }
 
 function commit(getState){
@@ -138,6 +138,19 @@ let gql_get_field_groups = {
               id,
               type,
               check_in
+            }
+            census {
+              id
+              inhabitants
+              cistern
+              drum
+              filter
+              plant_pot
+              pot
+              tank
+              tna
+              water_box
+              waterhole
             }
           }
         }
