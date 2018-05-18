@@ -202,7 +202,7 @@ export class CensoModal extends React.Component {
   okModal(){
     let updates = _.clone(this.props.address);
     // set census to updates
-    updates.census[0] = _.clone(this.state);
+    updates.census[0] = _.clone(_.omit(this.state, ['isReady']));
     // dispath action
     this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, updates);
     // feedback user

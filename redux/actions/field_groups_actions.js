@@ -112,7 +112,7 @@ function createUniqueIdsForAddresses(address){
 
 function commit(getState){
   let state = getState();
-  Session.Storage.create(state.currentUser.data.email, state.fieldGroups)
+  Session.Storage.create(state.currentUser.data.email, state.fieldGroups);
 }
 
 let gql_get_field_groups = {
@@ -138,7 +138,7 @@ let gql_get_field_groups = {
               id,
               type,
               check_in
-            }
+            },
             census {
               id
               inhabitants
