@@ -2,7 +2,7 @@
   "expo": {
     "sdkVersion": "23.0.0",
     "name":"Aedes em Foco Agente",
-    "version": "0.7.2",
+    "version": "0.7.3",
     "description":"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.",
     "slug":"aedes-agent-react-native",
     "privacy": "unlisted",
