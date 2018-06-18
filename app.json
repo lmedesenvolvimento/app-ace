@@ -18,6 +18,7 @@
       "image": "./assets/images/aedes_em_foco.png"
     },
     "android":{
+      "package": "br.ufc.lme.aedesemfoco.agent",
       "permissions":[
         "ACCESS_FINE_LOCATION"
       ]
