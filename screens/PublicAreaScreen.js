@@ -182,8 +182,7 @@ class FieldGroupScreen extends React.Component {
     return (
       <View style={styles.notfoundcontainer}>
         <Icon android="md-sad" ios="ios-sad-outline" style={styles.notfoundnoteicon}/>
-        <Text style={styles.notfoundtitle}>Oh, não! Você não tem nehuma rua cadastrada.</Text>
-        <Text note style={styles.notfoundnote}>Comece já a adicionar as localizações.</Text>
+        <Text style={styles.notfoundtitle}>Comece já a adicionar as residências e visitas.</Text>
       </View>
     )
   }
