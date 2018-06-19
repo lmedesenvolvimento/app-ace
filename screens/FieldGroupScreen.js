@@ -93,7 +93,7 @@ class PublicAreaScreen extends React.Component {
           position="bottomRight"
           style={{ backgroundColor: Colors.accentColor }}
           onPress={() => Actions.newStreetModal({ hide: false, fieldgroup: this.props.fieldgroup })}>
-          <MaterialIcons name="location-on" size={24} />
+          <MaterialIcons android="md-create" ios="ios-create" size={24} />
         </Fab>
       </Container>
     );

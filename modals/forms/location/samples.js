@@ -103,7 +103,7 @@ export class SamplesForm extends React.Component {
                   <Row style={{ alignItems: 'flex-end' }}>
                     <Col>
                       <Item floatingLabel>
-                        <Label> Nº da Amostra</Label>
+                        <Label> Nº da Coleta</Label>
                         <Input
                           value={this.state.newItem.number.toString()}
                           keyboardType='numeric'
@@ -179,7 +179,7 @@ export class SamplesForm extends React.Component {
     return(
       <ListItem>
         <Body>
-          <Text>{ `${item.number} ${ item.number > 1 ? "itens" : "itens" } coletado` }</Text>
+          <Text>{ `Nº da Coleta ${item.number}` }</Text>
           <Text note> Tipo da coleta: { Object.keys(SampleType)[item.type].toUpperCase() }</Text>
         </Body>
       </ListItem>
@@ -201,7 +201,7 @@ export class SamplesForm extends React.Component {
   }
 
   addSampleItem(){
-    if (this.state.newItem.value <= 0){
+    if (_.isUndefined(this.state.newItem.number) || this.state.newItem.number <= 0){
       Alert.alert(
         'Falha na coleta',
         'A quantidade de itens não pode ser menor ou igual a zero',
