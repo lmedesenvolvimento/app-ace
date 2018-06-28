@@ -2,7 +2,7 @@ export const CensoType = {
   inhabitants: 'Habitantes',
   tank: 'Tanques',
   drum: 'Tambores',
-  tna: 'TNA',
+  tna: 'TINA',
   filter: 'Filtros',
   pot: 'Vaso',
   plant_pot: 'Vaso de Planta',

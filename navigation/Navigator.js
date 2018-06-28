@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BackHandler, StyleSheet, View, Platform } from 'react-native';
+import { Alert, BackHandler, StyleSheet, View } from 'react-native';
 import { connect, Provider } from 'react-redux';
 
 import {
@@ -14,8 +14,6 @@ import {
 
 import Colors from '../constants/Colors';
 import Store, { configureStore } from '../constants/Store';
-
-import Session from '../services/Session';
 
 import MainMenu from './layout/MainMenu';
 import MenuButton from './layout/MenuButton';
@@ -39,21 +37,30 @@ import SynchronizeModal from '../modals/SynchronizeModal';
 
 const RouterWithRedux = connect()(Router);
 
-Store.instance = configureStore()
+Store.instance = configureStore();
 
 class Navigator extends Component {
-  whitelistExitApp = ["_home", "login"]
-
+  
   constructor(props){
     super(props);
+    this.whitelistExitApp = ['_home', 'login'];
   }
 
   onBackPress(){
     // Prevent app exit
     if (this.whitelistExitApp.includes(Actions.currentScene) && Actions.state.index === 0) {
-      return false;
+
+      Alert.alert(
+        'Confirmação',
+        'Você deseja realmente sair do aplicativo',
+        [
+          {text: 'Não', style: 'cancel'},
+          {text: 'Sim', onPress: () => BackHandler.exitApp() },
+        ],
+        { cancelable: false }
+      );      
     }
-    else if (Actions.currentScene == "syncDataModal"){
+    else if (Actions.currentScene == 'syncDataModal'){
       return true;
     } 
     else{
@@ -66,7 +73,7 @@ class Navigator extends Component {
     return(
       <View style={styles.container}>
         <Provider store={Store.instance}>
-          <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={ () => this.onBackPress() }>
+          <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={this.onBackPress.bind(this)}>
             <Modal key="root">
               <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
                 <Stack>
