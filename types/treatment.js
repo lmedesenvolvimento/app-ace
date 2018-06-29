@@ -1,3 +1,4 @@
 export const TreatmentType = {
-  larvicida: 0
+  larvicida_pyriproxyfen: 'Larvicida Pyriproxyfen',
+  larvicida_spinosad: 'Larvicida Spinosad'
 }

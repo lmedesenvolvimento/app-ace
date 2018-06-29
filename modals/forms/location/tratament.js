@@ -39,7 +39,7 @@ import { TreatmentType } from "../../../types/treatment";
 
 export class TratamentForm extends React.Component {
   state = {
-    type: TreatmentType.larvicida,
+    type: 'larvicida_pyriproxyfen',
     quantity: 0.0,
     adulticida_quantity: 0.0
   }
@@ -87,12 +87,16 @@ export class TratamentForm extends React.Component {
             </Grid>
             <Grid>
               <Col>
-                <Item floatingLabel >
-                  <Label>Tipo</Label>
-                  <Input 
-                    value='Larvícida'
-                    disabled={true}/>
-                </Item>                
+                <Label>Tipo</Label>
+                <Picker
+                  selectedValue={this.state.type}
+                  onValueChange={(type) => this.setState({ ...this.state, type: type})}
+                  supportedOrientations={['portrait', 'landscape']}
+                  iosHeader="Selecione um"
+                  mode="dropdown">
+                    <Item label={TreatmentType.larvicida_pyriproxyfen} value={'larvicida_pyriproxyfen'} />
+                    <Item label={TreatmentType.larvicida_spinosad} value={'larvicida_spinosad'} />
+                </Picker>                
               </Col>
             </Grid>
             <Grid>

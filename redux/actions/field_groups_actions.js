@@ -148,7 +148,7 @@ let gql_get_field_groups = {
               plant_pot
               pot
               tank
-              tna
+              tina
               water_box
               waterhole
             }
