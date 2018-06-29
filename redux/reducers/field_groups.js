@@ -61,6 +61,7 @@ export default function reducer(state = initialState, action){
 
       // Criando um Array para novas visitas
       newData.$id = genSecureHex()
+      newData.census = []
       newData.visits = [newData.visit]
       
       // Adicionando nova Localização e Visita

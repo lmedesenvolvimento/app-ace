@@ -15,7 +15,7 @@ class LogoutButton extends React.Component {
   render(){
     return (
       <Button danger disabled={!this.props.network.isConnected} onPress={ () => this.destroySession() } style={Layout.marginVertical}>
-        <Text>Logout</Text>
+        <Text>Sair</Text>
       </Button>
     );
   }

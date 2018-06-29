@@ -54,7 +54,7 @@ export class CensoModal extends React.Component {
     inhabitants: 0,
     tank: 0,
     drum: 0,
-    tna: 0,
+    tina: 0,
     filter: 0,
     pot: 0,
     plant_pot: 0,
@@ -99,12 +99,12 @@ export class CensoModal extends React.Component {
                  />
               </Item>
               <Item>
-                <Label>{CensoType.tna}</Label>
+                <Label>{CensoType.tina}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={this.state.tna.toString()}
-                  onChangeText={tna => this.setState({tna})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'tna')}
+                  value={this.state.tina.toString()}
+                  onChangeText={tina => this.setState({tina})}
+                  onBlur={this.onBlurNumeralState.bind(this, 'tina')}
                 />
               </Item>
               <Item>
