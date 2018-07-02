@@ -85,9 +85,9 @@ export class TratamentForm extends React.Component {
                 </Item>
               </Col>
             </Grid>
-            <Grid>
+            <Grid style={{ marginHorizontal: 12, marginTop: 24 }}>
               <Col>
-                <Label>Tipo</Label>
+                <Text note>Tipo de Código</Text>
                 <Picker
                   selectedValue={this.state.type}
                   onValueChange={(type) => this.setState({ ...this.state, type: type})}
