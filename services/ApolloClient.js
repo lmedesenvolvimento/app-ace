@@ -1,10 +1,12 @@
-import Config from "../env.json";
+import Config from '../env.json';
+import ProductionConfig from '../env.production.json';
 import { createApolloFetch } from 'apollo-fetch';
 
-const uri = `${Config.BASEURL}/graphql`;
+const baseurl = (__DEV__ ? Config.BASEURL : ProductionConfig);
+const uri = `${baseurl}/graphql`;
 
 export function applyApolloMiddleware(credential){
-  client.use(({ request, options }, next) => {
+  client.use(({ options }, next) => {
     if (!options.headers) {
       options.headers = {};
     }

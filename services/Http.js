@@ -1,8 +1,10 @@
-import Config from "../env.json";
-import axios from "axios";
+import Config from '../env.json';
+import ProductionConfig from '../env.production.json';
+
+import axios from 'axios';
 
 let instance = axios.create({
-  baseURL: Config.BASEURL
+  baseURL: ( __DEV__ ? Config.BASEURL : ProductionConfig )
 });
 
 instance.defaults.headers.post['Accept'] = 'application/json';
