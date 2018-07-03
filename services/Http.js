@@ -1,10 +1,8 @@
-import Config from '../env.json';
-import ProductionConfig from '../env.production.json';
-
+import Expo from 'expo';
 import axios from 'axios';
 
 let instance = axios.create({
-  baseURL: ( __DEV__ ? Config.BASEURL : ProductionConfig )
+  baseURL: Expo.Constants.manifest.extra.baseurl
 });
 
 instance.defaults.headers.post['Accept'] = 'application/json';
