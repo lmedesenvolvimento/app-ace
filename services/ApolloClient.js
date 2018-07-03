@@ -1,8 +1,7 @@
-import Config from '../env.json';
-import ProductionConfig from '../env.production.json';
+import Expo from 'expo';
 import { createApolloFetch } from 'apollo-fetch';
 
-const baseurl = (__DEV__ ? Config.BASEURL : ProductionConfig);
+const baseurl = Expo.Constants.manifest.extra.baseurl;
 const uri = `${baseurl}/graphql`;
 
 export function applyApolloMiddleware(credential){
@@ -10,7 +9,7 @@ export function applyApolloMiddleware(credential){
     if (!options.headers) {
       options.headers = {};
     }
-    options.headers['X-User-Email'] = credential.email
+    options.headers['X-User-Email'] = credential.email;
     options.headers['X-User-Token'] = credential.authentication_token;
     next();
   });
