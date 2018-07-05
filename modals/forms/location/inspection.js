@@ -58,7 +58,7 @@ export class InspectionForm extends React.Component {
 
   componentWillMount(){    
     let { address } = this.props;
-    if(address){
+    if(address && address.visit){
       this.setState({ ...address.visit.inspect, ...address.visit.sample })
     }
   }

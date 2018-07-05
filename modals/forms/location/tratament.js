@@ -24,14 +24,8 @@ import {
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
-import StringMask from 'string-mask';
-import moment from 'moment';
-
 import Colors from '../../../constants/Colors';
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
-
-import { simpleToast } from '../../../services/Toast';
 
 import { StepBars, Step } from './StepBars';
 
@@ -52,7 +46,7 @@ export class TratamentForm extends React.Component {
   }
 
   componentWillMount(){    
-    if(this.props.address){
+    if(this.props.address && this.props.address.visit){
       this.setState({...this.props.address.visit.treatment})
     }
   }

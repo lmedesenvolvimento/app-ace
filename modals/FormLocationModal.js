@@ -22,7 +22,6 @@ import {
 import Swiper from 'react-native-swiper';
 
 import Colors from '../constants/Layout';
-import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
 import { getLocationAsync } from '../services/Permissions';
@@ -173,7 +172,8 @@ export class FormLocationModal extends React.Component {
     this.setState(updates);
   }
   
-  onObservationFormSubmit = (data) => {
+  onObservationFormSubmit = (data) => {let { latitude, longitude } = data.coords;
+  this.setState({ latitude, longitude })
     let { address } = this.props;    
     let updates = {
       visit: this.state.visit

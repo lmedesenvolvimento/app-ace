@@ -44,8 +44,9 @@ export class ObservationForm extends React.Component {
   }
 
   componentWillMount(){    
-    if(this.props.address){
-      this.setState({observation: this.props.address.visit.observation})
+    let { address } = this.props;
+    if(address && address.visit){
+      this.setState({observation: address.visit.observation})
     }
   }
 

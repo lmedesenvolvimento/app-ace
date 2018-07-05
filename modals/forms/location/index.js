@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Alert } from 'react-native';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
+
+import numeral from 'numeral';
 
 import {
   Header,
@@ -42,7 +44,7 @@ import { VisitType, VisitTypeLocation } from '../../../types/visit';
 
 export class LocationForm extends React.Component {
   state = {
-    number: null,
+    number: '',
     complement: null,
     check_in: moment(),
     type: VisitType.normal,
@@ -69,10 +71,12 @@ export class LocationForm extends React.Component {
       updates.id = address.id
       updates.number = address.number
       updates.complement = address.complement
-      updates.type = address.visit.type
-      updates.type_location = address.visit.type_location
-      updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in)
-      updates.check_in_translate = updates.check_in.format('HH:mm')
+      if(this.props.address.visit){
+        updates.type = address.visit.type
+        updates.type_location = address.visit.type_location
+        updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in)
+        updates.check_in_translate = updates.check_in.format('HH:mm')
+      }
     }
 
     this.setState(updates)
@@ -103,7 +107,12 @@ export class LocationForm extends React.Component {
                 <Col size={33}>
                   <Item floatingLabel error={this.state.validation.number}>
                     <Label>Número</Label>
-                    <Input disabled={this.state.id} value={this.state.number.toString()} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
+                    <Input 
+                      disabled={this.state.id}
+                      keyboardType='numeric'
+                      value={this.state.number ? this.state.number.toString() : ''} 
+                      onChangeText={(number) => this.setState({number})} 
+                      onBlur={this.onBlurNumeralState.bind(this)} />
                   </Item>
                 </Col>
                 <Col size={66} style={{ justifyContent: 'flex-end' }}>
@@ -203,7 +212,11 @@ export class LocationForm extends React.Component {
 
   onSubmit(){
     if(this.isInvalid()){
-      Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
+      if(this.isHasNumberInPublicArea()){
+        Alert.alert('Falha na Validação', 'Por favor cheque se o número do local já foi utilizado anteriormente.')
+      } else {
+        Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
+      }
     } else {
       // Force instance momment
       this.state.check_in = moment(this.state.check_in)
@@ -231,6 +244,15 @@ export class LocationForm extends React.Component {
     }
   }
 
+  onBlurNumeralState(){
+    let number = numeral(this.state.number).value()
+    let updates = {}
+
+    updates.number = Math.abs(number) || ''
+
+    this.setState(updates)
+  }
+
   applyStartDateMask(check_in_translate){
     check_in_translate = check_in_translate.replace(':','')
     let result = new StringMask("00:00").apply(check_in_translate)
@@ -242,7 +264,7 @@ export class LocationForm extends React.Component {
     const { number, check_in_translate } = this.state;
 
     this.state.validation = {
-      number: _.isEmpty(number),
+      number: _.isEmpty(number.toString()) || this.isHasNumberInPublicArea(),
       check_in_translate: _.isEmpty(check_in_translate),
     }
 
@@ -253,6 +275,15 @@ export class LocationForm extends React.Component {
 
     // Verify if all states has present
     return _.values(this.state.validation).includes(true)
+  }
+
+  isHasNumberInPublicArea(){
+    // if registred address has same state number
+    if(this.props.address && this.props.address.number.toString() == this.state.number.toString()){
+      return false
+    }
+
+    return _.chain(this.props.publicarea.addresses).find((a)=> a.number.toString() == this.state.number.toString()).value() ? true : false
   }
 
   toObservation(){

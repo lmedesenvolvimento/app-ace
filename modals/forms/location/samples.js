@@ -30,14 +30,9 @@ import {
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import StringMask from 'string-mask';
-import moment from 'moment';
 
 import Colors from '../../../constants/Colors';
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
-
-import { simpleToast } from '../../../services/Toast';
 
 import { StepBars, Step } from './StepBars';
 
@@ -60,7 +55,7 @@ export class SamplesForm extends React.Component {
 
   componentWillMount(){    
     let { address } = this.props;
-    if (address && address.visit.samples){
+    if (address && address.visit && address.visit.samples){
       this.setState({ data: address.visit.samples })
     }
   }
