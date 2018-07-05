@@ -178,7 +178,7 @@ export class CensoModal extends React.Component {
                 </Col>
               </Row>
             </Grid>
-          </Footer>          
+          </Footer>
         </Container>
       );
     } else{

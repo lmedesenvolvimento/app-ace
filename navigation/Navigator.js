@@ -31,6 +31,7 @@ import FormLocationModal from '../modals/FormLocationModal';
 import PublicAreaScreen from '../screens/PublicAreaScreen';
 
 import CensoModal from '../modals/CensoModal';
+import ClearStorageModal from '../modals/ClearStorageModal';
 
 // Sync Flux
 import SynchronizeModal from '../modals/SynchronizeModal';
@@ -123,11 +124,12 @@ class Navigator extends Component {
               </Scene>
 
               {/* MODALS*/}
-              <Scene key="syncDataModal"   component={ SynchronizeModal }  modal title="Sincronizando Informações" hideNavBar />
-              <Scene key="newStreetModal"  component={ NewStreetModal }    modal title="Novo Logradouro"   hideNavBar />
-              <Scene key="editStreetModal" component={ EditStreetModal }   modal title="Editar Logradouro" hideNavBar />
-              <Scene key="locationModal"   component={ FormLocationModal } modal title="Editar Logradouro" hideNavBar />
-              <Scene key="censoModal"      component={ CensoModal }        modal title="Editar Censo" hideNavBar />
+              <Scene key="syncDataModal" component={ SynchronizeModal } modal title="Sincronizando Informações" hideNavBar />
+              <Scene key="newStreetModal"  component={ NewStreetModal } modal title="Novo Logradouro"   hideNavBar />
+              <Scene key="editStreetModal" component={ EditStreetModal } modal title="Editar Logradouro" hideNavBar />
+              <Scene key="locationModal" component={ FormLocationModal } modal title="Editar Logradouro" hideNavBar />
+              <Scene key="censoModal" component={ CensoModal } modal title="Editar Censo" hideNavBar />
+              <Scene key="clearStorageModal" component={ ClearStorageModal } modal title="Apagar todos os dados locais" hideNavBar />
               {/* END MODALS*/}
             </Modal>
           </RouterWithRedux>

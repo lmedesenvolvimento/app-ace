@@ -58,6 +58,7 @@ class MainMenu extends Component {
               </Body>
             </ListItem>
             { this._renderSyncItem() }
+            { this._renderForceSyncItem() }
           </List>
         </Content>
       </Container>
@@ -66,24 +67,35 @@ class MainMenu extends Component {
 
   shareCurrentState(){
     Share.share({
-      title: "Estado da Aplicação",
+      title: 'Estado da Aplicação',
       message: JSON.stringify(this.props.state.fieldGroups.data)
-    })
+    });
   }
 
   _defineItemStyle(key){
-    return this.props.activeItemKey == key ? styles.listItemActive : styles.listItem
+    return this.props.activeItemKey == key ? styles.listItemActive : styles.listItem;
   }
   _defineItemTextStyle(key){
-    return this.props.activeItemKey == key ? styles.listItemActiveText : styles.listItemText
+    return this.props.activeItemKey == key ? styles.listItemActiveText : styles.listItemText;
   }
 
   _renderSyncItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('syncDataModal')} last onPress={_ => Actions.syncDataModal()}>
+        <ListItem style={this._defineItemStyle('syncDataModal')} last onPress={ () => Actions.syncDataModal()}>
           <Body>
             <Text style={this._defineItemTextStyle('syncDataModal')}>Sincronizar Informações</Text>
+          </Body>
+        </ListItem>
+      );
+    }
+  }
+  _renderForceSyncItem(){
+    if (this.props.state.network.isConnected){
+      return(
+        <ListItem style={this._defineItemStyle('clearStorageModal')} last onPress={_ => Actions.clearStorageModal()}>
+          <Body>
+            <Text style={this._defineItemTextStyle('clearStorageModal')}>Sincronizar Informações</Text>
           </Body>
         </ListItem>
       );
@@ -96,9 +108,9 @@ const styles = {
     flex: 1,
     maxHeight: 160,
     padding: 16,
-    alignSelf:"stretch",
-    alignItems: "flex-start",
-    justifyContent: "flex-end",
+    alignSelf: 'stretch',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
     backgroundColor: Colors.primaryColor,
   },
   listItem: {
@@ -126,8 +138,8 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.userActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainMenu)
+export default connect(mapStateToProps, mapDispatchToProps)(MainMenu);
