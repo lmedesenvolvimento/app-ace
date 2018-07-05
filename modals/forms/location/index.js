@@ -103,7 +103,7 @@ export class LocationForm extends React.Component {
                 <Col size={33}>
                   <Item floatingLabel error={this.state.validation.number}>
                     <Label>Número</Label>
-                    <Input disabled={this.state.id} value={this.state.number} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
+                    <Input disabled={this.state.id} value={this.state.number.toString()} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
                   </Item>
                 </Col>
                 <Col size={66} style={{ justifyContent: 'flex-end' }}>
