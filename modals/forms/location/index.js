@@ -8,6 +8,7 @@ import {
   Container,
   Content,
   H2,
+  H3,
   Text,
   Title,
   Left,
@@ -20,6 +21,7 @@ import {
   Body,
   Button,
   Picker,
+  DatePicker
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
@@ -30,6 +32,7 @@ import momentTimezone from "moment-timezone";
 
 import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
+import Colors from '../../../constants/Colors';
 
 import { simpleToast } from '../../../services/Toast';
 
@@ -91,36 +94,55 @@ export class LocationForm extends React.Component {
             <H2 style={Layout.padding}>Localização</H2>
 
             <Grid>
-              <Col size={66}>
-                <Item floatingLabel>
-                  <Label>Logradouro</Label>
-                  <Input value={this.state.address}  disabled={true}/>
-                </Item>
-              </Col>
-              <Col size={33}>
-                <Item floatingLabel error={this.state.validation.number}>
-                  <Label>Número</Label>
-                  <Input disabled={this.state.id} value={this.state.number} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
-                </Item>
-              </Col>
+              <Row>
+                <Col>
+                  <H3 note style={Layout.padding}>{this.state.address}</H3>
+                </Col>
+              </Row>
+              <Row>
+                <Col size={33}>
+                  <Item floatingLabel error={this.state.validation.number}>
+                    <Label>Número</Label>
+                    <Input disabled={this.state.id} value={this.state.number} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
+                  </Item>
+                </Col>
+                <Col size={66} style={{ justifyContent: 'flex-end' }}>
+                  <Item floatingLabel>
+                    <Label>Complemento</Label>
+                    <Input disabled={this.state.id} value={this.state.complement} onChangeText={(complement) => this.setState({complement})} />
+                  </Item>
+                </Col>
+              </Row>
             </Grid>
 
-            <Grid>
-              <Col size={66} style={{ justifyContent: 'flex-end' }}>
-                <Item floatingLabel>
-                  <Label>Complemento</Label>
-                  <Input disabled={this.state.id} value={this.state.complement} onChangeText={(complement) => this.setState({complement})} />
-                </Item>
-              </Col>
-              <Col size={33}>
-                <Item floatingLabel error={this.state.validation.check_in_translate}>
-                  <Label>Entrada</Label>
-                  <Input
-                    value={this.state.check_in_translate}
-                    keyboardType='numeric'
-                    onChangeText={ this.applyStartDateMask.bind(this) } />
-                </Item>
-              </Col>
+            <Grid style={Layout.padding}>
+              <Row style={{ alignItems: 'flex-end' }}>
+                <Col size={66}>
+                  <Text note>Data</Text>
+                  <DatePicker
+                    defaultDate={ this.state.check_in._d ? this.state.check_in.toDate() : new Date() }
+                    minimumDate={new Date(2018, 1, 1)}
+                    locale={"pt-br"}
+                    timeZoneOffsetInMinutes={undefined}
+                    modalTransparent={false}
+                    animationType={"fade"}
+                    androidMode={"default"}
+                    placeHolderText={ this.state.check_in._d ? this.state.check_in.format('DD/mm/YYYY') : 'Selecione uma data' }
+                    textStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
+                    placeHolderTextStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
+                    onDateChange={ (check_in) => this.setState({ check_in: moment(check_in) }) }
+                    />
+                </Col>
+                <Col size={33}>
+                  <Item floatingLabel error={this.state.validation.check_in_translate}>
+                    <Label>Entrada</Label>
+                    <Input
+                      value={this.state.check_in_translate}
+                      keyboardType='numeric'
+                      onChangeText={ this.applyStartDateMask.bind(this) } />
+                  </Item>
+                </Col>
+              </Row>
             </Grid>
 
             <Grid style={{ marginHorizontal: 12, marginTop: 24 }}>
@@ -195,10 +217,12 @@ export class LocationForm extends React.Component {
         m: time[1]
       })
 
-      this.state.check_in = momentTimezone.tz(this.state.check_in, "America/Sao_paulo").format()
+      let updates = _.clone(this.state)
+
+      updates.check_in = momentTimezone.tz(updates.check_in, "America/Sao_paulo").format()
 
       // Pass form value parent component
-      let state = _.omit(this.state,['validation','check_in_translate'])
+      let state = _.omit(updates,['validation','check_in_translate'])
       this.props.onSubmit(state)
       // Next step
       isVisitClosedOrRefused(this.state.type) 

@@ -136,8 +136,10 @@ export class FormLocationModal extends React.Component {
 
     // Save Current Geo Location
     getLocationAsync().then((data) => {
-      let { latitude, longitude } = data.coords;
-      this.setState({ latitude, longitude })
+      if(data) {
+        let { latitude, longitude } = data.coords;
+        this.setState({ latitude, longitude });
+      }
     })
   }
   
