@@ -4,7 +4,7 @@ export const CensoType = {
   drum: 'Tambores',
   tina: 'TINA',
   filter: 'Filtros',
-  pot: 'Vaso',
+  pot: 'Pote',
   plant_pot: 'Vaso de Planta',
   cistern: 'Cisterna',
   waterhole: 'Poço de Água',

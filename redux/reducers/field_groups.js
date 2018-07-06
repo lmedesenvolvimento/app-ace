@@ -131,9 +131,9 @@ function getPublicAreaIndex(state, action, index){
     .find(['$id', fieldGroupId])
     .get('field_group.public_areas')
     .findIndex(['$id', index])
-    .value()
+    .value();
 
-  return result
+  return result;
 }
 
 // Queries for Location
@@ -146,9 +146,9 @@ function getLocationIndex(state, action, index){
     .find(['$id', publicareaId])
     .get('addresses')
     .findIndex(['$id', index])
-    .value()
+    .value();
 
-  return result  
+  return result;
 }
 
 // Checks

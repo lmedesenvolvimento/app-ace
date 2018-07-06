@@ -52,13 +52,13 @@ class MainMenu extends Component {
               </Body>
             </ListItem>
 
-            <ListItem style={this._defineItemStyle('about')} onPress={_=> Actions.about()}>
+            <ListItem style={this._defineItemStyle('about')} onPress={ () => Actions.about()}>
               <Body>
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
               </Body>
             </ListItem>
+            {/* { this._renderForceSyncItem() } */}
             { this._renderSyncItem() }
-            { this._renderForceSyncItem() }
           </List>
         </Content>
       </Container>
@@ -93,9 +93,9 @@ class MainMenu extends Component {
   _renderForceSyncItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('clearStorageModal')} last onPress={_ => Actions.clearStorageModal()}>
+        <ListItem style={this._defineItemStyle('clearStorageModal')} onPress={_ => Actions.clearStorageModal()}>
           <Body>
-            <Text style={this._defineItemTextStyle('clearStorageModal')}>Sincronizar Informações</Text>
+            <Text style={this._defineItemTextStyle('clearStorageModal')}>Apagar Cache</Text>
           </Body>
         </ListItem>
       );

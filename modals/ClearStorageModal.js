@@ -59,9 +59,9 @@ export class ClearStorageModal extends React.Component {
       return (
         <Container>
           <Grid>
-            <Col style={{ justifyContent: 'center', alignItems: 'center' }}>
+            <Col style={styles.container}>
               <H2 style={Layout.padding}>Apagar todos os dados locais</H2>
-              <Text note>Para limpar</Text>
+              <Text note style={styles.textCenter}>Você deseja realmente apagar os dados locais essa ação é irreversível?</Text>
             </Col>
           </Grid>
           <Footer style={{backgroundColor:"white"}} padder>
@@ -101,9 +101,15 @@ export class ClearStorageModal extends React.Component {
 }
 
 const styles = {
+  container: {
+    marginVertical: 24,
+    marginHorizontal: 48,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   wrapper: {},
-  slide: {
-    flex: 1
+  textCenter: {
+    textAlign: 'center'
   },
   spinnerContainer: {
     flex: 1,

@@ -38,7 +38,7 @@ import { SamplesForm } from './forms/location/samples';
 import { TratamentForm } from './forms/location/tratament';
 import { ObservationForm } from './forms/location/observation';
 
-import { VisitType, VisitTypeLocation } from '../types/visit';
+import { VisitType } from '../types/visit';
 
 export class FormLocationModal extends React.Component {
   state = {
@@ -53,8 +53,7 @@ export class FormLocationModal extends React.Component {
       samples: [],
       inspect: {},
       treatment: {},
-    },
-    census: {}
+    }
   }
   
   constructor(props) {
@@ -172,8 +171,7 @@ export class FormLocationModal extends React.Component {
     this.setState(updates);
   }
   
-  onObservationFormSubmit = (data) => {let { latitude, longitude } = data.coords;
-  this.setState({ latitude, longitude })
+  onObservationFormSubmit = (data) => {
     let { address } = this.props;    
     let updates = {
       visit: this.state.visit

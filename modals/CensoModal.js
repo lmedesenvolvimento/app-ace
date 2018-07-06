@@ -3,34 +3,23 @@ import React from 'react';
 import { ActivityIndicator, View, Picker, Platform } from 'react-native';
 
 import {
-  Header,
   Container,
   Content,
-  H1,
   H2,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
-  Form,
   Item,
   Label,
   Input,
-  Body,
-  Button,
-  Spinner
+  Button
 } from 'native-base';
 
 import { Grid, Row, Col } from 'react-native-easy-grid';
-
-import Swiper from 'react-native-swiper';
 
 import Colors from '../constants/Layout';
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
-import { getLocationAsync } from '../services/Permissions';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
@@ -38,11 +27,6 @@ import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from "../redux/actions";
 
-import { LocationForm } from './forms/location';
-import { InspectionForm } from './forms/location/inspection';
-import { SamplesForm } from './forms/location/samples';
-import { TratamentForm } from './forms/location/tratament';
-import { ObservationForm } from './forms/location/observation';
 
 import { CensoType } from '../types/censo';
 
@@ -97,6 +81,15 @@ export class CensoModal extends React.Component {
                   onChangeText={tank => this.setState({tank})}
                   onBlur={this.onBlurNumeralState.bind(this, 'tank')}
                  />
+              </Item>
+              <Item>
+                <Label>{CensoType.filter}</Label>
+                <Input
+                  keyboardType='numeric' 
+                  value={this.state.filter.toString()}
+                  onChangeText={filter => this.setState({filter})}
+                  onBlur={this.onBlurNumeralState.bind(this, 'filter')}
+                />
               </Item>
               <Item>
                 <Label>{CensoType.tina}</Label>
