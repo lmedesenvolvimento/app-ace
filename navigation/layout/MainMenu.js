@@ -1,31 +1,27 @@
-import React, { Component } from 'react';
-import { View, Share } from 'react-native';
-import { Actions } from "react-native-router-flux";
+import React from 'react';
+import { Share } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import ReduxActions from "../../redux/actions";
+import ReduxActions from '../../redux/actions';
 
-import Colors from "../../constants/Colors";
-import Layout from "../../constants/Layout";
+import Colors from '../../constants/Colors';
+import Layout from '../../constants/Layout';
 
 import {
   Container,
-  Header,
   Content,
   List,
   ListItem,
-  Left,
   Body,
-  Right,
-  Thumbnail,
   Text,
   Title,
-  Subtitle,
+  Subtitle
 } from 'native-base';
 
-class MainMenu extends Component {
+class MainMenu extends React.Component {
   constructor(props){
     super(props);
   }
@@ -84,7 +80,7 @@ class MainMenu extends Component {
       return(
         <ListItem style={this._defineItemStyle('syncDataModal')} last onPress={ () => Actions.syncDataModal()}>
           <Body>
-            <Text style={this._defineItemTextStyle('syncDataModal')}>Sincronizar Informações</Text>
+            <Text style={this._defineItemTextStyle('syncDataModal')}>Sincronizar Dados</Text>
           </Body>
         </ListItem>
       );
@@ -95,7 +91,7 @@ class MainMenu extends Component {
       return(
         <ListItem style={this._defineItemStyle('clearStorageModal')} onPress={_ => Actions.clearStorageModal()}>
           <Body>
-            <Text style={this._defineItemTextStyle('clearStorageModal')}>Apagar Cache</Text>
+            <Text style={this._defineItemTextStyle('clearStorageModal')}>Receber Dados</Text>
           </Body>
         </ListItem>
       );

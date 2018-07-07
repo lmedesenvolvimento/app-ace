@@ -1,19 +1,15 @@
 import React from 'react';
 import { View, Alert, ListView } from 'react-native';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 import numeral from 'numeral';
 
 import {
-  Header,
   Container,
   Content,
   H2,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
   Form,
   Label,

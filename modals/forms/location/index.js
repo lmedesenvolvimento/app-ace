@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { Alert } from 'react-native';
 
 import _ from 'lodash';
 
@@ -14,7 +14,6 @@ import {
   Text,
   Title,
   Left,
-  Right,
   Footer,
   Form,
   Label,
@@ -26,60 +25,59 @@ import {
   DatePicker
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import StringMask from 'string-mask';
 import moment from 'moment';
-import momentTimezone from "moment-timezone";
+import momentTimezone from 'moment-timezone';
 
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
 import Colors from '../../../constants/Colors';
-
-import { simpleToast } from '../../../services/Toast';
 
 import { StepBars, Step } from './StepBars';
 
 import { VisitType, VisitTypeLocation } from '../../../types/visit';
 
 export class LocationForm extends React.Component {
-  state = {
-    number: '',
-    complement: null,
-    check_in: moment(),
-    type: VisitType.normal,
-    type_location: VisitTypeLocation.residential,
-    validation: {
-      number: false,
-      check_in_translate: false
-    }
-  }  
-
+  
   constructor(props){
     super(props);
-    this.state.check_in_translate = this.state.check_in.format('HH:mm')
+    
+    this.state = {
+      number: '',
+      complement: null,
+      check_in: moment(),
+      type: VisitType.normal,
+      type_location: VisitTypeLocation.residential,
+      validation: {
+        number: false,
+        check_in_translate: false
+      }
+    };
+
+    this.state.check_in_translate = this.state.check_in.format('HH:mm');
   }
 
   componentWillMount(){
     let updates = {
       address: this.props.publicarea.address
-    }
+    };
 
     if(this.props.address){
-      let { address } = this.props
+      let { address } = this.props;
 
-      updates.id = address.id
-      updates.number = address.number
-      updates.complement = address.complement
+      updates.id = address.id;
+      updates.number = address.number;
+      updates.complement = address.complement;
       if(this.props.address.visit){
-        updates.type = address.visit.type
-        updates.type_location = address.visit.type_location
-        updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in)
-        updates.check_in_translate = updates.check_in.format('HH:mm')
+        updates.type = address.visit.type;
+        updates.type_location = address.visit.type_location;
+        updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in);
+        updates.check_in_translate = updates.check_in.format('HH:mm');
       }
     }
 
-    this.setState(updates)
+    this.setState(updates);
   }
 
   render(){
@@ -131,16 +129,16 @@ export class LocationForm extends React.Component {
                   <DatePicker
                     defaultDate={ this.state.check_in._d ? this.state.check_in.toDate() : new Date() }
                     minimumDate={new Date(2018, 1, 1)}
-                    locale={"pt-br"}
+                    locale={'pt-br'}
                     timeZoneOffsetInMinutes={undefined}
                     modalTransparent={false}
-                    animationType={"fade"}
-                    androidMode={"default"}
+                    animationType={'fade'}
+                    androidMode={'default'}
                     placeHolderText={ this.state.check_in._d ? this.state.check_in.format('DD/mm/YYYY') : 'Selecione uma data' }
                     textStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
                     placeHolderTextStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
                     onDateChange={ (check_in) => this.setState({ check_in: moment(check_in) }) }
-                    />
+                  />
                 </Col>
                 <Col size={33}>
                   <Item floatingLabel error={this.state.validation.check_in_translate}>
@@ -162,12 +160,12 @@ export class LocationForm extends React.Component {
                   onValueChange={(type_location) => this.setState({type_location}) }
                   supportedOrientations={['portrait','landscape']}
                   renderHeader={this._renderPickerHeader.bind(this)}
-                  mode="dropdown">
-                  <Item label="Residencial" value={VisitTypeLocation.residential} />
-                  <Item label="Comércio" value={VisitTypeLocation.commerce} />
-                  <Item label="Terreno baldio" value={VisitTypeLocation.wasteland} />
-                  <Item label="Ponto Estratégico" value={VisitTypeLocation.strategic_point} />
-                  <Item label="Outros" value={VisitTypeLocation.others} />
+                  mode='dropdown'>
+                  <Item label='Residencial' value={VisitTypeLocation.residential} />
+                  <Item label='Comércio' value={VisitTypeLocation.commerce} />
+                  <Item label='Terreno baldio' value={VisitTypeLocation.wasteland} />
+                  <Item label='Ponto Estratégico' value={VisitTypeLocation.strategic_point} />
+                  <Item label='Outros' value={VisitTypeLocation.others} />
                 </Picker>
               </Col>
             </Grid>
@@ -180,17 +178,17 @@ export class LocationForm extends React.Component {
                   onValueChange={(type) => this.setState({type}) }
                   supportedOrientations={['portrait','landscape']}
                   renderHeader={this._renderPickerHeader.bind(this)}
-                  mode="dropdown">
-                  <Item label="Normal" value={VisitType.normal} />
-                  <Item label="Recuperada" value={VisitType.recovered} />
-                  <Item label="Fechada" value={VisitType.closed} />
-                  <Item label="Recusada" value={VisitType.refused} />
+                  mode='dropdown'>
+                  <Item label='Normal' value={VisitType.normal} />
+                  <Item label='Recuperada' value={VisitType.recovered} />
+                  <Item label='Fechada' value={VisitType.closed} />
+                  <Item label='Recusada' value={VisitType.refused} />
                 </Picker>
               </Col>
             </Grid>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
@@ -213,49 +211,49 @@ export class LocationForm extends React.Component {
   onSubmit(){
     if(this.isInvalid()){
       if(this.isHasNumberInPublicArea()){
-        Alert.alert('Falha na Validação', 'Por favor cheque se o número do local já foi utilizado anteriormente.')
+        Alert.alert('Falha na Validação', 'Por favor cheque se o número do local já foi utilizado anteriormente.');
       } else {
-        Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
+        Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.');
       }
     } else {
       // Force instance momment
-      this.state.check_in = moment(this.state.check_in)
+      this.state.check_in = moment(this.state.check_in);
       
       // Covert check_in string to Timestamp
-      time = this.state.check_in_translate.split(':')
+      let time = this.state.check_in_translate.split(':');
     
       // set for translate check_i date
       this.state.check_in.set({
         h: time[0],
         m: time[1]
-      })
+      });
 
-      let updates = _.clone(this.state)
+      let updates = _.clone(this.state);
 
-      updates.check_in = momentTimezone.tz(updates.check_in, "America/Sao_paulo").format()
+      updates.check_in = momentTimezone.tz(updates.check_in, 'America/Sao_paulo').format();
 
       // Pass form value parent component
-      let state = _.omit(updates,['validation','check_in_translate'])
-      this.props.onSubmit(state)
+      let state = _.omit(updates,['validation','check_in_translate']);
+      this.props.onSubmit(state);
       // Next step
-      isVisitClosedOrRefused(this.state.type) 
-      ? this.toObservation()
-      : this.props.scrollBy(1)      
+      isVisitClosedOrRefused(this.state.type)
+        ? this.toObservation()
+        : this.props.scrollBy(1);
     }
   }
 
   onBlurNumeralState(){
-    let number = numeral(this.state.number).value()
-    let updates = {}
+    let number = numeral(this.state.number).value();
+    let updates = {};
 
-    updates.number = Math.abs(number) || ''
+    updates.number = Math.abs(number) || '';
 
-    this.setState(updates)
+    this.setState(updates);
   }
 
   applyStartDateMask(check_in_translate){
-    check_in_translate = check_in_translate.replace(':','')
-    let result = new StringMask("00:00").apply(check_in_translate)
+    check_in_translate = check_in_translate.replace(':','');
+    let result = new StringMask('00:00').apply(check_in_translate);
     // Is nesscessary for clean field
     this.setState({ check_in_translate: result });
   }
@@ -266,7 +264,7 @@ export class LocationForm extends React.Component {
     this.state.validation = {
       number: _.isEmpty(number.toString()) || this.isHasNumberInPublicArea(),
       check_in_translate: _.isEmpty(check_in_translate),
-    }
+    };
 
     // Update view
     this.setState({
@@ -274,20 +272,26 @@ export class LocationForm extends React.Component {
     });
 
     // Verify if all states has present
-    return _.values(this.state.validation).includes(true)
+    return _.values(this.state.validation).includes(true);
   }
 
   isHasNumberInPublicArea(){
     // if registred address has same state number
     if(this.props.address && this.props.address.number.toString() == this.state.number.toString()){
-      return false
+      return false;
     }
 
-    return _.chain(this.props.publicarea.addresses).find((a)=> a.number.toString() == this.state.number.toString()).value() ? true : false
+    return _.chain(this.props.publicarea.addresses).find(
+      (a) => {
+        return ( a.number.toString() == this.state.number.toString() ) && ( a.complement == this.state.complement );
+      } 
+    ).value()
+      ? true 
+      : false;
   }
 
   toObservation(){
-    return this.props.scrollBy(4)
+    return this.props.scrollBy(4);
   }
 
   _renderProgress(){
@@ -315,7 +319,7 @@ export class LocationForm extends React.Component {
           <Title style={{textAlign: 'center'}}>Selecione um</Title>
         </Body>
       </Header>
-    )
+    );
   }
 }
 
@@ -329,7 +333,7 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   },
   progressItem:{
     width: 32,
@@ -344,9 +348,9 @@ const styles = {
     ...this.progressItem,
     backgroundColor: 'red'
   }
-}
+};
 
 // Checks
 function isVisitClosedOrRefused(type){
-  return [VisitType.closed, VisitType.refused].includes(type)
+  return [VisitType.closed, VisitType.refused].includes(type);
 }

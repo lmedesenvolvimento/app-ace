@@ -1,35 +1,22 @@
 import React from 'react';
-import { View } from 'react-native';
 
 import {
-  Header,
   Container,
   Content,
   H2,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
   Form,
   Label,
   Item,
   Input,
-  Body,
   Button,
-  Picker,
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
-import StringMask from 'string-mask';
-import moment from 'moment';
-
-import Colors from '../../../constants/Colors';
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
 
-import { simpleToast } from '../../../services/Toast';
 import { VisitType } from '../../../types/visit';
 
 import { StepBars, Step } from './StepBars';

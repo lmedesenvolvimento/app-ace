@@ -5,6 +5,8 @@ import { client } from '../../services/ApolloClient';
 import { genSecureHex } from '../../services/SecureRandom';
 import { simpleToast } from '../../services/Toast';
 
+import _ from 'lodash';
+
 
 export function setFieldGroups(data){
   return {
@@ -15,14 +17,20 @@ export function setFieldGroups(data){
 
 export function getFieldGroups(){
   return (dispatch, getState) => {
-    let state = getState()
+    let state = getState();
 
     if(state.fieldGroups.data.length){
       return false;
     }
 
-    Session.Storage.get(state.currentUser.data.email).then(() => {
-      if(Session.Storage.cache == null || Session.Storage.cache.data == null){
+    Session.Storage.get(state.currentUser.data.email).then((response) => {
+      let storageData = null;
+      
+      response 
+        ? storageData = response.data
+        : storageData = [];
+
+      if (Session.Storage.cache == null || Session.Storage.cache.data == null || _.isEmpty(storageData)) {
         // Get in API
         client(gql_get_field_groups)
           .then((response) => {
@@ -37,8 +45,8 @@ export function getFieldGroups(){
         // Resgatando do Cache
         dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data });
       }
-    })
-  }
+    });
+  };
 }
 
 export function addPublicArea(fieldGroupId, newData){
@@ -46,7 +54,7 @@ export function addPublicArea(fieldGroupId, newData){
     dispatch({ type: Types.PUSH_PUBLIC_AREA, data: { fieldGroupId, newData } });
     // Guardando Alterações no Banco
     commit(getState);
-  }
+  };
 }
 
 export function editPublicArea(fieldGroupId, record, newData){
@@ -54,7 +62,7 @@ export function editPublicArea(fieldGroupId, record, newData){
     dispatch({ type: Types.EDIT_PUBLIC_AREA, data: { fieldGroupId, record, newData } });
     // Guardando Alterações no Banco
     commit(getState);
-  }
+  };
 }
 
 export function removePublicArea(fieldGroupId, record){
@@ -62,7 +70,7 @@ export function removePublicArea(fieldGroupId, record){
     dispatch({ type: Types.REMOVE_PUBLIC_AREA, data: { fieldGroupId, record } });
     // Guardando Alterações no Banco
     commit(getState);
-  }
+  };
 }
 
 export function addLocationInPublicArea(fieldGroupId, publicareaId, newData){
@@ -70,7 +78,7 @@ export function addLocationInPublicArea(fieldGroupId, publicareaId, newData){
     dispatch({ type: Types.PUSH_LOCATION, data: { fieldGroupId, publicareaId, newData } });
     // Update LocalStorage
     commit(getState);
-  }
+  };
 }
 
 export function updateLocationInPublicArea(fieldGroupId, publicareaId, record, newData){
@@ -78,7 +86,7 @@ export function updateLocationInPublicArea(fieldGroupId, publicareaId, record, n
     dispatch({ type: Types.EDIT_LOCATION, data: { fieldGroupId, publicareaId, record, newData } });
     // Update LocalStorage
     commit(getState);
-  }
+  };
 }
 
 export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
@@ -86,7 +94,7 @@ export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
     dispatch({ type: Types.REMOVE_LOCATION, data: { fieldGroupId, publicareaId, record } });
     // Update LocalStorage
     commit(getState);
-  }
+  };
 }
 
 function createUniqueIds(mapping){

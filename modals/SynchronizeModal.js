@@ -1,35 +1,14 @@
 import React from 'react';
-import { Platform, ProgressBarAndroid, ProgressViewIOS } from 'react-native';
-import { View } from 'react-native-animatable';
 
 import {
-    Header,
-    Container,
-    Content,
-    H1,
-    H3,
-    Text,
-    Title,
-    Left,
-    Right,
-    Footer,
-    Form,
-    Label,
-    Item,
-    Input,
-    Icon,
-    Body,
-    Button,
-    Picker,
+  Container,
+  Content,
 } from 'native-base';
 
-import Colors from '../constants/Layout';
-import Layout from '../constants/Layout';
 import Http from '../services/Http';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
-import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from "../redux/actions";
 

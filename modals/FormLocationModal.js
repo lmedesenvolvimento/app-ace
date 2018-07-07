@@ -1,23 +1,5 @@
 import React from 'react';
-import { ActivityIndicator, View, Picker, Platform } from 'react-native';
-
-import {
-  Header,
-  Container,
-  Content,
-  H1,
-  Text,
-  Title,
-  Left,
-  Right,
-  Footer,
-  Form,
-  Label,
-  Input,
-  Body,
-  Button,
-  Spinner
-} from 'native-base';
+import { ActivityIndicator, View, Platform } from 'react-native';
 
 import Swiper from 'react-native-swiper';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 import Colors from '../../../constants/Colors';
@@ -8,10 +8,6 @@ export class StepBars extends React.Component {
   constructor(props){
     super(props)
     this.renderChildren = this.renderChildren.bind(this)
-  }
-
-  componentDidMount(){
-
   }
 
   renderChildren(){

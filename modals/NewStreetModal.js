@@ -1,29 +1,22 @@
 import React from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { View } from 'react-native';
 
 import {
-  Header,
   Container,
   Content,
   H1,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
   Form,
   Label,
   Item,
   Input,
-  Body,
-  Button,
-  Picker,
+  Button
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 
 
-import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';

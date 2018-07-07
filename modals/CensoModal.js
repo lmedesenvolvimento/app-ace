@@ -34,21 +34,22 @@ import * as _ from 'lodash';
 import numeral from 'numeral';
 
 export class CensoModal extends React.Component {
-  state = {
-    inhabitants: 0,
-    tank: 0,
-    drum: 0,
-    tina: 0,
-    filter: 0,
-    pot: 0,
-    plant_pot: 0,
-    cistern: 0,
-    waterhole: 0,
-    water_box: 0
-  }
   
   constructor(props) {
     super(props);
+    
+    this.state = {
+      inhabitants: 0,
+      tank: 0,
+      drum: 0,
+      tina: 0,
+      filter: 0,
+      pot: 0,
+      plant_pot: 0,
+      cistern: 0,
+      waterhole: 0,
+      water_box: 0
+    };
   }  
 
   componentDidMount(){

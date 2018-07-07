@@ -1,44 +1,25 @@
 import React from 'react';
 
-import { ActivityIndicator, View, Picker, Platform } from 'react-native';
+import { ActivityIndicator, View, Platform } from 'react-native';
 
 import {
-  Header,
   Container,
-  Content,
-  H1,
   H2,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
-  Form,
-  Item,
-  Label,
-  Input,
-  Body,
-  Button,
-  Spinner
+  Button
 } from 'native-base';
 
 import { Grid, Row, Col } from 'react-native-easy-grid';
 
-import Swiper from 'react-native-swiper';
-
 import Colors from '../constants/Layout';
 import Layout from '../constants/Layout';
 
-import { simpleToast } from '../services/Toast';
-import { getLocationAsync } from '../services/Permissions';
-
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
-
-import _ from 'lodash';
+import ReduxActions from '../redux/actions';
 
 export class ClearStorageModal extends React.Component {  
   constructor(props) {
@@ -64,7 +45,7 @@ export class ClearStorageModal extends React.Component {
               <Text note style={styles.textCenter}>Você deseja realmente apagar os dados locais essa ação é irreversível?</Text>
             </Col>
           </Grid>
-          <Footer style={{backgroundColor:"white"}} padder>
+          <Footer style={{backgroundColor:'white'}} padder>
             <Grid>
               <Row>
                 <Col>
@@ -82,7 +63,7 @@ export class ClearStorageModal extends React.Component {
         <View style={styles.spinnerContainer}>
           <ActivityIndicator size={Platform.OS == 'ios' ? 1 : 64} color={Colors.accentColor} />
         </View>
-      )
+      );
     }
   }
 
@@ -93,10 +74,6 @@ export class ClearStorageModal extends React.Component {
 
   dismissModal(){
     Actions.pop();
-  }
-
-  onCancel = () => {
-    this.dismissModal()
   }
 }
 
@@ -119,11 +96,11 @@ const styles = {
   },
   footerBorder:{
     borderTopWidth: 1,
-    borderTopColor: "#eee"
+    borderTopColor: '#eee'
   },
   colLeftBorder: {
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   }
 }
 
@@ -136,7 +113,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 

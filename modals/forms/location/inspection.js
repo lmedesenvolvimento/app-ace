@@ -1,40 +1,27 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 
 import numeral from 'numeral';
 
 import {
-  Header,
   Container,
   Content,
   H2,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
   Form,
   Label,
   Item,
   Input,
-  Body,
-  Button,
-  Picker,
+  Button
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
-import StringMask from 'string-mask';
-import moment from 'moment';
-
 import Colors from '../../../constants/Colors';
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
-
-import { simpleToast } from '../../../services/Toast';
 
 import { StepBars, Step } from './StepBars';
 

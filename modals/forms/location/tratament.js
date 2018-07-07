@@ -1,7 +1,4 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
-
-import numeral from 'numeral';
 
 import {
   Header,
@@ -11,7 +8,6 @@ import {
   Text,
   Title,
   Left,
-  Right,
   Footer,
   Form,
   Label,
@@ -23,6 +19,8 @@ import {
 } from 'native-base';
 
 import { Col, Row, Grid } from "react-native-easy-grid";
+
+import numeral from 'numeral';
 
 import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
