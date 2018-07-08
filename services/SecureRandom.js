@@ -2,6 +2,6 @@ import ShortUniqueId from 'short-unique-id';
 
 const uid = new ShortUniqueId();
 
-export function genSecureHex(){
-    return uid.randomUUID(13)
+export function genSecureHex(limit=13){
+  return uid.randomUUID(limit);
 }

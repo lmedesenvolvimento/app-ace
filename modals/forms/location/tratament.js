@@ -18,7 +18,7 @@ import {
   Picker,
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import numeral from 'numeral';
 
@@ -27,20 +27,18 @@ import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
 
-import { TreatmentType } from "../../../types/treatment";
+import { TreatmentType } from '../../../types/treatment';
 
 export class TratamentForm extends React.Component {
-  state = {
-    type: 'larvicida_pyriproxyfen',
-    quantity: 0.0,
-    adulticida_quantity: 0.0
-  }
-
+  
   constructor(props){
     super(props);
-    this.props.state = {
-      
-    }
+    this.props.state = {};
+    this.state = {
+      type: 'larvicida_pyriproxyfen',
+      quantity: 0.0,
+      adulticida_quantity: 0.0
+    };
   }
 
   componentWillMount(){    
@@ -84,8 +82,8 @@ export class TratamentForm extends React.Component {
                   selectedValue={this.state.type}
                   onValueChange={(type) => this.setState({ ...this.state, type: type})}
                   supportedOrientations={['portrait', 'landscape']}
-                  iosHeader="Selecione um"
-                  mode="dropdown">
+                  iosHeader='Selecione um'
+                  mode='dropdown'>
                     <Item label={TreatmentType.larvicida_pyriproxyfen} value={'larvicida_pyriproxyfen'} />
                     <Item label={TreatmentType.larvicida_spinosad} value={'larvicida_spinosad'} />
                 </Picker>                
@@ -105,7 +103,7 @@ export class TratamentForm extends React.Component {
             </Grid>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
@@ -178,6 +176,6 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   }
 }

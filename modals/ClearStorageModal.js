@@ -4,10 +4,15 @@ import { ActivityIndicator, View, Platform } from 'react-native';
 
 import {
   Container,
-  H2,
+  H1,
+  H3,
   Text,
   Footer,
-  Button
+  Button,
+  Body,
+  Form,
+  Item,
+  Input
 } from 'native-base';
 
 import { Grid, Row, Col } from 'react-native-easy-grid';
@@ -21,16 +26,24 @@ import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from '../redux/actions';
 
+import Session from '../services/Session';
+import { genSecureHex } from '../services/SecureRandom';
+import { simpleToast } from '../services/Toast';
+
 export class ClearStorageModal extends React.Component {  
   constructor(props) {
     super(props);
     
     this.state = {
+      busy: false,
+      inputConfirmCode: '',
+      confirmCode: '',
       isReady: false
-    }
+    };
   }  
 
   componentDidMount(){
+    this.setState({ confirmCode: genSecureHex(4).toUpperCase() });
     // remove preloading
     setTimeout( () => this.setState({ isReady: true }), 200 );
   }
@@ -40,10 +53,29 @@ export class ClearStorageModal extends React.Component {
       return (
         <Container>
           <Grid>
-            <Col style={styles.container}>
-              <H2 style={Layout.padding}>Apagar todos os dados locais</H2>
-              <Text note style={styles.textCenter}>Você deseja realmente apagar os dados locais essa ação é irreversível?</Text>
-            </Col>
+            <Row>
+              <Col>
+                <Body style={styles.container}>
+                  <H3 style={styles.textCenter}>Você deseja realmente recarregar os dados? Seus dados locais serão apagados e essa ação é irreversível.</H3>
+                </Body>
+                <Form style={{ alignItems: 'center', flex: 3 }}>
+                  <Text note style={styles.textCenter}>Código de Confirmação</Text>
+                  <H1 style={[Layout.padding, styles.textCenter]}>{this.state.confirmCode}</H1>
+                  <Item fixedLabel>
+                    <Input 
+                      value={this.state.inputConfirmCode}
+                      onChangeText={(inputConfirmCode) => {
+                        this.setState({inputConfirmCode});
+                      }} 
+                      style={styles.textCenter} 
+                      placeholder="Informe o código de confirmação." />
+                  </Item>
+                  <Button onPress={this.onSubmitConfirmCode.bind(this)} full primary style={Layout.padding}>
+                    <Text>Recarregar dados agora</Text>
+                  </Button>                  
+                </Form>
+              </Col>
+            </Row>
           </Grid>
           <Footer style={{backgroundColor:'white'}} padder>
             <Grid>
@@ -67,6 +99,26 @@ export class ClearStorageModal extends React.Component {
     }
   }
 
+  onSubmitConfirmCode(){
+    let { confirmCode, inputConfirmCode } = this.state;
+    
+    if (confirmCode.toUpperCase() === inputConfirmCode.toUpperCase()) {
+      let { currentUser } = this.props.state;
+      let emptyArray = [];
+
+      // Limpando Storage
+      Session.Storage.destroy(currentUser.data.email);
+      // Limpando States
+      this.props.setFieldGroups(emptyArray);
+      // Carregando novo estado da Aplicação
+      this.props.getFieldGroups();
+      
+      simpleToast('Novos dados carregados');
+
+      this.dismissModal();
+    }
+  }
+
   okModal(){    
     // close modal
     Actions.pop();
@@ -79,6 +131,7 @@ export class ClearStorageModal extends React.Component {
 
 const styles = {
   container: {
+    flex: 1,
     marginVertical: 24,
     marginHorizontal: 48,
     justifyContent: 'center',
@@ -102,7 +155,7 @@ const styles = {
     borderLeftWidth: 1,
     borderLeftColor: '#eee'
   }
-}
+};
 
 function mapStateToProps(state) {
   return {
@@ -110,7 +163,7 @@ function mapStateToProps(state) {
       currentUser: state.currentUser,
       fieldGroups: state.fieldGroups
     }
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch){

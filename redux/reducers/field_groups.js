@@ -15,7 +15,7 @@ export default function reducer(state = initialState, action){
       var { fieldGroupId, newData } = action.data;
 
       // Criando Id para novo Logradouro
-      newData.$id = genSecureHex()
+      newData.$id = genSecureHex();
       
       // Adicionando novo Logradouro
       _.find(state.data, ['$id', fieldGroupId]).field_group.public_areas.push(newData)

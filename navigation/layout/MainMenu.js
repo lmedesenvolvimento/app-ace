@@ -36,13 +36,13 @@ class MainMenu extends React.Component {
         </Body>
         <Content>
           <List>
-            <ListItem style={[this._defineItemStyle('home'), Layout.firstListItem]} first onPress={_=> Actions.home()} >
+            <ListItem style={[this._defineItemStyle('home'), Layout.firstListItem]} first onPress={() => Actions.home()} >
               <Body>
                 <Text style={this._defineItemTextStyle('home')}>Início</Text>
               </Body>
             </ListItem>
 
-            <ListItem style={this._defineItemStyle('profile')}  onPress={_=> Actions.profile()}>
+            <ListItem style={this._defineItemStyle('profile')}  onPress={() => Actions.profile()}>
               <Body>
                 <Text style={this._defineItemTextStyle('profile')}>Perfil</Text>
               </Body>
@@ -53,8 +53,8 @@ class MainMenu extends React.Component {
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
               </Body>
             </ListItem>
-            {/* { this._renderForceSyncItem() } */}
-            { this._renderSyncItem() }
+            {this._renderForceSyncItem()}
+            {this._renderSyncItem()}
           </List>
         </Content>
       </Container>
@@ -89,9 +89,9 @@ class MainMenu extends React.Component {
   _renderForceSyncItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('clearStorageModal')} onPress={_ => Actions.clearStorageModal()}>
+        <ListItem style={this._defineItemStyle('clearStorageModal')} onPress={ () => Actions.clearStorageModal()}>
           <Body>
-            <Text style={this._defineItemTextStyle('clearStorageModal')}>Receber Dados</Text>
+            <Text style={this._defineItemTextStyle('clearStorageModal')}>Recarregar Dados</Text>
           </Body>
         </ListItem>
       );
@@ -122,7 +122,7 @@ const styles = {
     fontWeight: '800',
     color: Colors.accentColor
   }
-}
+};
 
 function mapStateToProps(state) {
   return {
@@ -131,7 +131,7 @@ function mapStateToProps(state) {
       fieldGroups: state.fieldGroups,
       network: state.network
     }
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch){
