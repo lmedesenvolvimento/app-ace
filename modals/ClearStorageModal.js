@@ -30,6 +30,8 @@ import Session from '../services/Session';
 import { genSecureHex } from '../services/SecureRandom';
 import { simpleToast } from '../services/Toast';
 
+import { clone } from 'lodash';
+
 export class ClearStorageModal extends React.Component {  
   constructor(props) {
     super(props);
@@ -101,31 +103,42 @@ export class ClearStorageModal extends React.Component {
 
   onSubmitConfirmCode(){
     let { confirmCode, inputConfirmCode } = this.state;
+    let { fieldGroups } = this.props.state;
     
+    let fieldGroupsBackup = clone(fieldGroups);
+
     if (confirmCode.toUpperCase() === inputConfirmCode.toUpperCase()) {
       let { currentUser } = this.props.state;
       let emptyArray = [];
+      
+      simpleToast('Sincronizando...');
 
       // Limpando Storage
       Session.Storage.destroy(currentUser.data.email);
       // Limpando States
       this.props.setFieldGroups(emptyArray);
       // Carregando novo estado da Aplicação
-      this.props.getFieldGroups();
-      
-      simpleToast('Novos dados carregados');
-
-      this.dismissModal();
+      this.props.getFieldGroups(
+        this.getFieldGroupsSuccess.bind(this), 
+        this.getFieldGroupsFail.bind(this, fieldGroupsBackup)
+      );
+    } else{
+      simpleToast('Código está vazio ou não confere com o da imagem.');
     }
   }
 
-  okModal(){    
-    // close modal
-    Actions.pop();
+  dismissModal(){
+    Actions.pop();    
   }
 
-  dismissModal(){
-    Actions.pop();
+  getFieldGroupsSuccess(){
+    simpleToast('Novos dados carregados');
+    this.dismissModal();
+  }
+
+  getFieldGroupsFail(fieldGroupsBackup){
+    // Recovery State
+    this.props.setFieldGroups(fieldGroupsBackup.data);
   }
 }
 

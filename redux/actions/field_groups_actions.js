@@ -15,7 +15,7 @@ export function setFieldGroups(data){
   };
 }
 
-export function getFieldGroups(){
+export function getFieldGroups(callback, onFail){
   return (dispatch, getState) => {
     let state = getState();
 
@@ -40,7 +40,15 @@ export function getFieldGroups(){
             dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
             // Guardando Alterações no Banco
             commit(getState);
-          }).catch(error => simpleToast(error));
+            // sucess callback
+            return callback ? callback(field_groups) : false;
+          }).catch(() => {
+            let msg = 'Sessão de usuário já expirada, por favor efetue login novamente e tente de novo.';
+            // user feedback
+            simpleToast(msg);
+            
+            return onFail ? onFail(msg) : false;
+          });
       } else{
         // Resgatando do Cache
         dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: Session.Storage.cache.data });
