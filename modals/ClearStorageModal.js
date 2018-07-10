@@ -52,46 +52,59 @@ export class ClearStorageModal extends React.Component {
 
   render() {
     if(this.state.isReady){
-      return (
-        <Container>
-          <Grid>
+      if(this.state.busy){
+        return(
+          <Container>
             <Row>
-              <Col>
-                <Body style={styles.container}>
-                  <H3 style={styles.textCenter}>Você deseja realmente recarregar os dados? Seus dados locais serão apagados e essa ação é irreversível.</H3>
-                </Body>
-                <Form style={{ alignItems: 'center', flex: 3 }}>
-                  <Text note style={styles.textCenter}>Código de Confirmação</Text>
-                  <H1 style={[Layout.padding, styles.textCenter]}>{this.state.confirmCode}</H1>
-                  <Item fixedLabel>
-                    <Input 
-                      value={this.state.inputConfirmCode}
-                      onChangeText={(inputConfirmCode) => {
-                        this.setState({inputConfirmCode});
-                      }} 
-                      style={styles.textCenter} 
-                      placeholder="Informe o código de confirmação." />
-                  </Item>
-                  <Button onPress={this.onSubmitConfirmCode.bind(this)} full primary style={Layout.padding}>
-                    <Text>Recarregar dados agora</Text>
-                  </Button>                  
-                </Form>
+              <Col style={{ justifyContent: 'center' }}>
+                <Text note style={[Layout.marginVertical16, styles.textCenter]}>Sincronizando</Text>
+                <ActivityIndicator size={Platform.OS == 'ios' ? 1 : 64} color={Colors.accentColor} />
               </Col>
             </Row>
-          </Grid>
-          <Footer style={{backgroundColor:'white'}} padder>
+          </Container>
+        );
+      } else {
+        return (
+          <Container>
             <Grid>
               <Row>
                 <Col>
-                  <Button full transparent onPress={this.dismissModal.bind(this)}>
-                    <Text>Cancelar</Text>
-                  </Button>
-                </Col>                
+                  <Body style={styles.container}>
+                    <H3 style={styles.textCenter}>Você deseja realmente recarregar os dados? Seus dados locais serão apagados e essa ação é irreversível.</H3>
+                  </Body>
+                  <Form style={{ alignItems: 'center', flex: 3 }}>
+                    <Text note style={styles.textCenter}>Código de Confirmação</Text>
+                    <H1 style={[Layout.padding, styles.textCenter]}>{this.state.confirmCode}</H1>
+                    <Item fixedLabel>
+                      <Input 
+                        value={this.state.inputConfirmCode}
+                        onChangeText={(inputConfirmCode) => {
+                          this.setState({inputConfirmCode});
+                        }} 
+                        style={styles.textCenter} 
+                        placeholder="Informe o código de confirmação." />
+                    </Item>
+                    <Button onPress={this.onSubmitConfirmCode.bind(this)} full primary style={Layout.padding}>
+                      <Text>Recarregar dados agora</Text>
+                    </Button>                  
+                  </Form>
+                </Col>
               </Row>
             </Grid>
-          </Footer>
-        </Container>
-      );
+            <Footer style={{backgroundColor:'white'}} padder>
+              <Grid>
+                <Row>
+                  <Col>
+                    <Button full transparent onPress={this.dismissModal.bind(this)}>
+                      <Text>Cancelar</Text>
+                    </Button>
+                  </Col>                
+                </Row>
+              </Grid>
+            </Footer>
+          </Container>
+        );
+      }
     } else{
       return (
         <View style={styles.spinnerContainer}>
@@ -102,6 +115,10 @@ export class ClearStorageModal extends React.Component {
   }
 
   onSubmitConfirmCode(){
+    if(this.state.busy){
+      return true;
+    }
+
     let { confirmCode, inputConfirmCode } = this.state;
     let { fieldGroups } = this.props.state;
     
@@ -111,7 +128,7 @@ export class ClearStorageModal extends React.Component {
       let { currentUser } = this.props.state;
       let emptyArray = [];
       
-      simpleToast('Sincronizando...');
+      this.setState({busy: true});
 
       // Limpando Storage
       Session.Storage.destroy(currentUser.data.email);
@@ -123,7 +140,7 @@ export class ClearStorageModal extends React.Component {
         this.getFieldGroupsFail.bind(this, fieldGroupsBackup)
       );
     } else{
-      simpleToast('Código está vazio ou não confere com o da imagem.');
+      simpleToast('Código está errado ou vazio.');
     }
   }
 
@@ -133,12 +150,14 @@ export class ClearStorageModal extends React.Component {
 
   getFieldGroupsSuccess(){
     simpleToast('Novos dados carregados');
+    this.setState({busy: false});
     this.dismissModal();
   }
 
   getFieldGroupsFail(fieldGroupsBackup){
     // Recovery State
     this.props.setFieldGroups(fieldGroupsBackup.data);
+    this.setState({busy: false});
   }
 }
 
