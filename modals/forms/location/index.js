@@ -134,7 +134,7 @@ export class LocationForm extends React.Component {
                     modalTransparent={false}
                     animationType={'fade'}
                     androidMode={'default'}
-                    placeHolderText={ this.state.check_in._d ? this.state.check_in.format('DD/mm/YYYY') : 'Selecione uma data' }
+                    placeHolderText={ this.state.check_in._d ? this.state.check_in.format('DD/MM/YYYY') : 'Selecione uma data' }
                     textStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
                     placeHolderTextStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
                     onDateChange={ (check_in) => this.setState({ check_in: moment(check_in) }) }
@@ -211,7 +211,7 @@ export class LocationForm extends React.Component {
   onSubmit(){
     if(this.isInvalid()){
       if(this.isHasNumberInPublicArea()){
-        Alert.alert('Falha na Validação', 'Por favor cheque se o número do local já foi utilizado anteriormente.');
+        Alert.alert('Falha no registro da residência', 'A residência já foi cadastrada.');
       } else {
         Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.');
       }
