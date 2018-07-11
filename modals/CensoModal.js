@@ -69,7 +69,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.inhabitants}</Label>
                 <Input 
                   keyboardType='numeric' 
-                  value={ this.state.inhabitants ? this.state.inhabitants.toString() : ''}
+                  value={ this.state.inhabitants ? this.state.inhabitants.toString() : '0'}
                   onChangeText={inhabitants => this.setState({inhabitants})}
                   onBlur={this.onBlurNumeralState.bind(this, 'inhabitants')} 
                 />
@@ -78,7 +78,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.tank}</Label>
                 <Input 
                   keyboardType='numeric' 
-                  value={ this.state.tank ? this.state.tank.toString() : ''}
+                  value={ this.state.tank ? this.state.tank.toString() : '0'}
                   onChangeText={tank => this.setState({tank})}
                   onBlur={this.onBlurNumeralState.bind(this, 'tank')}
                  />
@@ -87,7 +87,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.filter}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.filter ? this.state.filter.toString() : ''}
+                  value={ this.state.filter ? this.state.filter.toString() : '0'}
                   onChangeText={filter => this.setState({filter})}
                   onBlur={this.onBlurNumeralState.bind(this, 'filter')}
                 />
@@ -96,7 +96,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.tina}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.tina ? this.state.tina.toString() : ''}
+                  value={ this.state.tina ? this.state.tina.toString() : '0'}
                   onChangeText={tina => this.setState({tina})}
                   onBlur={this.onBlurNumeralState.bind(this, 'tina')}
                 />
@@ -105,7 +105,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.drum}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.drum ? this.state.drum.toString() : ''}
+                  value={ this.state.drum ? this.state.drum.toString() : '0'}
                   onChangeText={drum => this.setState({drum})}
                   onBlur={this.onBlurNumeralState.bind(this, 'drum')}
                 />
@@ -114,7 +114,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.pot}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.pot ? this.state.pot.toString() : ''}
+                  value={ this.state.pot ? this.state.pot.toString() : '0'}
                   onChangeText={pot => this.setState({pot})}
                   onBlur={this.onBlurNumeralState.bind(this, 'pot')}
                 />
@@ -123,7 +123,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.plant_pot}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.plant_pot ? this.state.plant_pot.toString() : ''} 
+                  value={ this.state.plant_pot ? this.state.plant_pot.toString() : '0'} 
                   onChangeText={plant_pot => this.setState({plant_pot})}
                   onBlur={this.onBlurNumeralState.bind(this, 'plant_pot')}
                 />
@@ -132,7 +132,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.cistern}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.cistern ? this.state.cistern.toString() : ''}
+                  value={ this.state.cistern ? this.state.cistern.toString() : '0'}
                   onChangeText={cistern => this.setState({cistern})}
                   onBlur={this.onBlurNumeralState.bind(this, 'cistern')}
                 />
@@ -141,7 +141,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.waterhole}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.waterhole ?  this.state.waterhole.toString() : ''}
+                  value={ this.state.waterhole ?  this.state.waterhole.toString() : '0'}
                   onChangeText={waterhole => this.setState({waterhole})}
                   onBlur={this.onBlurNumeralState.bind(this, 'waterhole')}
                 />
@@ -150,7 +150,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.water_box}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={ this.state.water_box ? this.state.water_box.toString() : ''}
+                  value={ this.state.water_box ? this.state.water_box.toString() : '0'}
                   onChangeText={water_box => this.setState({water_box}) }
                   onBlur={this.onBlurNumeralState.bind(this, 'water_box')}
                 />
