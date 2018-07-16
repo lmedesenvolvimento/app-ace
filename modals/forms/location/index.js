@@ -65,10 +65,11 @@ export class LocationForm extends React.Component {
 
     if(this.props.address){
       let { address } = this.props;
-
+      
       updates.id = address.id;
       updates.number = address.number;
       updates.complement = address.complement;
+
       if(this.props.address.visit){
         updates.type = address.visit.type;
         updates.type_location = address.visit.type_location;

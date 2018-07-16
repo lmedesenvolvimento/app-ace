@@ -8,6 +8,9 @@ import Colors from '../constants/Layout';
 import { simpleToast } from '../services/Toast';
 import { getLocationAsync } from '../services/Permissions';
 
+import moment from 'moment';
+import momentTimezone from 'moment-timezone';
+
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
@@ -23,26 +26,38 @@ import { ObservationForm } from './forms/location/observation';
 import { VisitType } from '../types/visit';
 
 export class FormLocationModal extends React.Component {
-  state = {
-    isReady: false,
-    number: null,
-    complement: null,
-    visit: {
-      type: null,
-      type_location: null,
-      check_in: null,
-      observation: null,
-      samples: [],
-      inspect: {},
-      treatment: {},
-    }
-  }
   
   constructor(props) {
     super(props);
+    this.state = {
+      isReady: false,
+      number: null,
+      complement: null,
+      visit: {
+        type: null,
+        type_location: null,
+        check_in: null,
+        observation: null,
+        registred_at: null,
+        latitude: null,
+        longitude: null,
+        samples: [],
+        inspect: {},
+        treatment: {}
+      }
+    };
   }  
 
   componentDidMount(){
+    if(this.props.address){
+      let updates = { visit: this.state.visit }
+      
+      updates.visit.latitude = this.props.address.latitude;
+      updates.visit.longitude = this.props.address.longitude;
+      updates.visit.registred_at = this.props.address.visit.registred_at;
+
+      this.setState(updates);
+    }
     // Melhora a peformace do Swiper
     setTimeout( () => this.setState({ isReady: true }), 200 )
   }
@@ -93,11 +108,11 @@ export class FormLocationModal extends React.Component {
   }
 
   scrollBy = (index) => {
-    this.swiper.scrollBy(index)
+    this.swiper.scrollBy(index);
   }
 
   onCancel = () => {
-    this.dismissModal()
+    this.dismissModal();
   }
 
   // step-step responses
@@ -106,29 +121,39 @@ export class FormLocationModal extends React.Component {
       number: data.number,
       complement: data.complement,
       visit: this.state.visit
+    };
+
+    updates.visit.type = data.type;
+    updates.visit.check_in = data.check_in;
+    updates.visit.type_location = data.type_location;
+
+    if( !this.props.address || !this.props.address.visit.hasOwnProperty("registred_at") ){
+      updates.visit.registred_at = momentTimezone.tz(updates.check_in, 'America/Sao_paulo').format();
     }
-
-    updates.visit.type = data.type
-    updates.visit.check_in = data.check_in
-    updates.visit.type_location = data.type_location
-
-    this.setState(updates);
 
     // Save Current Geo Location
     getLocationAsync().then((data) => {
       if(data) {
         let { latitude, longitude } = data.coords;
-        this.setState({ latitude, longitude });
+        updates.latitude = latitude;
+        updates.longitude = longitude;
+        if( !this.props.address || !this.props.address.visit.hasOwnProperty("registred_at") ){
+          updates.visit.latitude = latitude
+          updates.visit.longitude = longitude
+        }
+        this.setState(updates);
+      } else{
+        this.setState(updates);
       }
-    })
+    }).catch(error => this.setState(updates));
   }
   
   onInspectionFormSubmit = (data) => {
     let updates = {
       visit: this.state.visit
-    }
+    };
     
-    updates.visit.inspect = _.omit(data, ['start_number', 'end_number'])      
+    updates.visit.inspect = _.omit(data, ['start_number', 'end_number']);
     
     this.setState(updates);
   }
@@ -138,7 +163,7 @@ export class FormLocationModal extends React.Component {
       visit: this.state.visit
     }
 
-    updates.visit.samples = data
+    updates.visit.samples = data;
 
     this.setState(updates);
   }
@@ -148,7 +173,7 @@ export class FormLocationModal extends React.Component {
       visit: this.state.visit
     }
     
-    updates.visit.treatment = data    
+    updates.visit.treatment = data;
     
     this.setState(updates);
   }
@@ -159,17 +184,17 @@ export class FormLocationModal extends React.Component {
       visit: this.state.visit
     };
 
-    updates.visit.observation = data.observation
+    updates.visit.observation = data.observation;
 
-    this.setState(updates)
+    this.setState(updates);
 
-    let newData = _.omit(this.state, ['isReady'])
+    let newData = _.omit(this.state, ['isReady']);
 
     if(address){
-      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData)
+      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
       simpleToast("Endereço foi atualizado!");
     } else{
-      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData)
+      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData);
       simpleToast("Endereço adicionado com sucesso!");
     }
 
