@@ -14,7 +14,7 @@ import {
   List,
   ListItem,
   Icon,
-  Fab
+  Fab,
 } from 'native-base';
 
 import SearchBar from 'react-native-searchbar';
@@ -22,26 +22,21 @@ import SearchBar from 'react-native-searchbar';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
 
 import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
-import Session from '../services/Session';
 
-import LogoutButton from '../components/LogoutButton';
-
-import * as _ from "lodash";
+import _ from 'lodash';
 
 class PublicAreaScreen extends React.Component {
-  state = {
-    public_areas: []
-  }
   constructor(props) {
     super(props);
+    this.state = {
+      public_areas: []
+    }
   }
 
   componentDidMount(){
@@ -99,7 +94,7 @@ class PublicAreaScreen extends React.Component {
     );
   }
 
-  renderItem(item, sectionID, rowID){
+  renderItem(item){
     return(
       <ListItem
         icon

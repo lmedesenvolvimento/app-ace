@@ -20,6 +20,8 @@ import {
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
+import Modal from '../../../components/Modal';
+
 import numeral from 'numeral';
 
 import Colors from '../../../constants/Colors';
@@ -34,10 +36,14 @@ export class TratamentForm extends React.Component {
   constructor(props){
     super(props);
     this.props.state = {};
+    
     this.state = {
       type: 'larvicida_pyriproxyfen',
       quantity: 0.0,
-      adulticida_quantity: 0.0
+      adulticida_quantity: 0.0,
+      modalIsVisible: false,
+      bigSpoonpQuantity: 0.0,
+      smallSpoonpQuantity: 0.0
     };
   }
 
@@ -66,7 +72,7 @@ export class TratamentForm extends React.Component {
             <Grid>
               <Col>
                 <Item floatingLabel >
-                  <Label>Nº de depósitos tratamentos</Label>
+                  <Label>N de depósitos tratados</Label>
                   <Input 
                     keyboardType='numeric'
                     value={this.state.quantity.toString()}
@@ -84,22 +90,29 @@ export class TratamentForm extends React.Component {
                   supportedOrientations={['portrait', 'landscape']}
                   iosHeader='Selecione um'
                   mode='dropdown'>
-                    <Item label={TreatmentType.larvicida_pyriproxyfen} value={'larvicida_pyriproxyfen'} />
-                    <Item label={TreatmentType.larvicida_spinosad} value={'larvicida_spinosad'} />
+                  <Item label={TreatmentType.larvicida_pyriproxyfen} value={'larvicida_pyriproxyfen'} />
+                  <Item label={TreatmentType.larvicida_spinosad} value={'larvicida_spinosad'} />
                 </Picker>                
               </Col>
             </Grid>
             <Grid>
-              <Col>
-                <Item floatingLabel>
-                  <Label>Larvicida gramas</Label>
-                  <Input 
-                    keyboardType='numeric'
-                    value={this.state.adulticida_quantity.toString()}
-                    onChangeText={(adulticida_quantity) => this.setState({adulticida_quantity})} 
-                    onBlur={this.onBlurNumeralState.bind(this, 'adulticida_quantity')} />
-                </Item>
-              </Col>              
+              <Row style={{ alignItems: 'flex-end' }}>
+                <Col>
+                  <Item floatingLabel>
+                    <Label>Larvicida gramas</Label>
+                    <Input 
+                      keyboardType='numeric'
+                      value={this.state.adulticida_quantity.toString()}
+                      onChangeText={(adulticida_quantity) => this.setState({adulticida_quantity})} 
+                      onBlur={this.onBlurNumeralState.bind(this, 'adulticida_quantity')} />
+                  </Item>
+                </Col>
+                <Col>
+                  <Button onPress={this.openModal.bind(this)} primary transparent>
+                    <Text>Calcular Quantidade</Text>
+                  </Button>
+                </Col>
+              </Row>
             </Grid>
           </Form>
         </Content>
@@ -119,35 +132,88 @@ export class TratamentForm extends React.Component {
             </Row>
           </Grid>
         </Footer>
+        <Modal isVisible={this.state.modalIsVisible} onConfirm={this.onConfirm.bind(this)} onCancel={this.onCancel.bind(this)} title='Calcular quantidade'>
+          <Content padder>
+            <Form>
+              <Item floatingLabel>
+                <Label>Nº de colheres grandes</Label>
+                <Input 
+                  keyboardType='numeric'
+                  value={this.state.bigSpoonpQuantity.toString()}
+                  onChangeText={(bigSpoonpQuantity) => this.setState({bigSpoonpQuantity})} 
+                  onBlur={this.onBlurNumeralState.bind(this, 'bigSpoonpQuantity')} />
+              </Item>
+              <Item floatingLabel>
+                <Label>Nº de colheres pequenas</Label>
+                <Input 
+                  keyboardType='numeric'
+                  value={this.state.smallSpoonpQuantity.toString()}
+                  onChangeText={(smallSpoonpQuantity) => this.setState({smallSpoonpQuantity})} 
+                  onBlur={this.onBlurNumeralState.bind(this, 'smallSpoonpQuantity')} />
+              </Item>
+              <Grid style={Layout.padding}>
+                <Row style={{ alignItems: 'flex-end' }}>
+                  <Col>
+                    <Text>Quantidade total</Text>
+                  </Col>
+                  <Col>
+                    <Text note>{this.calcAdulticidaQuantity()}g</Text>
+                  </Col>
+                </Row>
+              </Grid>
+            </Form>
+          </Content>
+        </Modal>
       </Container>
     );
   }
 
+  openModal(){
+    // reset modal inputs and open modal
+    this.setState({ smallSpoonpQuantity: 0.0, bigSpoonpQuantity: 0.0, modalIsVisible: true });
+  }
+
   updateQuantity(){
-    number = numeral(this.state.quantity)
+    let number = numeral(this.state.quantity);
         
     if(number.value() > 0){
-      this.setState({ quantity: number.value() })  
+      this.setState({ quantity: number.value() });
     } else{      
-      this.setState({ quantity: ( number.value() * -1 ) })  
+      this.setState({ quantity: ( number.value() * -1 ) });
     }
+  }
+
+  toNumeral(str){
+    let number = numeral(str).value();
+    return Math.abs(number);
   }
 
 
   onBlurNumeralState(key){
-    let number = numeral(this.state[key]).value()
-    let updates = {}
+    let updates = {};
 
-    updates[key] = Math.abs(number)
+    updates[key] = this.toNumeral(this.state[key]);
 
-    this.setState(updates)
+    this.setState(updates);
   }
 
   onSubmit(){
     // Pass form value parent component
-    this.props.onSubmit(this.state)
+    this.props.onSubmit(this.state);
     // Next Step
-    this.props.scrollBy(1)
+    this.props.scrollBy(1);
+  }
+  
+  onConfirm () {
+    this.setState({ modalIsVisible: false, adulticida_quantity: this.calcAdulticidaQuantity() });
+  }
+
+  onCancel () {
+    this.setState({ modalIsVisible: false });
+  }
+
+  calcAdulticidaQuantity(){
+    return ( this.toNumeral(this.state.smallSpoonpQuantity) * 0.1 ) + this.toNumeral(this.state.bigSpoonpQuantity);
   }
 
   _renderPickerHeader(backAction){
@@ -162,7 +228,7 @@ export class TratamentForm extends React.Component {
           <Title style={{textAlign: 'center'}}>Selecione um</Title>
         </Body>
       </Header>
-    )
+    );
   }
 }
 
@@ -178,4 +244,4 @@ const styles = {
     borderLeftWidth: 1,
     borderLeftColor: '#eee'
   }
-}
+};

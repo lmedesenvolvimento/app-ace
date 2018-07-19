@@ -173,7 +173,7 @@ export class FormLocationModal extends React.Component {
       visit: this.state.visit
     }
     
-    updates.visit.treatment = data;
+    updates.visit.treatment = _.omit(data, ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity']);
     
     this.setState(updates);
   }
