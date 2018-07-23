@@ -43,6 +43,8 @@ import moment from 'moment';
 
 import { Grid, Row } from 'react-native-easy-grid';
 
+import TimerMixin from 'react-timer-mixin';
+
 class FieldGroupScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -151,16 +153,7 @@ class FieldGroupScreen extends React.Component {
         icon 
         style={Layout.listHeight}
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
-        onPress={()=> {
-          if( _.last(address.visits) && _.last(address.visits).hasOwnProperty('id') && this._SyncAddressHasVisit(address)){
-            return false;
-          }
-          Actions.locationModal({ 
-            address: address,
-            publicarea: this.props.publicarea,
-            fieldgroup: this.props.fieldgroup
-          });
-        }} >
+        onPress={this._handleOnPressItem.bind(this, address)}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
@@ -257,6 +250,19 @@ class FieldGroupScreen extends React.Component {
         </Button>
       );
     }
+  }
+
+  _handleOnPressItem(address){
+    TimerMixin.requestAnimationFrame(() => {
+      if( _.last(address.visits) && _.last(address.visits).hasOwnProperty('id') && this._SyncAddressHasVisit(address)){
+        return false;
+      }
+      Actions.locationModal({ 
+        address: address,
+        publicarea: this.props.publicarea,
+        fieldgroup: this.props.fieldgroup
+      });
+    });
   }
 
   alertIfSyncAddress(){

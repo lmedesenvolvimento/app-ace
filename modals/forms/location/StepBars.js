@@ -1,21 +1,20 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import Colors from '../../../constants/Colors';
 
 export class StepBars extends React.Component {
   constructor(props){
-    super(props)
-    this.renderChildren = this.renderChildren.bind(this)
+    super(props);
+    this.renderChildren = this.renderChildren.bind(this);
   }
 
   renderChildren(){
-    return this.props.children ? this.props.children : <View/>
+    return this.props.children ? this.props.children : <View/>;
   }
 
   render(){
-    const children = this.props.children;
     return(
       <Grid>
         <Row style={styles.row}>
@@ -29,7 +28,7 @@ export class StepBars extends React.Component {
 
 export class Step extends React.Component {
   constructor(props){
-    super(props)
+    super(props);
   }
   render(){
     if(this.props.active){
@@ -79,4 +78,4 @@ const styles = {
     width: 52,
     opacity: 0.3
   }
-}
+};

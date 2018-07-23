@@ -31,6 +31,8 @@ import Layout from '../constants/Layout';
 
 import _ from 'lodash';
 
+import TimerMixin from 'react-timer-mixin';
+
 class PublicAreaScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -48,7 +50,6 @@ class PublicAreaScreen extends React.Component {
   }
 
   render() {
-    let { currentUser } = this.props;
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
     return (
@@ -98,7 +99,7 @@ class PublicAreaScreen extends React.Component {
     return(
       <ListItem
         icon
-        onPress={() => Actions.publicarea({ publicarea: item, title: item.address, fieldgroup: this.props.fieldgroup })}
+        onPress={this._handleItemPress.bind(this, item)}
         style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
@@ -113,15 +114,21 @@ class PublicAreaScreen extends React.Component {
     );
   }
 
+  _handleItemPress(item){
+    TimerMixin.requestAnimationFrame(() => {
+      Actions.publicarea({ publicarea: item, title: item.address, fieldgroup: this.props.fieldgroup });
+    });
+  }
+
   _onSearchExit(){
     this.setState({public_areas: this.props.public_areas});
-    this.searchBar.hide()
+    this.searchBar.hide();
   }
 
   _handleSearch(q){
     // Use Lodash regex for get match public_areas
     let result = _.filter( this._getPublicAreas() , (i)=> _.isMatch(i.address, q));
-    this.setState({public_areas:  result})
+    this.setState({public_areas:  result});
   }
 
   _getPublicAreas(){    

@@ -23,36 +23,36 @@ import {
   Icon
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Col, Row, Grid } from 'react-native-easy-grid';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 
 import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
-
 import { SampleType } from '../../../types/sample';
+
+import TimerMixin from 'react-timer-mixin';
 
 const initialItem = {
   number: 0,
   type: SampleType.a1
-}
+};
 
 export class SamplesForm extends React.Component {
-  state = {
-    newItem: _.clone(initialItem),
-    data: []
-  }
-
   constructor(props){
     super(props);
+    this.state = {
+      newItem: _.clone(initialItem),
+      data: []
+    };
   }
 
   componentWillMount(){    
     let { address } = this.props;
     if (address && address.visit && address.visit.samples){
-      this.setState({ data: address.visit.samples })
+      this.setState({ data: address.visit.samples });
     }
   }
 
@@ -63,74 +63,74 @@ export class SamplesForm extends React.Component {
       <Container>
         <KeyboardAwareScrollView>
           <Content padder>
-              <Form>
-                <StepBars>
-                  <Step complete={true}></Step>
-                  <Step complete={true}></Step>
-                  <Step active={true}></Step>
-                  <Step></Step>
-                  <Step></Step>
-                </StepBars>
-                <H2 style={Layout.padding}>Coleta de Amostra</H2>                
-                <Grid>
-                  <Row>
-                    <Col>
-                      <List
-                        dataSource={ds.cloneWithRows(this.state.data)}
-                        renderRow={this.renderItem.bind(this)}
-                        renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
-                        renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
-                        enableEmptySections={true}
-                        onRowOpen={false}
-                        leftOpenValue={0}
-                        rightOpenValue={-75} />
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col style={Layout.padding}>
-                      <Text style={{ color: Colors.primaryColor }}>Preencha abaixo a coleta que deseja adicionar</Text>
-                    </Col>
-                  </Row>
-                  <Row style={{ alignItems: 'flex-end' }}>
-                    <Col>
-                      <Item floatingLabel>
-                        <Label> Nº da Coleta</Label>
-                        <Input
-                          value={this.state.newItem.number.toString()}
-                          keyboardType='numeric'
-                          onChangeText={ (number) => this.setState({ newItem: { ...this.state.newItem, number: number } }) }
-                          onBlur={this.onBlurNumeralState.bind(this, 'number')} />
-                      </Item>
-                    </Col>
-                    <Col>
-                      <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
-                      <Picker
-                        selectedValue={this.state.newItem.type}
-                        onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type} })}
-                        supportedOrientations={['portrait', 'landscape']}
-                        iosHeader="Selecione um"
-                        mode="dropdown">
-                          <Item label="A1" value={SampleType.a1} />
-                          <Item label="A2" value={SampleType.a2} />
-                          <Item label="B" value={SampleType.b} />
-                          <Item label="C" value={SampleType.c} />
-                          <Item label="D1" value={SampleType.d1} />
-                          <Item label="D2" value={SampleType.d2} />
-                      </Picker>
-                    </Col>
-                  </Row>
-                  <Row style={Layout.marginVertical8}>
-                    <Col>
-                      <Button transparent primary block onPress={this.addSampleItem.bind(this)}>
-                        <Text>+ Adicionar Coleta</Text>
-                      </Button>
-                    </Col>
-                  </Row>
-                </Grid>
-              </Form>
+            <Form>
+              <StepBars>
+                <Step complete={true}></Step>
+                <Step complete={true}></Step>
+                <Step active={true}></Step>
+                <Step></Step>
+                <Step></Step>
+              </StepBars>
+              <H2 style={Layout.padding}>Coleta de Amostra</H2>                
+              <Grid>
+                <Row>
+                  <Col>
+                    <List
+                      dataSource={ds.cloneWithRows(this.state.data)}
+                      renderRow={this.renderItem.bind(this)}
+                      renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
+                      renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                      enableEmptySections={true}
+                      onRowOpen={false}
+                      leftOpenValue={0}
+                      rightOpenValue={-75} />
+                  </Col>
+                </Row>
+                <Row>
+                  <Col style={Layout.padding}>
+                    <Text style={{ color: Colors.primaryColor }}>Preencha abaixo a coleta que deseja adicionar</Text>
+                  </Col>
+                </Row>
+                <Row style={{ alignItems: 'flex-end' }}>
+                  <Col>
+                    <Item floatingLabel>
+                      <Label> Nº da Coleta</Label>
+                      <Input
+                        value={this.state.newItem.number.toString()}
+                        keyboardType='numeric'
+                        onChangeText={ (number) => this.setState({ newItem: { ...this.state.newItem, number: number } }) }
+                        onBlur={this.onBlurNumeralState.bind(this, 'number')} />
+                    </Item>
+                  </Col>
+                  <Col>
+                    <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
+                    <Picker
+                      selectedValue={this.state.newItem.type}
+                      onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type} })}
+                      supportedOrientations={['portrait', 'landscape']}
+                      iosHeader='Selecione um'
+                      mode='dropdown'>
+                      <Item label='A1' value={SampleType.a1} />
+                      <Item label='A2' value={SampleType.a2} />
+                      <Item label='B' value={SampleType.b} />
+                      <Item label='C' value={SampleType.c} />
+                      <Item label='D1' value={SampleType.d1} />
+                      <Item label='D2' value={SampleType.d2} />
+                    </Picker>
+                  </Col>
+                </Row>
+                <Row style={Layout.marginVertical8}>
+                  <Col>
+                    <Button transparent primary block onPress={this.addSampleItem.bind(this)}>
+                      <Text>+ Adicionar Coleta</Text>
+                    </Button>
+                  </Col>
+                </Row>
+              </Grid>
+            </Form>
           </Content>
         </KeyboardAwareScrollView>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
@@ -152,21 +152,23 @@ export class SamplesForm extends React.Component {
 
   onSubmit(){
     this.props.scrollBy(1);
-    this.props.onSubmit(this.state.data);
+    TimerMixin.requestAnimationFrame(()=> {
+      this.props.onSubmit(this.state.data);
+    });
   }
 
-  onBlurNumeralState(key){
-    let number = numeral(this.state.newItem.number).value()
+  onBlurNumeralState(){
+    let number = numeral(this.state.newItem.number).value();
     let updates = { 
       newItem: { ...this.state.newItem } 
-    }
+    };
 
-    updates.newItem.number = Math.abs(number)
+    updates.newItem.number = Math.abs(number);
 
-    this.setState(updates)
+    this.setState(updates);
   }
 
-  renderItem(item, key){
+  renderItem(item){
     return(
       <ListItem>
         <Body>
@@ -180,12 +182,12 @@ export class SamplesForm extends React.Component {
   renderRightHiddenRow(data, secId, rowId, rowMap) {
     return (
       <Button danger onPress={this.removeSampleItem.bind(this, secId, rowId, rowMap )}>
-        <Icon active name="trash" />
+        <Icon active name='trash' />
       </Button>
     );
   }
 
-  renderLeftHiddenRow(data, secId, rowId, rowMap) {
+  renderLeftHiddenRow() {
     return (
       <View></View>
     );
@@ -203,8 +205,8 @@ export class SamplesForm extends React.Component {
       );
       return true;
     } else{
-      this.state.data.push( _.clone(this.state.newItem))
-      this.setState({ data: this.state.data, newItem: initialItem })
+      this.state.data.push( _.clone(this.state.newItem));
+      this.setState({ data: this.state.data, newItem: initialItem });
     }
   }
 
@@ -226,9 +228,9 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   },
   lastField: {
     paddingBottom: 48
   }
-}
+};

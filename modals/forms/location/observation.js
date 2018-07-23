@@ -13,7 +13,7 @@ import {
   Button,
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import Layout from '../../../constants/Layout';
 
@@ -21,19 +21,22 @@ import { VisitType } from '../../../types/visit';
 
 import { StepBars, Step } from './StepBars';
 
-export class ObservationForm extends React.Component {
-  state = {
-    observation: ''
-  }
+import { omit } from 'lodash';
 
+import TimerMixin from 'react-timer-mixin';
+
+export class ObservationForm extends React.Component {  
   constructor(props){
     super(props);
+    this.state = {
+      observation: ''
+    };
   }
 
   componentWillMount(){    
     let { address } = this.props;
     if(address && address.visit){
-      this.setState({observation: address.visit.observation})
+      this.setState({observation: address.visit.observation});
     }
   }
 
@@ -42,7 +45,6 @@ export class ObservationForm extends React.Component {
       <Container>
         <Content padder>
           <Form>
-
             <StepBars>
               <Step complete={true}></Step>
               <Step complete={true}></Step>
@@ -62,7 +64,7 @@ export class ObservationForm extends React.Component {
             </Grid>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
@@ -83,16 +85,19 @@ export class ObservationForm extends React.Component {
   }
 
   onBack(){
-    let { visit } = this.props
+    let { visit } = this.props;
     isVisitClosedOrRefused(visit.type)
-    ? this.props.scrollBy(-4)
-    : this.props.scrollBy(-1)
+      ? this.props.scrollBy(-4)
+      : this.props.scrollBy(-1);
   }
 
   onSubmit(){
     // Pass form value parent component
-    let state = _.omit(this.state,['validation'])
-    this.props.onSubmit(state)
+    let state = omit(this.state,['validation']);
+    
+    TimerMixin.requestAnimationFrame(()=> {
+      this.props.onSubmit(state);
+    });
   }
 }
 
@@ -106,13 +111,13 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   },
   textarea: {
     height: 200
   }
-}
+};
 
 function isVisitClosedOrRefused(type){
-  return [VisitType.closed, VisitType.refused].includes(type)
+  return [VisitType.closed, VisitType.refused].includes(type);
 }

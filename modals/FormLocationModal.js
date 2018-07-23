@@ -12,10 +12,10 @@ import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
+import ReduxActions from '../redux/actions';
 
 import { LocationForm } from './forms/location';
 import { InspectionForm } from './forms/location/inspection';
@@ -25,8 +25,11 @@ import { ObservationForm } from './forms/location/observation';
 
 import { VisitType } from '../types/visit';
 
-export class FormLocationModal extends React.Component {
-  
+import TimerMixin from 'react-timer-mixin';
+
+import { omit } from 'lodash';
+
+export class FormLocationModal extends React.Component {  
   constructor(props) {
     super(props);
     this.state = {
@@ -50,16 +53,17 @@ export class FormLocationModal extends React.Component {
 
   componentDidMount(){
     if(this.props.address){
-      let updates = { visit: this.state.visit }
+      let updates = { visit: this.state.visit };
       
       updates.visit.latitude = this.props.address.latitude;
       updates.visit.longitude = this.props.address.longitude;
-      updates.visit.registred_at = this.props.address.visit.registred_at;
+      updates.visit.registred_at = 
+        this.props.address.visit ? this.props.address.visit.registred_at : moment();
 
       this.setState(updates);
     }
     // Melhora a peformace do Swiper
-    setTimeout( () => this.setState({ isReady: true }), 200 )
+    TimerMixin.setTimeout(() => this.setState({ isReady: true }), 200 );
   }
 
   render() {
@@ -68,24 +72,25 @@ export class FormLocationModal extends React.Component {
         <Swiper
           ref={ (component) => this.swiper = component }
           loop={false}
+          animated={false}
           style={styles.wrapper}
           scrollEnabled={false}
           showsPagination={false}
           showsButtons={false}>
           <View style={styles.slide}>
-            <LocationForm {...this.props } scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onLocationFormSubmit} />
+            <LocationForm {...this.props } scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} />
           </View>
           <View style={styles.slide}>
-            <InspectionForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onInspectionFormSubmit} />
+            <InspectionForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onInspectionFormSubmit.bind(this)} />
           </View>
           <View style={styles.slide}>
-            <SamplesForm {...this.props} scrollBy={this.scrollBy} onSubmit={this.onSamplesFormSubmit} />
+            <SamplesForm {...this.props} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onSamplesFormSubmit.bind(this)} />
           </View>
           <View style={styles.slide}>
-            <TratamentForm {...this.props } scrollBy={this.scrollBy} onSubmit={this.onTratamentFormSubmit} />
+            <TratamentForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onTratamentFormSubmit.bind(this)} />
           </View>
           <View style={styles.slide}>
-            <ObservationForm {...this.props } visit={this.state.visit} scrollBy={this.scrollBy} onCancel={this.onCancel} onSubmit={this.onObservationFormSubmit} />
+            <ObservationForm {...this.props } visit={this.state.visit} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onObservationFormSubmit.bind(this)} />
           </View>
         </Swiper>
       );
@@ -94,29 +99,31 @@ export class FormLocationModal extends React.Component {
         <View style={styles.spinnerContainer}>
           <ActivityIndicator size={Platform.OS == 'ios' ? 1 : 64} color={Colors.accentColor} />
         </View>
-      )
+      );
     }
   }
 
   okModal(targetTab){
     Actions.pop();
-    setTimeout(() => Actions.refresh({ activeTab: targetTab }), 200);
+    TimerMixin.requestAnimationFrame(() => Actions.refresh({ activeTab: targetTab }));
   }
 
   dismissModal(){
     Actions.pop();
   }
 
-  scrollBy = (index) => {
-    this.swiper.scrollBy(index);
+  scrollBy (index) {
+    TimerMixin.requestAnimationFrame(() => {
+      this.swiper.scrollBy(index);
+    });
   }
 
-  onCancel = () => {
+  onCancel () {
     this.dismissModal();
   }
 
   // step-step responses
-  onLocationFormSubmit = (data) => {
+  onLocationFormSubmit (data) {
     let updates = {
       number: data.number,
       complement: data.complement,
@@ -127,7 +134,7 @@ export class FormLocationModal extends React.Component {
     updates.visit.check_in = data.check_in;
     updates.visit.type_location = data.type_location;
 
-    if( !this.props.address || !this.props.address.visit.hasOwnProperty("registred_at") ){
+    if( !this.props.address || !this.props.address.visit.hasOwnProperty('registred_at') ){
       updates.visit.registred_at = momentTimezone.tz(updates.check_in, 'America/Sao_paulo').format();
     }
 
@@ -137,48 +144,48 @@ export class FormLocationModal extends React.Component {
         let { latitude, longitude } = data.coords;
         updates.latitude = latitude;
         updates.longitude = longitude;
-        if( !this.props.address || !this.props.address.visit.hasOwnProperty("registred_at") ){
-          updates.visit.latitude = latitude
-          updates.visit.longitude = longitude
+        if( !this.props.address || !this.props.address.visit.hasOwnProperty('registred_at') ){
+          updates.visit.latitude = latitude;
+          updates.visit.longitude = longitude;
         }
         this.setState(updates);
       } else{
         this.setState(updates);
       }
-    }).catch(error => this.setState(updates));
+    }).catch(() => this.setState(updates));
   }
   
-  onInspectionFormSubmit = (data) => {
+  onInspectionFormSubmit (data) {
     let updates = {
       visit: this.state.visit
     };
     
-    updates.visit.inspect = _.omit(data, ['start_number', 'end_number']);
+    updates.visit.inspect = omit(data, ['start_number', 'end_number']);
     
     this.setState(updates);
   }
 
-  onSamplesFormSubmit = (data) => {
+  onSamplesFormSubmit (data) {
     let updates = {
       visit: this.state.visit
-    }
+    };
 
     updates.visit.samples = data;
 
     this.setState(updates);
   }
   
-  onTratamentFormSubmit = (data) => {
+  onTratamentFormSubmit (data) {
     let updates = {
       visit: this.state.visit
-    }
+    };
     
-    updates.visit.treatment = _.omit(data, ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity']);
+    updates.visit.treatment = omit(data, ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity']);
     
     this.setState(updates);
   }
   
-  onObservationFormSubmit = (data) => {
+  onObservationFormSubmit (data) {
     let { address } = this.props;    
     let updates = {
       visit: this.state.visit
@@ -188,19 +195,19 @@ export class FormLocationModal extends React.Component {
 
     this.setState(updates);
 
-    let newData = _.omit(this.state, ['isReady']);
+    let newData = omit(this.state, ['isReady']);
 
     if(address){
       this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
-      simpleToast("Endereço foi atualizado!");
+      simpleToast('Endereço foi atualizado!');
     } else{
       this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData);
-      simpleToast("Endereço adicionado com sucesso!");
+      simpleToast('Endereço adicionado com sucesso!');
     }
 
-    let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1
+    let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
     
-    this.okModal(targetTab)
+    this.okModal(targetTab);
   }
 }
 
@@ -215,10 +222,10 @@ const styles = {
     justifyContent: 'space-around',
     padding: 8
   }
-}
+};
 
 function isVisitClosedOrRefused(type) {
-  return [VisitType.closed, VisitType.refused].includes(type)
+  return [VisitType.closed, VisitType.refused].includes(type);
 }
 
 function mapStateToProps(state) {
@@ -227,10 +234,10 @@ function mapStateToProps(state) {
       currentUser: state.currentUser,
       fieldGroups: state.fieldGroups
     }
-  }
+  };
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 

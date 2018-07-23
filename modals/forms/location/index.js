@@ -38,6 +38,8 @@ import { StepBars, Step } from './StepBars';
 
 import { VisitType, VisitTypeLocation } from '../../../types/visit';
 
+import TimerMixin from 'react-timer-mixin';
+
 export class LocationForm extends React.Component {
   
   constructor(props){
@@ -235,11 +237,17 @@ export class LocationForm extends React.Component {
 
       // Pass form value parent component
       let state = _.omit(updates,['validation','check_in_translate']);
-      this.props.onSubmit(state);
+      
       // Next step
       isVisitClosedOrRefused(this.state.type)
         ? this.toObservation()
         : this.props.scrollBy(1);
+
+      
+      // Otimize swipper transition
+      TimerMixin.requestAnimationFrame(() => {
+        this.props.onSubmit(state);
+      });
     }
   }
 
