@@ -255,7 +255,7 @@ export class LocationForm extends React.Component {
     let number = numeral(this.state.number).value();
     let updates = {};
 
-    updates.number = Math.abs(number) || '';
+    updates.number =  Math.floor( Math.abs(number) ) || '';
 
     this.setState(updates);
   }

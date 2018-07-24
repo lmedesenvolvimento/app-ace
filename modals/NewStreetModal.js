@@ -11,10 +11,11 @@ import {
   Label,
   Item,
   Input,
-  Button
+  Button,
+  Picker
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 
 import Layout from '../constants/Layout';
@@ -22,32 +23,35 @@ import Layout from '../constants/Layout';
 import { simpleToast } from '../services/Toast';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
+import ReduxActions from '../redux/actions';
+
+import { PublicAreaTypes } from '../types/publicarea';
 
 export class NewStreetModal extends React.Component {
-  state = {
-    address: undefined,
-    neighborhood: {},
-    addresses: []
-  }
-
+  
   constructor(props) {
     super(props);
+    this.state = {
+      address: undefined,
+      type: PublicAreaTypes.street,
+      neighborhood: {},
+      addresses: []
+    };
   }
 
   componentDidMount(){
-    this.setState({ neighborhood: this.props.fieldgroup.neighborhood })
+    this.setState({ neighborhood: this.props.fieldgroup.neighborhood });
   }
 
   okModal(){
     if(!this.state.address){
-      return simpleToast("Logradouro vazio.")
+      return simpleToast('Logradouro vazio.');
     }
-    this.props.addPublicArea(this.props.fieldgroup.$id, this.state)
-    this.dismissModal()
+    this.props.addPublicArea(this.props.fieldgroup.$id, this.state);
+    this.dismissModal();
   }
 
   dismissModal(){
@@ -62,16 +66,30 @@ export class NewStreetModal extends React.Component {
           <Form>
             <View style={Layout.padding}>
               <Label>Bairro</Label>
-              <Input placeholder="Nome do Bairro" value={this.state.neighborhood.name} disabled={true}/>
+              <Input placeholder='Nome do Bairro' value={this.state.neighborhood.name} disabled={true}/>
+            </View>
+            
+
+            <View style={Layout.padding}>
+              <Text note>Tipo de Imóvel</Text>
+              <Picker
+                selectedValue={this.state.type}
+                onValueChange={(type) => this.setState({type}) }
+                supportedOrientations={['portrait','landscape']}
+                mode='dropdown'>
+                <Item label='Rua' value={PublicAreaTypes.street} />
+                <Item label='Avenida' value={PublicAreaTypes.avenue} />
+                <Item label='Outros' value={PublicAreaTypes.others} />
+              </Picker>
             </View>
 
             <Item stackedLabel>
               <Label>Logradouro</Label>
-              <Input placeholder="Nome do Logradouro" value={this.state.address} onChangeText={(address)=> this.setState({address})} />
+              <Input placeholder='Nome do Logradouro' value={this.state.address} onChangeText={(address)=> this.setState({address})} />
             </Item>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col style={styles.col}>
@@ -81,8 +99,8 @@ export class NewStreetModal extends React.Component {
               </Col>
               <Col style={[styles.col, styles.colLeftBorder]}>
                 <Button full transparent onPress={ () => this.okModal() }>
-                <Text>Novo Logradouro</Text>
-              </Button>
+                  <Text>Novo Logradouro</Text>
+                </Button>
               </Col>
             </Row>
           </Grid>          
@@ -99,7 +117,7 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   },
   progressItem:{
     width: 32,
@@ -114,7 +132,7 @@ const styles = {
     ...this.progressItem,
     backgroundColor: 'red'
   }
-}
+};
 
 
 function mapStateToProps(state) {
@@ -123,10 +141,10 @@ function mapStateToProps(state) {
       currentUser: state.currentUser,
       fieldGroups: state.fieldGroups
     }
-  }
+  };
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
