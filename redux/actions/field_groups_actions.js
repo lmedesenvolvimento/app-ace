@@ -144,9 +144,9 @@ let gql_get_field_groups = {
         },
         public_areas {
           id,
-          address,
-          addresses,
           type,
+          address,
+          addresses
           {
             id,
             number,
