@@ -18,7 +18,7 @@
     },
     "android":{
       "package": "br.ufc.lme.aedesemfoco.agent",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions":[
         "ACCESS_FINE_LOCATION"
       ]
@@ -50,7 +50,7 @@
     },
     "android":{
       "package": "br.ufc.lme.aedesemfoco.agent",
-      "versionCode": 2,
+      "versionCode": 3,
       "permissions":[
         "ACCESS_FINE_LOCATION"
       ]

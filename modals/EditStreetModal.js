@@ -34,7 +34,6 @@ import { PublicAreaTypes } from '../types/publicarea';
 import TimerMixin from 'react-timer-mixin';
 
 class EditStreetModal extends NewStreetModal {
-  
   constructor(props) {
     super(props);
     this.state = {

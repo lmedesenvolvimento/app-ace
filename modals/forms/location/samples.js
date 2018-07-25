@@ -196,8 +196,8 @@ export class SamplesForm extends React.Component {
   addSampleItem(){
     if (_.isUndefined(this.state.newItem.number) || this.state.newItem.number <= 0){
       Alert.alert(
-        'Falha na coleta',
-        'A quantidade de itens não pode ser menor ou igual a zero',
+        'Falha na numeração da coleta',
+        'A numeração da amostra não pode ser igual a zero',
         [
           { text: 'Ok', onPress: () => false, style: 'cancel' },          
         ],
