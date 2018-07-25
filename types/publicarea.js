@@ -3,3 +3,9 @@ export const PublicAreaTypes = {
   street: 1,
   others: 2
 };
+
+export const PublicAreaTypesTranslate = {
+  0: 'Avenida',
+  1: 'Rua',
+  2: 'Outros'
+};

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 
 import {
   Container,
@@ -17,7 +17,6 @@ import {
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
-
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
@@ -29,6 +28,8 @@ import { Actions } from 'react-native-router-flux';
 import ReduxActions from '../redux/actions';
 
 import { PublicAreaTypes } from '../types/publicarea';
+
+import _ from 'lodash';
 
 export class NewStreetModal extends React.Component {
   
@@ -45,19 +46,7 @@ export class NewStreetModal extends React.Component {
   componentDidMount(){
     this.setState({ neighborhood: this.props.fieldgroup.neighborhood });
   }
-
-  okModal(){
-    if(!this.state.address){
-      return simpleToast('Logradouro vazio.');
-    }
-    this.props.addPublicArea(this.props.fieldgroup.$id, this.state);
-    this.dismissModal();
-  }
-
-  dismissModal(){
-    Actions.pop();
-  }
-
+  
   render() {
     return (
       <Container>
@@ -107,6 +96,38 @@ export class NewStreetModal extends React.Component {
         </Footer>
       </Container>
     );
+  }
+
+  okModal() {
+    if (!this.state.address) {
+      return simpleToast('Logradouro vazio.');
+    }
+
+    if (this.isHasAddressInFieldgroup()){
+      return Alert.alert('Falha no registro do Logradouro', 'O logradouro já foi cadastrada.');
+    }
+
+    this.props.addPublicArea(this.props.fieldgroup.$id, this.state);
+    
+    this.dismissModal();
+  }
+
+  dismissModal() {
+    Actions.pop();
+  }
+
+  isHasAddressInFieldgroup() {
+    if (this.props.publicarea && this.props.publicarea.address == this.state.address){
+      return false;
+    }
+
+    return _.chain(this.props.fieldgroup.public_areas).find(
+      (pua) => {
+        return (pua.address == this.state.address) && ( pua.type == this.state.type );
+      }
+    ).value() ?
+      true :
+      false;
   }
 }
 

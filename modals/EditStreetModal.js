@@ -1,5 +1,5 @@
 import React from 'react';
-import { View} from 'react-native';
+import { Alert, View } from 'react-native';
 
 import {
   Container,
@@ -31,6 +31,8 @@ import ReduxActions from '../redux/actions';
 
 import { PublicAreaTypes } from '../types/publicarea';
 
+import TimerMixin from 'react-timer-mixin';
+
 class EditStreetModal extends NewStreetModal {
   
   constructor(props) {
@@ -44,25 +46,7 @@ class EditStreetModal extends NewStreetModal {
 
   componentDidMount(){
     this.setState({ neighborhood: this.props.fieldgroup.neighborhood, ...this.props.publicarea });
-  }
-
-  dismissModalBeforeModal(){
-    Actions.pop({publicarea: this.state});
-
-    setTimeout(() => {
-      Actions.refresh({publicarea: this.state});
-    });
-  }
-
-  okModal(){
-    if(!this.state.address){
-      return simpleToast('Logradouro vazio.');
-    }
-    
-    this.props.editPublicArea(this.props.fieldgroup.$id, this.props.publicarea, this.state);
-
-    this.dismissModalBeforeModal();
-  }
+  }  
 
   render() {
     return (
@@ -112,6 +96,32 @@ class EditStreetModal extends NewStreetModal {
         </Footer>
       </Container>
     );
+  }
+
+  dismissModalBeforeModal() {
+    Actions.pop({
+      publicarea: this.state
+    });
+
+    TimerMixin.setTimeout(() => {
+      Actions.refresh({
+        publicarea: this.state
+      });
+    });
+  }
+
+  okModal() {
+    if (!this.state.address) {
+      return simpleToast('Logradouro vazio.');
+    }
+
+    if (this.isHasAddressInFieldgroup()) {
+      return Alert.alert('Falha no registro do Logradouro', 'O logradouro já foi cadastrada.');
+    }
+
+    this.props.editPublicArea(this.props.fieldgroup.$id, this.props.publicarea, this.state);
+
+    this.dismissModalBeforeModal();
   }
 }
 

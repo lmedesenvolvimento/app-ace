@@ -29,6 +29,8 @@ import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
+import { PublicAreaTypesTranslate } from '../types/publicarea';
+
 import _ from 'lodash';
 
 import TimerMixin from 'react-timer-mixin';
@@ -38,7 +40,7 @@ class PublicAreaScreen extends React.Component {
     super(props);
     this.state = {
       public_areas: []
-    }
+    };
   }
 
   componentDidMount(){
@@ -106,6 +108,7 @@ class PublicAreaScreen extends React.Component {
         </Left>
         <Body style={Layout.listItemBody}>
           <Text>{item.address}</Text>
+          <Text note>{ PublicAreaTypesTranslate[item.type] }</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />

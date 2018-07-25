@@ -26,13 +26,13 @@ export default function reducer(state = initialState, action) {
     var { fieldGroupId, record, newData } = action.data;
 
     // Mesclando informações do Logradouro
-    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId])
-    var indexOfPublicArea = getPublicAreaIndex(state, action)
+    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
+    var indexOfPublicArea = getPublicAreaIndex(state, action, record.$id);
 
     state
       .data[indexOfFieldGroup]
       .field_group
-      .public_areas[indexOfPublicArea] = { ...record, ...newData };
+      .public_areas[indexOfPublicArea] = { ...record, ...newData };                  
 
     return { ...state, data: state.data };
 
