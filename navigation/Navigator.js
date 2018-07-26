@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { Alert, BackHandler, StyleSheet, View } from 'react-native';
 import { connect, Provider } from 'react-redux';
 
@@ -9,7 +9,6 @@ import {
   Scene,
   Stack,
   Modal,
-  Lightbox
 } from 'react-native-router-flux';
 
 import Colors from '../constants/Colors';
@@ -40,7 +39,7 @@ const RouterWithRedux = connect()(Router);
 
 Store.instance = configureStore();
 
-class Navigator extends Component {
+class Navigator extends React.Component {
   
   constructor(props){
     super(props);
@@ -75,61 +74,61 @@ class Navigator extends Component {
       <View style={styles.container}>
         <Provider store={Store.instance}>
           <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={this.onBackPress.bind(this)}>
-            <Modal key="root">
-              <Scene key="unauthorized" type="replace" initial={!this.props.authorized} hideNavBar>
+            <Modal key='root'>
+              <Scene key='unauthorized' type='replace' initial={!this.props.authorized} hideNavBar>
                 <Stack>
-                  <Scene key="login"
+                  <Scene key='login'
                     component={LoginScreen}
-                    title="Login"
+                    title='Login'
                     hideNavBar />
                 </Stack>
               </Scene>
-              <Scene key="authorized" type="replace" initial={this.props.authorized} hideNavBar>
+              <Scene key='authorized' type='replace' initial={this.props.authorized} hideNavBar>
                 <Drawer
-                  key="drawer"
+                  key='drawer'
                   contentComponent={MainMenu}
                   navigationBarStyle={styles.navigationBarStyle}
                   titleStyle={styles.navTitleStyle}
                   drawerOpenRoute='DrawerOpen'
-                	drawerCloseRoute='DrawerClose'
-                	drawerToggleRoute='DrawerToggle'
+                  drawerCloseRoute='DrawerClose'
+                  drawerToggleRoute='DrawerToggle'
                   renderLeftButton={() => <MenuButton /> }>
                   <Scene
-                    key="home"
+                    key='home'
                     component={HomeScreen}
-                    title="AEDES em foco">
+                    title='AEDES em foco'>
                   </Scene>
                   <Scene
-                    key="about"
+                    key='about'
                     component={AboutScreen}
-                    title="Sobre o App" />
+                    title='Sobre o App' />
                   <Scene
-                    key="profile"
+                    key='profile'
                     component={ProfileScreen}
-                    title="Perfil" />
+                    title='Perfil' />
                 </Drawer>
 
                 {/* LOCATIONS SCENES */}
                 <Scene
-                  key="fieldgroup"
+                  key='fieldgroup'
                   component={FieldGroupScreen}
-                  type="push"
+                  type='push'
                   hideNavBar />
                 <Scene
-                  key="publicarea"
+                  key='publicarea'
                   component={PublicAreaScreen}
-                  type="push"
+                  type='push'
                   hideNavBar />
                 {/* END LOCATIONS SCENES */}
               </Scene>
 
               {/* MODALS*/}
-              <Scene key="syncDataModal" component={ SynchronizeModal } modal title="Sincronizando Informações" hideNavBar />
-              <Scene key="newStreetModal"  component={ NewStreetModal } modal title="Novo Logradouro"   hideNavBar />
-              <Scene key="editStreetModal" component={ EditStreetModal } modal title="Editar Logradouro" hideNavBar />
-              <Scene key="locationModal" component={ FormLocationModal } modal title="Editar Logradouro" hideNavBar />
-              <Scene key="censoModal" component={ CensoModal } modal title="Editar Censo" hideNavBar />
-              <Scene key="clearStorageModal" component={ ClearStorageModal } modal title="Apagar todos os dados locais" hideNavBar />
+              <Scene key='syncDataModal' component={ SynchronizeModal } modal title='Sincronizando Informações' hideNavBar />
+              <Scene key='newStreetModal'  component={ NewStreetModal } modal title='Novo Logradouro'   hideNavBar />
+              <Scene key='editStreetModal' component={ EditStreetModal } modal title='Editar Logradouro' hideNavBar />
+              <Scene key='locationModal' component={ FormLocationModal } modal title='Editar Logradouro' hideNavBar />
+              <Scene key='censoModal' component={ CensoModal } modal title='Editar Censo' hideNavBar />
+              <Scene key='clearStorageModal' component={ ClearStorageModal } modal title='Apagar todos os dados locais' hideNavBar />
               {/* END MODALS*/}
             </Modal>
           </RouterWithRedux>
