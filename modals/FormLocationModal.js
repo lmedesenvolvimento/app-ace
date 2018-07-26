@@ -123,9 +123,7 @@ export class FormLocationModal extends React.Component {
   }
 
   scrollBy (index) {
-    TimerMixin.requestAnimationFrame(() => {
-      this.swiper.scrollBy(index);
-    });
+    this.swiper.scrollBy(index);
   }
 
   onCancel () {
@@ -162,7 +160,9 @@ export class FormLocationModal extends React.Component {
       } else{
         this.setState(updates);
       }
-    }).catch(() => this.setState(updates));
+    }).catch(() => {
+      this.setState(updates);
+    });
   }
   
   onInspectionFormSubmit (data) {
