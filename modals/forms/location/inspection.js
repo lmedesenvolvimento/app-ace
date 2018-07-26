@@ -25,8 +25,6 @@ import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
 
-import TimerMixin from 'react-timer-mixin';
-
 export class InspectionForm extends React.Component {
   
   constructor(props){
@@ -190,9 +188,7 @@ export class InspectionForm extends React.Component {
     let state = _.omit(this.state,['validation']);
     
     // Otimize swipper transition
-    TimerMixin.requestAnimationFrame(() => {
-      this.props.onSubmit(state);
-    });
+    this.props.onSubmit(state);
 
     // Next step
     this.props.scrollBy(1);

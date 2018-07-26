@@ -33,8 +33,6 @@ import Layout from '../../../constants/Layout';
 import { StepBars, Step } from './StepBars';
 import { SampleType } from '../../../types/sample';
 
-import TimerMixin from 'react-timer-mixin';
-
 const initialItem = {
   number: 0,
   type: SampleType.a1
@@ -152,9 +150,7 @@ export class SamplesForm extends React.Component {
 
   onSubmit(){
     this.props.scrollBy(1);
-    TimerMixin.requestAnimationFrame(()=> {
-      this.props.onSubmit(this.state.data);
-    });
+    this.props.onSubmit(this.state.data);
   }
 
   onBlurNumeralState(){

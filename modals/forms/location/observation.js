@@ -23,8 +23,6 @@ import { StepBars, Step } from './StepBars';
 
 import { omit } from 'lodash';
 
-import TimerMixin from 'react-timer-mixin';
-
 export class ObservationForm extends React.Component {  
   constructor(props){
     super(props);
@@ -93,11 +91,8 @@ export class ObservationForm extends React.Component {
 
   onSubmit(){
     // Pass form value parent component
-    let state = omit(this.state,['validation']);
-    
-    TimerMixin.requestAnimationFrame(()=> {
-      this.props.onSubmit(state);
-    });
+    let state = omit(this.state,['validation']);    
+    this.props.onSubmit(state);
   }
 }
 

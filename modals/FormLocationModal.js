@@ -34,6 +34,7 @@ export class FormLocationModal extends React.Component {
     super(props);
     this.state = {
       isReady: false,
+      isTransitionEnd: false,
       number: null,
       complement: null,
       visit: {
@@ -71,26 +72,27 @@ export class FormLocationModal extends React.Component {
       return (
         <Swiper
           ref={ (component) => this.swiper = component }
-          loop={false}
-          animated={false}
+          loop={false}          
           style={styles.wrapper}
+          loadMinimal={true}
+          loadMinimalSize={1}
           scrollEnabled={false}
           showsPagination={false}
           showsButtons={false}>
           <View style={styles.slide}>
-            <LocationForm {...this.props } scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} />
+            <LocationForm {...this.props } scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <InspectionForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onInspectionFormSubmit.bind(this)} />
+            <InspectionForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onInspectionFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <SamplesForm {...this.props} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onSamplesFormSubmit.bind(this)} />
+            <SamplesForm {...this.props} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onSamplesFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <TratamentForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onTratamentFormSubmit.bind(this)} />
+            <TratamentForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onTratamentFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <ObservationForm {...this.props } visit={this.state.visit} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onObservationFormSubmit.bind(this)} />
+            <ObservationForm {...this.props } visit={this.state.visit} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onObservationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
         </Swiper>
       );
@@ -110,6 +112,14 @@ export class FormLocationModal extends React.Component {
 
   dismissModal(){
     Actions.pop();
+  }
+
+  onIndexChanged(){
+    this.setState({ isTransitionEnd: false });
+  }
+
+  onMomentumScrollEnd(){
+    this.setState({ isTransitionEnd: true });
   }
 
   scrollBy (index) {

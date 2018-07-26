@@ -31,8 +31,6 @@ import { StepBars, Step } from './StepBars';
 
 import { TreatmentType } from '../../../types/treatment';
 
-import TimerMixin from 'react-timer-mixin';
-
 export class TratamentForm extends React.Component {
   
   constructor(props){
@@ -200,10 +198,7 @@ export class TratamentForm extends React.Component {
   }
 
   onSubmit(){
-    // Pass form value parent component
-    TimerMixin.requestAnimationFrame(() => {
-      this.props.onSubmit(this.state);
-    });
+    this.props.onSubmit(this.state);
     // Next Step
     this.props.scrollBy(1);
   }
