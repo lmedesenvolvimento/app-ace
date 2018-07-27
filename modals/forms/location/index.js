@@ -3,8 +3,6 @@ import { Alert } from 'react-native';
 
 import _ from 'lodash';
 
-import numeral from 'numeral';
-
 import {
   Header,
   Container,
@@ -108,10 +106,8 @@ export class LocationForm extends React.Component {
                     <Label>Número</Label>
                     <Input 
                       disabled={this.state.id}
-                      keyboardType='numeric'
-                      value={this.state.number ? this.state.number.toString() : ''} 
-                      onChangeText={(number) => this.setState({number})} 
-                      onBlur={this.onBlurNumeralState.bind(this)} />
+                      value={ _.isNumber(this.state.number) ? this.state.number.toString() : this.state.number} 
+                      onChangeText={(number) => this.setState({number})} />
                   </Item>
                 </Col>
                 <Col size={66} style={{ justifyContent: 'flex-end' }}>
@@ -243,16 +239,7 @@ export class LocationForm extends React.Component {
         ? this.toObservation()
         : this.props.scrollBy(1);            
     }
-  }
-
-  onBlurNumeralState(){
-    let number = numeral(this.state.number).value();
-    let updates = {};
-
-    updates.number =  Math.floor( Math.abs(number) ) || '';
-
-    this.setState(updates);
-  }
+  }  
 
   applyStartDateMask(check_in_translate){
     check_in_translate = check_in_translate.replace(':','');
@@ -280,13 +267,13 @@ export class LocationForm extends React.Component {
 
   isHasNumberInPublicArea(){
     // if registred address has same state number
-    if(this.props.address && this.props.address.number.toString() == this.state.number.toString()){
+    if(this.props.address && this.props.address.number == this.state.number){
       return false;
     }
 
     return _.chain(this.props.publicarea.addresses).find(
       (a) => {
-        return ( a.number.toString() == this.state.number.toString() ) && ( a.complement == this.state.complement );
+        return ( a.number == this.state.number ) && ( a.complement == this.state.complement );
       } 
     ).value()
       ? true 

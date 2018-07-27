@@ -52,9 +52,9 @@ export class FormLocationModal extends React.Component {
     };
   }  
 
-  componentDidMount(){
+  componentWillMount(){
     if(this.props.address){
-      let updates = { visit: this.state.visit };
+      let updates = this.props.address;
       
       updates.visit.latitude = this.props.address.latitude;
       updates.visit.longitude = this.props.address.longitude;
@@ -80,19 +80,19 @@ export class FormLocationModal extends React.Component {
           showsPagination={false}
           showsButtons={false}>
           <View style={styles.slide}>
-            <LocationForm {...this.props } scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <LocationForm {...omit(this.props, ['address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <InspectionForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onInspectionFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <InspectionForm {...omit(this.props, ['address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onInspectionFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <SamplesForm {...this.props} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onSamplesFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <SamplesForm {...omit(this.props, ['address'])} address={this.state} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onSamplesFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <TratamentForm {...this.props } scrollBy={this.scrollBy.bind(this)} onSubmit={this.onTratamentFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <TratamentForm {...omit(this.props, ['address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onTratamentFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <ObservationForm {...this.props } visit={this.state.visit} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onObservationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <ObservationForm {...omit(this.props, ['address']) } address={this.state} visit={this.state.visit} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onObservationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
         </Swiper>
       );
@@ -208,10 +208,10 @@ export class FormLocationModal extends React.Component {
     let newData = omit(this.state, ['isReady']);
 
     if(address){
-      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
+      this.props.updateLocationInPublicArea(this.props.fieldgroup, this.props.publicarea.$id, this.props.address, newData);
       simpleToast('Endereço foi atualizado!');
     } else{
-      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData);
+      this.props.addLocationInPublicArea(this.props.fieldgroup, this.props.publicarea.$id, newData);
       simpleToast('Endereço adicionado com sucesso!');
     }
 

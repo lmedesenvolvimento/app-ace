@@ -77,7 +77,7 @@ class HomeScreen extends React.Component {
   }
   _handleOnPressItem(field_group){
     TimerMixin.requestAnimationFrame(() => {
-      Actions.fieldgroup({fieldgroup: field_group, title: field_group.name, public_areas: field_group.public_areas});
+      Actions.fieldgroup({fieldgroup: field_group.$id, title: field_group.name});
     });
   }
 }
@@ -88,11 +88,11 @@ function mapStateToProps(state) {
       currentUser: state.currentUser,
       fieldGroups: state.fieldGroups
     }
-  }
+  };
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen)
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

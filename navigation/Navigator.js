@@ -74,7 +74,7 @@ class Navigator extends React.Component {
       <View style={styles.container}>
         <Provider store={Store.instance}>
           <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={this.onBackPress.bind(this)}>
-            <Modal key='root'>
+            <Modal key="root">
               <Scene key='unauthorized' type='replace' initial={!this.props.authorized} hideNavBar>
                 <Stack>
                   <Scene key='login'
@@ -107,7 +107,6 @@ class Navigator extends React.Component {
                     component={ProfileScreen}
                     title='Perfil' />
                 </Drawer>
-
                 {/* LOCATIONS SCENES */}
                 <Scene
                   key='fieldgroup'
@@ -121,7 +120,7 @@ class Navigator extends React.Component {
                   hideNavBar />
                 {/* END LOCATIONS SCENES */}
               </Scene>
-
+              
               {/* MODALS*/}
               <Scene key='syncDataModal' component={ SynchronizeModal } modal title='Sincronizando Informações' hideNavBar />
               <Scene key='newStreetModal'  component={ NewStreetModal } modal title='Novo Logradouro'   hideNavBar />

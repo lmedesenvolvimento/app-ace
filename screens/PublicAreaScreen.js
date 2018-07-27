@@ -128,8 +128,8 @@ class FieldGroupScreen extends React.Component {
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
             <Content padder>
-              <List 
-                dataSource={ ds.cloneWithRows(this._getAddressVisited())}
+              <List                 
+                dataSource={ ds.cloneWithRows( this._getAddressVisited() )}
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
@@ -144,7 +144,7 @@ class FieldGroupScreen extends React.Component {
     } else{
       return this.renderNotFoundItems();
     }
-  }
+  }  
 
   renderItem(address, secId, rowId, rowMap){
     address.visit = _.last(address.visits);
@@ -300,7 +300,7 @@ class FieldGroupScreen extends React.Component {
           // Force close animate Row
           rowMap[`${secId}${rowId}`].props.closeRow();          
           // Dispatch Action
-          this.props.removeLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, address);
+          this.props.removeLocationInPublicArea(this.props.fieldgroup, this.props.publicarea.$id, address);
         }},
       ],
       { cancelable: true }
@@ -325,7 +325,7 @@ class FieldGroupScreen extends React.Component {
   _getPublicArea(){
     let { fieldGroups, fieldgroup, publicarea } = this.props;
     let result = _.chain(fieldGroups.data)
-      .find(['$id', fieldgroup.$id])
+      .find(['$id', fieldgroup])
       .get('field_group.public_areas')
       .find(['$id', publicarea.$id]).value();
 

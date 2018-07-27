@@ -72,7 +72,7 @@ class PublicAreaScreen extends React.Component {
           </Right>
           <SearchBar
             ref={(ref) => this.searchBar = ref}
-            dataSource={this.public_areas}
+            dataSource={this.state.public_areas}
             animate={false}
             placeholder="Pesquisar"
             handleSearch={(q)=> this._handleSearch(q)}
@@ -119,7 +119,7 @@ class PublicAreaScreen extends React.Component {
 
   _handleItemPress(item){
     TimerMixin.requestAnimationFrame(() => {
-      Actions.publicarea({ publicarea: item, title: item.address, fieldgroup: this.props.fieldgroup });
+      Actions.publicarea({ publicarea: _.omit(item, ['addresses']), title: item.address, fieldgroup: this.props.fieldgroup });
     });
   }
 
@@ -136,8 +136,12 @@ class PublicAreaScreen extends React.Component {
 
   _getPublicAreas(){    
     let { fieldGroups, fieldgroup } = this.props;
-    let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
-    return _.orderBy(result.field_group.public_areas, ['address']);
+    if(fieldgroup){
+      let result = _.find(fieldGroups.data,['$id', fieldgroup]);
+      return _.orderBy(result.field_group.public_areas, ['address']);
+    } else{
+      return [];
+    }
   }  
 }
 
