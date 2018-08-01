@@ -33,9 +33,12 @@ import Layout from '../../../constants/Layout';
 import { StepBars, Step } from './StepBars';
 import { SampleType } from '../../../types/sample';
 
+import TimerMixin from 'react-timer-mixin';
+
 const initialItem = {
   number: 0,
-  type: SampleType.a1
+  type: SampleType.a1,
+  processing: false
 };
 
 export class SamplesForm extends React.Component {
@@ -133,12 +136,12 @@ export class SamplesForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full disabled={this.state.busy} transparent onPress={ () => this.props.scrollBy(-1) }>
+                <Button full disabled={this.state.busy} transparent onPress={this.onCancel.bind(this)}>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full disabled={this.state.busy} transparent onPress={ () => this.onSubmit() }>
+                <Button full disabled={this.state.busy} transparent onPress={this.onSubmit.bind(this)}>
                   <Text>Avançar</Text>
                 </Button>
               </Col>
@@ -150,8 +153,23 @@ export class SamplesForm extends React.Component {
   }
 
   onSubmit(){
-    this.props.onSubmit(this.state.data);
-    this.props.scrollBy(1);
+    if(this.state.processing) return;
+    
+    this.setState({ processing: true });
+
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
+  }
+  
+  _onSubmit(){
+    this.props.onSubmit(this.state.data, () => {
+      this.setState({ processing: false });
+      this.props.scrollBy(1);
+    });
+  }
+  
+  onCancel(){
+    if(this.state.processing) return;
+    this.props.scrollBy(-1);
   }
 
   onBlurNumeralState(){

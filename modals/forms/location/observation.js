@@ -21,14 +21,16 @@ import { VisitType } from '../../../types/visit';
 
 import { StepBars, Step } from './StepBars';
 
-import { omit, debounce } from 'lodash';
+import TimerMixin from 'react-timer-mixin';
+
+import { omit } from 'lodash';
 
 export class ObservationForm extends React.Component {  
   constructor(props){
     super(props);
     this.state = {
       observation: '',
-      busy: false
+      processing: false
     };
   }
 
@@ -67,12 +69,12 @@ export class ObservationForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent disabled={this.state.busy} onPress={this.onBack.bind(this)}>
+                <Button full transparent onPress={this.onBack.bind(this)}>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent disabled={this.state.busy} onPress={this.onSubmit.bind(this)}>
+                <Button full transparent onPress={this.onSubmit.bind(this)}>
                   <Text>Concluir</Text>
                 </Button>
               </Col>
@@ -85,22 +87,30 @@ export class ObservationForm extends React.Component {
 
   onBack(){
     let { visit } = this.props;
+    
+    if(this.state.processing) return;
+    
     isVisitClosedOrRefused(visit.type)
       ? this.props.scrollBy(-4)
       : this.props.scrollBy(-1);
   }
 
   onSubmit(){
-    this.setState({ busy: true });
+    if(this.state.processing) return;
     
-    return debounce(this._onSubmit.bind(this), 500, false)();
-  }
+    this.setState({ processing: true });
 
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
+  }
+  
   _onSubmit(){
+    const omitedAtributes = ['validation', 'busy'];    
     // Pass form value parent component
-    let state = omit(this.state, ['validation', 'busy']);
-    this.props.onSubmit(state);
-    this.setState({ busy: false });
+    let state = omit(this.state, omitedAtributes);
+    
+    this.props.onSubmit(state, () => {
+      this.setState({ processing: false });
+    });
   }
 }
 

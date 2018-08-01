@@ -31,6 +31,10 @@ import { StepBars, Step } from './StepBars';
 
 import { TreatmentType } from '../../../types/treatment';
 
+import TimerMixin from 'react-timer-mixin';
+
+import { omit } from 'lodash';
+
 export class TratamentForm extends React.Component {
   
   constructor(props){
@@ -43,7 +47,8 @@ export class TratamentForm extends React.Component {
       adulticida_quantity: 0.0,
       modalIsVisible: false,
       bigSpoonpQuantity: 0.0,
-      smallSpoonpQuantity: 0.0
+      smallSpoonpQuantity: 0.0,
+      processing: false
     };
   }
 
@@ -120,7 +125,7 @@ export class TratamentForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent disabled={this.state.busy} onPress={ () => this.props.scrollBy(-1) }>
+                <Button full transparent disabled={this.state.busy} onPress={this._onCancel.bind(this)}>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
@@ -198,11 +203,29 @@ export class TratamentForm extends React.Component {
   }
 
   onSubmit(){
-    this.props.onSubmit(this.state);
-    // Next Step
-    this.props.scrollBy(1);
+    if(this.state.processing) return;
+    
+    this.setState({ processing: true });
+
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
   }
   
+  _onSubmit(){
+    const omitedAtributes = ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity','processing'];    
+    
+    this.props.onSubmit( omit(this.state, omitedAtributes), () => {
+      this.setState({ processing: false });
+      // Next Step
+      this.props.scrollBy(1);
+    });
+  }
+  
+  
+  _onCancel(){    
+    if(this.state.processing) return;
+    this.props.scrollBy(-1);
+  }
+
   onConfirm () {
     this.setState({ modalIsVisible: false, adulticida_quantity: this.calcAdulticidaQuantity() });
   }

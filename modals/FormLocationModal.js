@@ -133,9 +133,12 @@ export class FormLocationModal extends React.Component {
     }
   }
 
-  okModal(targetTab){
+  okModal(targetTab, callback){
     Actions.pop();
-    TimerMixin.requestAnimationFrame(() => Actions.refresh({ activeTab: targetTab }));
+    TimerMixin.requestAnimationFrame(() =>  {
+      Actions.refresh({ activeTab: targetTab });
+      callback();
+    });
   }
 
   dismissModal(){
@@ -159,7 +162,7 @@ export class FormLocationModal extends React.Component {
   }
 
   // step-step responses
-  onLocationFormSubmit (data) {
+  onLocationFormSubmit (data, callback) {
     let updates = {
       number: data.number,
       complement: data.complement,
@@ -185,15 +188,18 @@ export class FormLocationModal extends React.Component {
           updates.visit.longitude = longitude;
         }
         this.setState(updates);
+        callback();
       } else{
         this.setState(updates);
+        callback();
       }
     }).catch(() => {
       this.setState(updates);
+      callback();
     });
   }
   
-  onInspectionFormSubmit (data) {
+  onInspectionFormSubmit (data, callback) {
     let updates = {
       visit: this.state.visit
     };
@@ -201,9 +207,11 @@ export class FormLocationModal extends React.Component {
     updates.visit.inspect = omit(data, ['start_number', 'end_number']);
     
     this.setState(updates);
+
+    callback();
   }
 
-  onSamplesFormSubmit (data) {
+  onSamplesFormSubmit (data, callback) {
     let updates = {
       visit: this.state.visit
     };
@@ -211,19 +219,23 @@ export class FormLocationModal extends React.Component {
     updates.visit.samples = data;
 
     this.setState(updates);
+
+    callback();
   }
   
-  onTratamentFormSubmit (data) {
+  onTratamentFormSubmit (data, callback) {
     let updates = {
       visit: this.state.visit
     };
     
-    updates.visit.treatment = omit(data, ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity']);
+    updates.visit.treatment = data;
     
     this.setState(updates);
+
+    callback();
   }
   
-  onObservationFormSubmit (data) {
+  onObservationFormSubmit (data, callback) {
     let { address } = this.props;    
     let updates = {
       visit: this.state.visit
@@ -245,7 +257,7 @@ export class FormLocationModal extends React.Component {
 
     let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
     
-    TimerMixin.setTimeout(this.okModal.bind(this, targetTab));
+    TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
   }
 }
 

@@ -25,6 +25,8 @@ import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
 
+import TimerMixin from 'react-timer-mixin';
+
 export class InspectionForm extends React.Component {
   
   constructor(props){
@@ -39,7 +41,8 @@ export class InspectionForm extends React.Component {
       e:  0,
       total_items: 0,
       collected: 0,
-      removed: 0
+      removed: 0,
+      processing: false,
     };
 
   }
@@ -167,7 +170,7 @@ export class InspectionForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent disabled={this.state.busy} onPress={ () => this.props.scrollBy(-1) }>
+                <Button full transparent disabled={this.state.busy} onPress={this.onCancel.bind(this)}>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
@@ -184,14 +187,28 @@ export class InspectionForm extends React.Component {
   }
 
   onSubmit(){
+    if(this.state.processing) return;
+    this.setState({ processing: true });
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
+  }
+  
+  _onSubmit(){
+    const omitedAtributes = ['validation','busy'];
     // Pass form value parent component
-    let state = _.omit(this.state,['validation','busy']);
+    let state = _.omit(this.state, omitedAtributes);
     
     // Otimize swipper transition
-    this.props.onSubmit(state);
-
-    // Next step
-    this.props.scrollBy(1);
+    this.props.onSubmit(state, () => {
+      this.setState({ processing: false });
+      // Next step
+      this.props.scrollBy(1);
+    });
+    
+  }
+  
+  onCancel(){
+    if(this.state.processing) return;
+    this.props.scrollBy(-1);
   }
 
   onBlurNumeralState(key){

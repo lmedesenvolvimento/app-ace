@@ -39,6 +39,8 @@ import { StepBars, Step } from './StepBars';
 
 import { VisitType, VisitTypeLocation } from '../../../types/visit';
 
+import TimerMixin from 'react-timer-mixin';
+
 export class LocationForm extends React.Component {
   
   constructor(props){
@@ -51,6 +53,7 @@ export class LocationForm extends React.Component {
       check_in_translate: moment().format('HH:mm'),
       type: VisitType.normal,
       type_location: VisitTypeLocation.residential,
+      processing: false,
       validation: {
         number: false,
         check_in_translate: false
@@ -190,7 +193,7 @@ export class LocationForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent disabled={this.state.busy} onPress={() => this.props.onCancel() }>
+                <Button full transparent disabled={this.state.busy} onPress={this.onCancel.bind(this)}>
                   <Text>Cancelar</Text>
                 </Button>
               </Col>
@@ -204,16 +207,27 @@ export class LocationForm extends React.Component {
         </Footer>
       </Container>
     );
-  }  
+  }
 
-  onSubmit() {
+  onSubmit(){
+    if(this.state.processing) return;
+    
+    this.setState({ processing: true });
+    
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
+  }
+
+  _onSubmit() {
+    const omitedAtributes = ['validation', 'check_in_translate', 'processing'];    
+
     if(this.isInvalid()){
       if(this.isHasNumberInPublicArea()){
         Alert.alert('Falha no registro da residência', 'A residência já foi cadastrada.');
       } else {
         Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.');
       }
-    } else {
+      this.setState({ processing: false });
+    } else {    
       let state = _.clone(this.state);
       
       // Force instance momment
@@ -231,16 +245,21 @@ export class LocationForm extends React.Component {
       state.check_in = momentTimezone.tz(state.check_in, 'America/Sao_paulo').format();
 
       // Pass form value parent component
-      this.props.onSubmit(_.omit(state, ['validation', 'check_in_translate', 'busy']));
+      this.props.onSubmit( _.omit(state, omitedAtributes), () => {
+        this.setState({ processing: false });    
+        // Next step
+        isVisitClosedOrRefused(state.type)
+          ? this.toObservation()
+          : this.props.scrollBy(1);
+      });
       
-      // Next step
-      isVisitClosedOrRefused(state.type)
-        ? this.toObservation()
-        : this.props.scrollBy(1);
-      
-      this.setState({ busy: false });
     }
-  }  
+  }
+
+  onCancel(){
+    if(this.state.processing) return;
+    this.props.onCancel();
+  }
 
   applyStartDateMask(check_in_translate){
     check_in_translate = check_in_translate.replace(':','');
