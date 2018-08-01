@@ -188,7 +188,9 @@ export class InspectionForm extends React.Component {
 
   onSubmit(){
     if(this.state.processing) return;
+
     this.setState({ processing: true });
+    
     TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
   }
   
