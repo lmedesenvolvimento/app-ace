@@ -17,7 +17,7 @@ import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from '../redux/actions';
 
-import { LocationForm } from './forms/location';
+import LocationForm from './forms/location';
 import { InspectionForm } from './forms/location/inspection';
 import { SamplesForm } from './forms/location/samples';
 import { TratamentForm } from './forms/location/tratament';
@@ -80,19 +80,47 @@ export class FormLocationModal extends React.Component {
           showsPagination={false}
           showsButtons={false}>
           <View style={styles.slide}>
-            <LocationForm { ...omit(this.props, ['state', 'address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <LocationForm 
+              { ...omit(this.props, ['state', 'address']) }
+              address={this.state} 
+              scrollBy={this.scrollBy.bind(this)} 
+              onCancel={this.onCancel.bind(this)} 
+              onSubmit={this.onLocationFormSubmit.bind(this)} 
+              isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <InspectionForm {...omit(this.props, ['address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onInspectionFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <InspectionForm
+              { ...omit(this.props, ['state','address']) }
+              address={this.state} 
+              scrollBy={this.scrollBy.bind(this)} 
+              onSubmit={this.onInspectionFormSubmit.bind(this)}
+              isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <SamplesForm {...omit(this.props, ['address'])} address={this.state} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onSamplesFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <SamplesForm
+              { ...omit(this.props, ['state','address']) }
+              address={this.state} 
+              scrollBy={this.scrollBy.bind(this)} 
+              onSubmit={this.onSamplesFormSubmit.bind(this)} 
+              isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <TratamentForm {...omit(this.props, ['address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onTratamentFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <TratamentForm
+              { ...omit(this.props, ['state','address']) }
+              address={this.state} 
+              scrollBy={this.scrollBy.bind(this)} 
+              onSubmit={this.onTratamentFormSubmit.bind(this)} 
+              isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <ObservationForm {...omit(this.props, ['address']) } address={this.state} visit={this.state.visit} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onObservationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <ObservationForm
+              { ...omit(this.props, ['state','address']) }
+              address={this.state} 
+              visit={this.state.visit} 
+              scrollBy={this.scrollBy.bind(this)} 
+              onCancel={this.onCancel.bind(this)} 
+              onSubmit={this.onObservationFormSubmit.bind(this)} 
+              isReady={this.state.isTransitionEnd} />
           </View>
         </Swiper>
       );
@@ -123,7 +151,7 @@ export class FormLocationModal extends React.Component {
   }
 
   scrollBy (index) {
-    this.swiper.scrollBy(index);
+    this.swiper.scrollBy(index);    
   }
 
   onCancel () {
@@ -217,7 +245,7 @@ export class FormLocationModal extends React.Component {
 
     let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
     
-    this.okModal(targetTab);
+    TimerMixin.setTimeout(this.okModal.bind(this, targetTab));
   }
 }
 
@@ -241,8 +269,7 @@ function isVisitClosedOrRefused(type) {
 function mapStateToProps(state) {
   return {
     state: {
-      currentUser: state.currentUser,
-      fieldGroups: state.fieldGroups
+      currentUser: state.currentUser
     }
   };
 }

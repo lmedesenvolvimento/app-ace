@@ -114,6 +114,7 @@ export class SamplesForm extends React.Component {
                       <Item label='C' value={SampleType.c} />
                       <Item label='D1' value={SampleType.d1} />
                       <Item label='D2' value={SampleType.d2} />
+                      <Item label='E' value={SampleType.e} />
                     </Picker>
                   </Col>
                 </Row>
@@ -132,12 +133,12 @@ export class SamplesForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent onPress={ () => this.props.scrollBy(-1) }>
+                <Button full disabled={this.state.busy} transparent onPress={ () => this.props.scrollBy(-1) }>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent onPress={ () => this.onSubmit() }>
+                <Button full disabled={this.state.busy} transparent onPress={ () => this.onSubmit() }>
                   <Text>Avançar</Text>
                 </Button>
               </Col>
@@ -149,8 +150,8 @@ export class SamplesForm extends React.Component {
   }
 
   onSubmit(){
-    this.props.scrollBy(1);
     this.props.onSubmit(this.state.data);
+    this.props.scrollBy(1);
   }
 
   onBlurNumeralState(){

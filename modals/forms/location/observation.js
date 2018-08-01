@@ -21,13 +21,14 @@ import { VisitType } from '../../../types/visit';
 
 import { StepBars, Step } from './StepBars';
 
-import { omit } from 'lodash';
+import { omit, debounce } from 'lodash';
 
 export class ObservationForm extends React.Component {  
   constructor(props){
     super(props);
     this.state = {
-      observation: ''
+      observation: '',
+      busy: false
     };
   }
 
@@ -66,12 +67,12 @@ export class ObservationForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent onPress={this.onBack.bind(this)}>
+                <Button full transparent disabled={this.state.busy} onPress={this.onBack.bind(this)}>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent onPress={this.onSubmit.bind(this)}>
+                <Button full transparent disabled={this.state.busy} onPress={this.onSubmit.bind(this)}>
                   <Text>Concluir</Text>
                 </Button>
               </Col>
@@ -90,9 +91,16 @@ export class ObservationForm extends React.Component {
   }
 
   onSubmit(){
+    this.setState({ busy: true });
+    
+    return debounce(this._onSubmit.bind(this), 500, false)();
+  }
+
+  _onSubmit(){
     // Pass form value parent component
-    let state = omit(this.state,['validation']);    
+    let state = omit(this.state, ['validation', 'busy']);
     this.props.onSubmit(state);
+    this.setState({ busy: false });
   }
 }
 

@@ -120,12 +120,12 @@ export class TratamentForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent onPress={ () => this.props.scrollBy(-1) }>
+                <Button full transparent disabled={this.state.busy} onPress={ () => this.props.scrollBy(-1) }>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent onPress={this.onSubmit.bind(this)}>
+                <Button full transparent disabled={this.state.busy} onPress={this.onSubmit.bind(this)}>
                   <Text>Avançar</Text>
                 </Button>
               </Col>

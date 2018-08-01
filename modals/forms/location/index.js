@@ -3,6 +3,8 @@ import { Alert } from 'react-native';
 
 import _ from 'lodash';
 
+import { connect } from 'react-redux';
+
 import {
   Header,
   Container,
@@ -22,6 +24,7 @@ import {
   Picker,
   DatePicker
 } from 'native-base';
+
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
@@ -61,7 +64,7 @@ export class LocationForm extends React.Component {
     if(this.props.address){
       let { address } = this.props;
 
-      if (address.hasOwnProperty('$id')){
+      if (address.number){
         updates.id = address.id;
         updates.number = address.number;
         updates.complement = address.complement;
@@ -73,7 +76,7 @@ export class LocationForm extends React.Component {
           updates.check_in_translate = updates.check_in.format('HH:mm');
         }
         this.setState(updates);
-      }      
+      }
     }
   }
 
@@ -187,12 +190,12 @@ export class LocationForm extends React.Component {
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent onPress={ () => this.props.onCancel() }>
+                <Button full transparent disabled={this.state.busy} onPress={() => this.props.onCancel() }>
                   <Text>Cancelar</Text>
                 </Button>
               </Col>
               <Col style={[styles.col, styles.colLeftBorder]}>
-                <Button full transparent onPress={ () => this.onSubmit() }>
+                <Button full transparent disabled={this.state.busy} onPress={this.onSubmit.bind(this)}>
                   <Text>Avançar</Text>
                 </Button>
               </Col>
@@ -201,9 +204,9 @@ export class LocationForm extends React.Component {
         </Footer>
       </Container>
     );
-  }
+  }  
 
-  onSubmit(){
+  onSubmit() {
     if(this.isInvalid()){
       if(this.isHasNumberInPublicArea()){
         Alert.alert('Falha no registro da residência', 'A residência já foi cadastrada.');
@@ -211,31 +214,31 @@ export class LocationForm extends React.Component {
         Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.');
       }
     } else {
+      let state = _.clone(this.state);
+      
       // Force instance momment
-      this.state.check_in = moment(this.state.check_in);
+      state.check_in = moment(state.check_in);
       
       // Covert check_in string to Timestamp
-      let time = this.state.check_in_translate.split(':');
+      let time = state.check_in_translate.split(':');
     
       // set for translate check_i date
-      this.state.check_in.set({
+      state.check_in.set({
         h: time[0],
         m: time[1]
       });
 
-      let updates = _.clone(this.state);
-
-      updates.check_in = momentTimezone.tz(updates.check_in, 'America/Sao_paulo').format();
+      state.check_in = momentTimezone.tz(state.check_in, 'America/Sao_paulo').format();
 
       // Pass form value parent component
-      let state = _.omit(updates,['validation','check_in_translate']);
-
-      this.props.onSubmit(state);
+      this.props.onSubmit(_.omit(state, ['validation', 'check_in_translate', 'busy']));
       
       // Next step
-      isVisitClosedOrRefused(this.state.type)
+      isVisitClosedOrRefused(state.type)
         ? this.toObservation()
-        : this.props.scrollBy(1);            
+        : this.props.scrollBy(1);
+      
+      this.setState({ busy: false });
     }
   }  
 
@@ -269,14 +272,14 @@ export class LocationForm extends React.Component {
       return false;
     }
 
-    return _.chain(this.props.publicarea.addresses).find(
+    return _.chain(this._getPublicAreas()).find(
       (a) => {
         return ( a.number == this.state.number ) && ( a.complement == this.state.complement );
       } 
     ).value()
       ? true 
       : false;
-  }
+  }  
 
   toObservation(){
     return this.props.scrollBy(4);
@@ -308,6 +311,19 @@ export class LocationForm extends React.Component {
         </Body>
       </Header>
     );
+  }
+
+  _getPublicAreas(){
+    let { fieldgroup, fieldGroups, publicarea } = this.props;
+    
+    let result = _.chain(fieldGroups.data)
+      .find(['$id', fieldgroup.$id])
+      .get('field_group.public_areas')
+      .find(['$id', publicarea.$id])
+      .get('addresses')
+      .value();
+
+    return result;
   }
 }
 
@@ -342,3 +358,5 @@ const styles = {
 function isVisitClosedOrRefused(type){
   return [VisitType.closed, VisitType.refused].includes(type);
 }
+
+export default connect(({ fieldGroups }) => ({ fieldGroups}))(LocationForm);
