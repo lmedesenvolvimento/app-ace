@@ -45,6 +45,7 @@ export class LocationForm extends React.Component {
       number: '',
       complement: null,
       check_in: moment(),
+      check_in_translate: moment().format('HH:mm'),
       type: VisitType.normal,
       type_location: VisitTypeLocation.residential,
       validation: {
@@ -52,31 +53,28 @@ export class LocationForm extends React.Component {
         check_in_translate: false
       }
     };
-
-    this.state.check_in_translate = this.state.check_in.format('HH:mm');
   }
 
   componentWillMount(){
-    let updates = {
-      address: this.props.publicarea.address
-    };
+    let updates = {};
 
     if(this.props.address){
       let { address } = this.props;
-      
-      updates.id = address.id;
-      updates.number = address.number;
-      updates.complement = address.complement;
 
-      if(this.props.address.visit){
-        updates.type = address.visit.type;
-        updates.type_location = address.visit.type_location;
-        updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in);
-        updates.check_in_translate = updates.check_in.format('HH:mm');
-      }
+      if (address.hasOwnProperty('$id')){
+        updates.id = address.id;
+        updates.number = address.number;
+        updates.complement = address.complement;
+  
+        if(this.props.address.visit){
+          updates.type = address.visit.type;
+          updates.type_location = address.visit.type_location;
+          updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in);
+          updates.check_in_translate = updates.check_in.format('HH:mm');
+        }
+        this.setState(updates);
+      }      
     }
-
-    this.setState(updates);
   }
 
   render(){    
@@ -97,7 +95,7 @@ export class LocationForm extends React.Component {
             <Grid>
               <Row>
                 <Col>
-                  <H3 note style={Layout.padding}>{this.state.address}</H3>
+                  <H3 note style={Layout.padding}>{ this.props.publicarea.address }</H3>
                 </Col>
               </Row>
               <Row>

@@ -137,7 +137,7 @@ class PublicAreaScreen extends React.Component {
   _getPublicAreas(){    
     let { fieldGroups, fieldgroup } = this.props;
     if(fieldgroup){
-      let result = _.find(fieldGroups.data,['$id', fieldgroup]);
+      let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
       return _.orderBy(result.field_group.public_areas, ['address']);
     } else{
       return [];

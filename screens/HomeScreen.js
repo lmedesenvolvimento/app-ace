@@ -25,6 +25,8 @@ import ReduxActions from '../redux/actions';
 import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
 
+import { omit} from 'lodash';
+
 import TimerMixin from 'react-timer-mixin';
 
 class HomeScreen extends React.Component {
@@ -77,7 +79,7 @@ class HomeScreen extends React.Component {
   }
   _handleOnPressItem(field_group){
     TimerMixin.requestAnimationFrame(() => {
-      Actions.fieldgroup({fieldgroup: field_group.$id, title: field_group.name});
+      Actions.fieldgroup({fieldgroup: omit(field_group, ['public_areas']), title: field_group.name});
     });
   }
 }

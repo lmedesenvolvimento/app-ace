@@ -7,6 +7,8 @@ import { simpleToast } from '../../services/Toast';
 
 import _ from 'lodash';
 
+import { ActionConst, Actions } from 'react-native-router-flux';
+
 
 export function setFieldGroups(data){
   return {
@@ -44,8 +46,11 @@ export function getFieldGroups(callback, onFail){
             return callback ? callback(field_groups) : false;
           }).catch(() => {
             let msg = 'Sessão de usuário já expirada, por favor efetue login novamente e tente de novo.';
+            
             // user feedback
             simpleToast(msg);
+
+            Actions.unauthorized({type: ActionConst.RESET});
             
             return onFail ? onFail(msg) : false;
           });

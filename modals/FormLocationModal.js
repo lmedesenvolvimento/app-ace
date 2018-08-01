@@ -80,7 +80,7 @@ export class FormLocationModal extends React.Component {
           showsPagination={false}
           showsButtons={false}>
           <View style={styles.slide}>
-            <LocationForm {...omit(this.props, ['address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
+            <LocationForm { ...omit(this.props, ['state', 'address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onCancel={this.onCancel.bind(this)} onSubmit={this.onLocationFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
             <InspectionForm {...omit(this.props, ['address']) } address={this.state} scrollBy={this.scrollBy.bind(this)} onSubmit={this.onInspectionFormSubmit.bind(this)} isReady={this.state.isTransitionEnd} />
@@ -208,10 +208,10 @@ export class FormLocationModal extends React.Component {
     let newData = omit(this.state, ['isReady']);
 
     if(address){
-      this.props.updateLocationInPublicArea(this.props.fieldgroup, this.props.publicarea.$id, this.props.address, newData);
+      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
       simpleToast('Endereço foi atualizado!');
     } else{
-      this.props.addLocationInPublicArea(this.props.fieldgroup, this.props.publicarea.$id, newData);
+      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData);
       simpleToast('Endereço adicionado com sucesso!');
     }
 
