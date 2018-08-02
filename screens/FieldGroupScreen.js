@@ -124,13 +124,18 @@ class PublicAreaScreen extends React.Component {
   }
 
   _onSearchExit(){
-    this.setState({public_areas: this.props.public_areas});
+    this.setState({ public_areas: this._getPublicAreas() });
     this.searchBar.hide();
   }
 
   _handleSearch(q){
     // Use Lodash regex for get match public_areas
-    let result = _.filter( this._getPublicAreas() , (i)=> _.isMatch(i.address, q));
+    let public_areas = this._getPublicAreas();
+
+    let result = _.filter(public_areas , (pua)=> {
+      return _.isMatch(pua.address.toLowerCase(), q.toLowerCase());
+    });
+
     this.setState({public_areas:  result});
   }
 

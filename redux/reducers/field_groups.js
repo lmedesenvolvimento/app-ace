@@ -82,7 +82,7 @@ export default function reducer(state = initialState, action) {
 
     // Adicionando MappingId a visita
     newData.visit.mapping_id = state.data[indexOfFieldGroup].id
-
+    
     // Se a visita for fechada ou se a visita anterior for fechada adiciona mais uma visita ao endereço
     if (isVisitClosedORefused(newData.visit.type) || isVisitClosedORefused(_.last(record.visits).type)) {
       newData.visits = _.clone(record.visits)

@@ -52,9 +52,10 @@ export class TratamentForm extends React.Component {
     };
   }
 
-  componentWillMount(){    
-    if(this.props.address && this.props.address.visit){
-      this.setState({...this.props.address.visit.treatment});
+  componentWillMount(){
+    let { payload } = this.props;
+    if(payload && payload.visit){
+      this.setState({...payload.visit.treatment});
     }
   }
 

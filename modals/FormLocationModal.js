@@ -27,9 +27,9 @@ import { VisitType } from '../types/visit';
 
 import TimerMixin from 'react-timer-mixin';
 
-import { omit } from 'lodash';
+import { omit, clone } from 'lodash';
 
-export class FormLocationModal extends React.Component {  
+export class FormLocationModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -54,12 +54,14 @@ export class FormLocationModal extends React.Component {
 
   componentWillMount(){
     if(this.props.address){
-      let updates = this.props.address;
+      let updates = clone(this.props.address);
       
-      updates.visit.latitude = this.props.address.latitude;
-      updates.visit.longitude = this.props.address.longitude;
-      updates.visit.registred_at = 
-        this.props.address.visit ? this.props.address.visit.registred_at : moment();
+      if(this.props.address.hasOwnProperty('latitude')){
+        updates.visit.latitude = this.props.address.latitude;
+        updates.visit.longitude = this.props.address.longitude;
+        updates.visit.registred_at = 
+          this.props.address.visit ? this.props.address.visit.registred_at : moment();
+      } 
 
       this.setState(updates);
     }
@@ -81,8 +83,9 @@ export class FormLocationModal extends React.Component {
           showsButtons={false}>
           <View style={styles.slide}>
             <LocationForm 
-              { ...omit(this.props, ['state', 'address']) }
-              address={this.state} 
+              payload={this.state}
+              fieldgroup={this.props.fieldgroup}
+              publicarea={this.props.publicarea}
               scrollBy={this.scrollBy.bind(this)} 
               onCancel={this.onCancel.bind(this)} 
               onSubmit={this.onLocationFormSubmit.bind(this)} 
@@ -90,32 +93,36 @@ export class FormLocationModal extends React.Component {
           </View>
           <View style={styles.slide}>
             <InspectionForm
-              { ...omit(this.props, ['state','address']) }
-              address={this.state} 
+              payload={this.state}
+              fieldgroup={this.props.fieldgroup}
+              publicarea={this.props.publicarea}
               scrollBy={this.scrollBy.bind(this)} 
               onSubmit={this.onInspectionFormSubmit.bind(this)}
               isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
             <SamplesForm
-              { ...omit(this.props, ['state','address']) }
-              address={this.state} 
+              payload={this.state} 
+              fieldgroup={this.props.fieldgroup}
+              publicarea={this.props.publicarea}
               scrollBy={this.scrollBy.bind(this)} 
               onSubmit={this.onSamplesFormSubmit.bind(this)} 
               isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
             <TratamentForm
-              { ...omit(this.props, ['state','address']) }
-              address={this.state} 
+              payload={this.state} 
+              fieldgroup={this.props.fieldgroup}
+              publicarea={this.props.publicarea}
               scrollBy={this.scrollBy.bind(this)} 
               onSubmit={this.onTratamentFormSubmit.bind(this)} 
               isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
             <ObservationForm
-              { ...omit(this.props, ['state','address']) }
-              address={this.state} 
+              payload={this.state} 
+              fieldgroup={this.props.fieldgroup}
+              publicarea={this.props.publicarea}
               visit={this.state.visit} 
               scrollBy={this.scrollBy.bind(this)} 
               onCancel={this.onCancel.bind(this)} 
@@ -166,7 +173,7 @@ export class FormLocationModal extends React.Component {
     let updates = {
       number: data.number,
       complement: data.complement,
-      visit: this.state.visit
+      visit: clone(this.state.visit)
     };
 
     updates.visit.type = data.type;
@@ -188,7 +195,10 @@ export class FormLocationModal extends React.Component {
           updates.visit.longitude = longitude;
         }
         this.setState(updates);
+
         callback();
+
+
       } else{
         this.setState(updates);
         callback();
@@ -236,7 +246,7 @@ export class FormLocationModal extends React.Component {
   }
   
   onObservationFormSubmit (data, callback) {
-    let { address } = this.props;    
+    let { address } = this.props;
     let updates = {
       visit: this.state.visit
     };
@@ -246,6 +256,8 @@ export class FormLocationModal extends React.Component {
     this.setState(updates);
 
     let newData = omit(this.state, ['isReady']);
+
+    console.log( this.props.address, newData );
 
     if(address){
       this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);

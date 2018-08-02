@@ -14,14 +14,14 @@ import {
   List,
   ListItem,
   Icon,
+  Item,
+  Input,
   Tab,
   Tabs,
   TabHeading,
   Fab,
   Col
 } from 'native-base';
-
-import SearchBar from 'react-native-searchbar';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -45,13 +45,17 @@ import { Grid, Row } from 'react-native-easy-grid';
 
 import TimerMixin from 'react-timer-mixin';
 
+const INITIAL_LIST_SIZE = 10;
+
 class FieldGroupScreen extends React.Component {
   constructor(props) {
     super(props);
     
     this.state = {
       model: {},
-      addresses: []
+      addresses: [],
+      queryVisited: '',
+      queryNotVisited: ''
     };
   }
 
@@ -78,17 +82,7 @@ class FieldGroupScreen extends React.Component {
           <Right>
             { this.renderEditButton() }
             { this.renderRemoveButton() }
-            <Button transparent onPress={()=> this.searchBar.show()}>
-              <Icon android='md-search' ios='ios-search' />
-            </Button>
-          </Right>
-          <SearchBar
-            ref={(ref) => this.searchBar = ref}
-            data={this.props.addresses}
-            animate={false}
-            placeholder='Pesquisar'
-            handleSearch={(q)=> this._handleSearch(q)}
-            onBack={ ()=> this._onSearchExit() } />
+          </Right>          
         </Header>
         { this.renderTabs() }
         <Fab
@@ -109,13 +103,13 @@ class FieldGroupScreen extends React.Component {
 
   renderTabs(){
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
     if(this.state.addresses && this.state.addresses.length){
       return (
         <Tabs locked={true} initialPage={this.props.activeTab || 0} page={this.props.activeTab}>
           <Tab heading={<TabHeading><Text>A VISITAR</Text></TabHeading>}>
-            <Content padder>
-              <List 
+            <Content>
+              <List
+                initialListSize={INITIAL_LIST_SIZE}
                 dataSource={ ds.cloneWithRows(this._getAddressNotVisited())}
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
@@ -127,8 +121,9 @@ class FieldGroupScreen extends React.Component {
             </Content>
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
-            <Content padder>
-              <List                 
+            <Content>
+              <List
+                initialListSize={INITIAL_LIST_SIZE}   
                 dataSource={ ds.cloneWithRows( this._getAddressVisited() )}
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
@@ -144,14 +139,26 @@ class FieldGroupScreen extends React.Component {
     } else{
       return this.renderNotFoundItems();
     }
-  }  
+  }
+  
+  // renderHeader(key){
+  //   return (
+  //     <Header searchBar rounded style={styles.listHeader}>
+  //       <Item>
+  //         <Icon name="ios-search" />
+  //         <Input placeholder="Buscar rápida" onChangeText={this._handleSearch.bind(this, key)} />
+  //       </Item>          
+  //     </Header>
+  //   );
+  // }
+  
 
   renderItem(address, secId, rowId, rowMap){
     address.visit = _.last(address.visits);
     return(
       <ListItem 
-        icon 
-        style={Layout.listHeight}
+        icon
+        style={[Layout.listHeight, styles.listItem]}
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
         onPress={this._handleOnPressItem.bind(this, address)}>
         <Left>
@@ -169,7 +176,6 @@ class FieldGroupScreen extends React.Component {
           </Grid>
         </Body>
       </ListItem>
-
     );
   }
 
@@ -258,7 +264,7 @@ class FieldGroupScreen extends React.Component {
         return false;
       }
       Actions.locationModal({ 
-        address: address,
+        address: _.clone(address),
         publicarea: this.props.publicarea,
         fieldgroup: this.props.fieldgroup
       });
@@ -314,10 +320,10 @@ class FieldGroupScreen extends React.Component {
     this.searchBar.hide();
   }
 
-  _handleSearch(q){
-    // Use Lodash regex for get match locations
-    let result = _.filter(this._getPublicArea().addresses, (i)=> _.isMatch(i.number, q));
-    this.setState({addresses:  result});
+  _handleSearch(key, q){
+    let updates = {};
+    updates[key] = q;
+    this.setState(updates);
   }
 
   // Helpers Queries 
@@ -342,6 +348,12 @@ class FieldGroupScreen extends React.Component {
         var lastVisit = _.chain(obj.visits).last().value();
         return lastVisit && !isVisitClosedOrRefused(lastVisit.type);
       }).orderBy(['number']).value();
+
+    if(!this.state.queryVisited.length) return result;
+
+    result = _.filter( result, (address)=> {
+      return _.isMatch(address.number.toLowerCase(), this.state.queryVisited.toLowerCase());
+    });
       
     return result;
   }
@@ -352,6 +364,12 @@ class FieldGroupScreen extends React.Component {
         var lastVisit = _.chain(obj.visits).last().value();
         return ( lastVisit && isVisitClosedOrRefused(lastVisit.type) ) || _.isUndefined(lastVisit);
       }).orderBy(['number']).value();
+
+    if(!this.state.queryNotVisited.length) return result;
+
+    result = _.filter( result, (address)=> {
+      return _.isMatch(address.number.toLowerCase(), this.state.queryNotVisited.toLowerCase());
+    });
 
     return result;
   }
@@ -375,6 +393,12 @@ const styles = {
   notfoundnoteicon: {
     fontSize: 124,
     color: '#ccc'
+  },
+  listHeader: {
+    backgroundColor: '#eeeeee'
+  },
+  listItem: {
+    paddingHorizontal: 16,
   }
 };
 

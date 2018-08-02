@@ -64,18 +64,18 @@ export class LocationForm extends React.Component {
   componentWillMount(){
     let updates = {};
 
-    if(this.props.address){
-      let { address } = this.props;
+    if(this.props.payload){
+      let { payload } = this.props;
 
-      if (address.number){
-        updates.id = address.id;
-        updates.number = address.number;
-        updates.complement = address.complement;
+      if (payload.number){
+        updates.id = payload.id;
+        updates.number = payload.number;
+        updates.complement = payload.complement;
   
-        if(this.props.address.visit){
-          updates.type = address.visit.type;
-          updates.type_location = address.visit.type_location;
-          updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in);
+        if(this.props.payload.visit){
+          updates.type = payload.visit.type;
+          updates.type_location = payload.visit.type_location || VisitTypeLocation.residential;
+          updates.check_in = isVisitClosedOrRefused(payload.visit.type) ? moment() : moment(payload.visit.check_in);
           updates.check_in_translate = updates.check_in.format('HH:mm');
         }
         this.setState(updates);
@@ -287,7 +287,7 @@ export class LocationForm extends React.Component {
 
   isHasNumberInPublicArea(){
     // if registred address has same state number
-    if(this.props.address && this.props.address.number == this.state.number){
+    if(this.props.payload && this.props.payload.number == this.state.number){
       return false;
     }
 

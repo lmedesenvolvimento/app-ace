@@ -47,9 +47,9 @@ export class InspectionForm extends React.Component {
 
   }
   componentWillMount(){    
-    let { address } = this.props;
-    if(address && address.visit){
-      this.setState({ ...address.visit.inspect, ...address.visit.sample });
+    let { payload } = this.props;
+    if(payload && payload.visit){
+      this.setState({ ...payload.visit.inspect, ...payload.visit.sample });
     }
   }
 
@@ -195,7 +195,7 @@ export class InspectionForm extends React.Component {
   }
   
   _onSubmit(){
-    const omitedAtributes = ['validation','busy'];
+    const omitedAtributes = ['validation','processing'];
     // Pass form value parent component
     let state = _.omit(this.state, omitedAtributes);
     

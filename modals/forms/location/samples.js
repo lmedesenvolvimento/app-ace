@@ -51,9 +51,9 @@ export class SamplesForm extends React.Component {
   }
 
   componentWillMount(){    
-    let { address } = this.props;
-    if (address && address.visit && address.visit.samples){
-      this.setState({ data: address.visit.samples });
+    let { payload } = this.props;
+    if (payload && payload.visit && payload.visit.samples){
+      this.setState({ data: payload.visit.samples });
     }
   }
 
