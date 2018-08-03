@@ -121,7 +121,6 @@ onStartSyncSuccess(response){
 
 onStartSyncFail(_error){
   let { msg, err, error } = _error.response.data;
-  console.log(_error.response.data)
   simpleToast(msg || error)
   this.setState({status: SynchronizeStatus.fail})
 }

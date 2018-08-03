@@ -22,7 +22,6 @@ export default function reducer(state = initialState, action) {
   switch (action.type) {
   case visit_types.SET_VISIT:
     var newState = Object.assign({}, state, action.data);
-    console.log(newState);
     return newState;
   case visit_types.CLEAR_VISIT:
     return initialState;

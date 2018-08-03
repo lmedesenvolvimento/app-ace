@@ -1,4 +1,4 @@
-import * as _ from 'lodash';
+import _ from 'lodash';
 import field_groups_types from '../types/field_groups_types';
 import { genSecureHex } from '../../services/SecureRandom';
 import { VisitType } from '../../types/visit';
@@ -69,28 +69,35 @@ export default function reducer(state = initialState, action) {
       .data[indexOfFieldGroup]
       .field_group
       .public_areas[indexOfPublicArea]
-      .addresses.push(_.omit(newData, ['visit']))
+      .addresses.push(_.omit(newData, ['visit']));
 
-    return { ...state, data: state.data }
+    return { ...state, data: state.data };
 
   case field_groups_types.EDIT_LOCATION:
     var { fieldGroupId, publicareaId, record, newData } = action.data;
 
-    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId])
-    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
-    var indexOfAddress = getLocationIndex(state, action, record.$id)
+    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
+    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId);
+    var indexOfAddress = getLocationIndex(state, action, record.$id);
 
     // Adicionando MappingId a visita
-    newData.visit.mapping_id = state.data[indexOfFieldGroup].id
+    newData.visit.mapping_id = state.data[indexOfFieldGroup].id;
     
     // Se a visita for fechada ou se a visita anterior for fechada adiciona mais uma visita ao endereço
     if (isVisitClosedORefused(newData.visit.type) || isVisitClosedORefused(_.last(record.visits).type)) {
-      newData.visits = _.clone(record.visits)
-      newData.visits.push(newData.visit)
+      let newVisit = _.clone(newData.visit);
+      // Copiando visitas anteriores
+      newData.visits = _.clone(record.visits);
+      // Se nova visita for fechada removendo informações de coleta da visita passada
+      if(isVisitClosedORefused(newData.visit.type)){
+        newData.visits.push(_.omit(newVisit, ['id', 'inspect', 'treatment', 'samples']));
+      } else {
+        newData.visits.push(_.omit(newVisit, ['id']));
+      }
     } else {
       // Mesclando alterações da última visíta
-      var lastVisitIndex = _.findLastIndex(record.visits)
-      record.visits[lastVisitIndex] = newData.visit
+      var lastVisitIndex = _.findLastIndex(record.visits);
+      record.visits[lastVisitIndex] = newData.visit;
     }
 
     // Atualizando Localização e Visita
@@ -98,16 +105,16 @@ export default function reducer(state = initialState, action) {
       .data[indexOfFieldGroup]
       .field_group
       .public_areas[indexOfPublicArea]
-      .addresses[indexOfAddress] = { ..._.omit(record, ['visit']), ..._.omit(newData, ['visit']) };
+      .addresses[indexOfAddress] = _.omit(newData, ['visit']);
 
-    return { ...state, data: state.data }
+    return { ...state, data: state.data };
 
   case field_groups_types.REMOVE_LOCATION:
     var { fieldGroupId, publicareaId, record } = action.data;
 
-    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId])
-    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
-    var indexOfAddress = getLocationIndex(state, action, record.$id)
+    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
+    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId);
+    var indexOfAddress = getLocationIndex(state, action, record.$id);
 
     // Deletando Endereço
     state
