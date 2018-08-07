@@ -61,4 +61,4 @@ function mapDispatchToProps(dispatch){
 }
 
 
-export default connect(({ currentUser, network }) => ({ currentUser, network}), mapDispatchToProps)(LogoutButton)
+export default connect(({ currentUser, network }) => ({ currentUser, network}), mapDispatchToProps)(LogoutButton);

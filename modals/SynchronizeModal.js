@@ -119,9 +119,23 @@ onStartSyncSuccess(response){
   
 }
 
-onStartSyncFail(_error){
-  let { msg, err, error } = _error.response.data;
-  simpleToast(msg || error)
+onStartSyncFail(err){
+  let { response } = err;
+  let { msg, error } = response.data;
+
+  switch (response.status) {
+    case 200:
+      msg = 'Sessão de usuário já expirada, por favor efetue login novamente e tente de novo.';
+      // user feedback
+      simpleToast(msg);
+      // Redirect for unauthorized
+      Actions.unauthorized({type: ActionConst.RESET});
+      break;
+    default:
+      simpleToast(msg || error)
+      break;
+  }
+
   this.setState({status: SynchronizeStatus.fail})
 }
 

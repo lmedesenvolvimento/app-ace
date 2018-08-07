@@ -1,18 +1,18 @@
 import React from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import { View, Image } from 'react-native';
 
 import { connect } from 'react-redux';
-import { Actions } from 'react-native-router-flux';
+import { bindActionCreators } from 'redux';
+
+import ReduxActions from '../redux/actions';
 
 import {
   Container,
   Content,
   Button,
   Text,
-  Title,
   Left,
   Right,
-  Body,
   Form,
   Item,
   Input,
@@ -21,34 +21,35 @@ import {
   Spinner
 } from 'native-base';
 
-import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
-import Colors from '../constants/Colors';
 import Store from '../constants/Store';
 
 import Auth from '../services/Auth';
-import Session from '../services/Session';
 
 import UserCallbacks from '../hooks/UserCallbacks';
 
 import * as AuthActions from '../redux/actions/auth_actions';
 
 class LoginScreen extends React.Component {
-  state = {
-    email: '',
-    emailValid: true,
-    password: '',
-    passwordValid: true
+  constructor(props){
+    super(props);
+    
+    this.state = {
+      email: '',
+      emailValid: true,
+      password: '',
+      passwordValid: true
+    };
   }
-
+  
   render() {
-    let { auth } = this.props;
+    let { auth } = this.props.state;
 
     return (
       <Container>
         <Content padder>
           <View style={[Layout.padding, styles.imgContainer]}>
-            <Image source={require('../assets/images/aedes_em_foco.png')} style={styles.img} />
+            <Image source={ require('../assets/images/aedes_em_foco.png') } style={styles.img} />
           </View>
           <Form style={{ flex: 1 }}>
             <Item inlineLabel error={!this.state.emailValid}>
@@ -86,7 +87,12 @@ class LoginScreen extends React.Component {
     }
     // Submit Authentication
     Store.instance.dispatch(AuthActions.toWaiting());
-    Auth.sign_in(this.state.email, this.state.password).then(UserCallbacks.signInWithEmailAndPasswordSuccess, UserCallbacks.signInWithEmailAndPasswordFail)
+    Auth
+      .sign_in(this.state.email, this.state.password)
+      .then(
+        UserCallbacks.signInWithEmailAndPasswordSuccess, 
+        UserCallbacks.signInWithEmailAndPasswordFail
+      );
   }
 }
 
@@ -112,6 +118,18 @@ const styles = {
   spinner: {
     marginLeft: 8
   }
+};
+
+function mapStateToProps(state) {
+  return {
+    state: {
+      auth: state.auth,
+    }
+  };
 }
 
-export default connect(({auth}) => ({auth}))(LoginScreen)
+function mapDispatchToProps(dispatch){
+  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginScreen);
