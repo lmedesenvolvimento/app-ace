@@ -14,8 +14,6 @@ import {
   List,
   ListItem,
   Icon,
-  Item,
-  Input,
   Tab,
   Tabs,
   TabHeading,
@@ -347,7 +345,8 @@ class FieldGroupScreen extends React.Component {
       _.chain(this.state.addresses).filter((obj) => {
         var lastVisit = _.chain(obj.visits).last().value();
         return lastVisit && !isVisitClosedOrRefused(lastVisit.type);
-      }).orderBy(['number']).value();
+      }).sortBy(sortByNumber).value();
+      
 
     if(!this.state.queryVisited.length) return result;
 
@@ -363,7 +362,7 @@ class FieldGroupScreen extends React.Component {
       _.chain(this.state.addresses).filter((obj) => {
         var lastVisit = _.chain(obj.visits).last().value();
         return ( lastVisit && isVisitClosedOrRefused(lastVisit.type) ) || _.isUndefined(lastVisit);
-      }).orderBy(['number']).value();
+      }).sortBy(sortByNumber).value();
 
     if(!this.state.queryNotVisited.length) return result;
 
@@ -373,6 +372,11 @@ class FieldGroupScreen extends React.Component {
 
     return result;
   }
+}
+
+function sortByNumber(o){
+  let number = parseInt(o.number);
+  return _.isNaN(number) ? -1 : number;
 }
 
 const styles = {

@@ -257,8 +257,6 @@ export class FormLocationModal extends React.Component {
 
     let newData = omit(this.state, ['isReady']);
 
-    console.log( this.props.address, newData );
-
     if(address){
       this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
       simpleToast('Endereço foi atualizado!');
