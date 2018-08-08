@@ -123,7 +123,7 @@ export class SamplesForm extends React.Component {
                 </Row>
                 <Row style={Layout.marginVertical8}>
                   <Col>
-                    <Button bordered primary block onPress={this.addSampleItem.bind(this)}>
+                    <Button bordered primary style={{ alignSelf:'center', marginVertical: 8 }} onPress={this.addSampleItem.bind(this)}>
                       <Text>+ Adicionar Coleta</Text>
                     </Button>
                   </Col>
