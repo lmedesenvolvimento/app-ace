@@ -152,7 +152,7 @@ class FieldGroupScreen extends React.Component {
   
 
   renderItem(address, secId, rowId, rowMap){
-    address.visit = _.last(address.visits);
+    address.visit = _.last(address.visits) || {};
     return(
       <ListItem 
         icon

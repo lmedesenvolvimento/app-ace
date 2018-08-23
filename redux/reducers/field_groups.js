@@ -80,11 +80,13 @@ export default function reducer(state = initialState, action) {
     var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId);
     var indexOfAddress = getLocationIndex(state, action, record.$id);
 
+    var lastVisit = _.last(record.visits);
+
     // Adicionando MappingId a visita
     newData.visit.mapping_id = state.data[indexOfFieldGroup].id;
     
     // Se a visita for fechada ou se a visita anterior for fechada adiciona mais uma visita ao endereço
-    if (isVisitClosedORefused(newData.visit.type) || isVisitClosedORefused(_.last(record.visits).type)) {
+    if ( _.isUndefined(lastVisit) ||  isVisitClosedORefused(newData.visit.type) || isVisitClosedORefused(lastVisit.type)) {
       let newVisit = _.clone(newData.visit);
       // Copiando visitas anteriores
       newData.visits = _.clone(record.visits);
