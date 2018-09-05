@@ -8,6 +8,8 @@ import Colors from '../constants/Layout';
 import { simpleToast } from '../services/Toast';
 import { getLocationAsync } from '../services/Permissions';
 
+import { captureException } from '../hooks/CustomError';
+
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
 
@@ -170,104 +172,134 @@ export class FormLocationModal extends React.Component {
 
   // step-step responses
   onLocationFormSubmit (data, callback) {
-    let updates = {
-      number: data.number,
-      complement: data.complement,
-      visit: clone(this.state.visit)
-    };
+    try {
+      let updates = {
+        number: data.number,
+        complement: data.complement,
+        visit: clone(this.state.visit)
+      };
 
-    updates.visit.type = data.type;
-    updates.visit.check_in = data.check_in;
-    updates.visit.type_location = data.type_location;
+      updates.visit.type = data.type;
+      updates.visit.check_in = data.check_in;
+      updates.visit.type_location = data.type_location;
 
-    if( !this.props.address || !this.props.address.visit.hasOwnProperty('registred_at') ){
-      updates.visit.registred_at = momentTimezone.tz(updates.check_in, 'America/Sao_paulo').format();
-    }
-
-    // Save Current Geo Location
-    getLocationAsync().then((data) => {
-      if(data) {
-        let { latitude, longitude } = data.coords;
-        updates.latitude = latitude;
-        updates.longitude = longitude;
-        if( !this.props.address || !this.props.address.visit.hasOwnProperty('registred_at') ){
-          updates.visit.latitude = latitude;
-          updates.visit.longitude = longitude;
-        }
-        this.setState(updates);
-
-        callback();
-
-
-      } else{
-        this.setState(updates);
-        callback();
+      if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
+        updates.visit.registred_at = momentTimezone.tz(updates.check_in, 'America/Sao_paulo').format();
       }
-    }).catch(() => {
-      this.setState(updates);
-      callback();
-    });
+
+      // Save Current Geo Location
+      getLocationAsync().then((data) => {
+        if (data) {
+          let { latitude, longitude } = data.coords;
+          updates.latitude = latitude;
+          updates.longitude = longitude;
+          if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
+            updates.visit.latitude = latitude;
+            updates.visit.longitude = longitude;
+          }
+          this.setState(updates);
+
+          callback();
+        } else {
+          this.setState(updates);
+          callback();
+        }
+      }).catch(() => {
+        this.setState(updates);
+        callback();
+      });
+
+      captureException(new Error("Passei pela etapa 1"));
+
+
+    } catch(e) {
+      captureException(e);
+    }    
   }
   
   onInspectionFormSubmit (data, callback) {
-    let updates = {
-      visit: this.state.visit
-    };
-    
-    updates.visit.inspect = omit(data, ['start_number', 'end_number']);
-    
-    this.setState(updates);
+    try{
+      let updates = {
+        visit: this.state.visit
+      };
+      
+      updates.visit.inspect = omit(data, ['start_number', 'end_number']);
+      
+      this.setState(updates);
 
-    callback();
+      captureException(new Error("Passei pela etapa 2"));
+  
+      callback();
+    } catch(e) {
+      captureException(e);
+    }
   }
 
   onSamplesFormSubmit (data, callback) {
-    let updates = {
-      visit: this.state.visit
-    };
+    try{
+      let updates = {
+        visit: this.state.visit
+      };
+  
+      updates.visit.samples = data;
+  
+      this.setState(updates);
 
-    updates.visit.samples = data;
-
-    this.setState(updates);
-
-    callback();
+      captureException(new Error("Passei pela etapa 3"));
+  
+      callback();
+    } catch(e) {
+      captureException(e);
+    }
   }
   
   onTratamentFormSubmit (data, callback) {
-    let updates = {
-      visit: this.state.visit
-    };
-    
-    updates.visit.treatment = data;
-    
-    this.setState(updates);
+    try{
+      let updates = {
+        visit: this.state.visit
+      };
+      
+      updates.visit.treatment = data;
+      
+      this.setState(updates);
 
-    callback();
+      captureException(new Error("Passei pela etapa 4"));
+  
+      callback();
+    } catch(e) {
+      captureException(e);
+    }
   }
   
   onObservationFormSubmit (data, callback) {
-    let { address } = this.props;
-    let updates = {
-      visit: this.state.visit
-    };
+    try {
+      let { address } = this.props;
+      let updates = {
+        visit: this.state.visit
+      };
+  
+      updates.visit.observation = data.observation;
+  
+      this.setState(updates);
+  
+      let newData = omit(this.state, ['isReady']);
+  
+      if(address){
+        this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
+        simpleToast('Endereço foi atualizado!');
+      } else{
+        this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData);
+        simpleToast('Endereço adicionado com sucesso!');
+      }
+  
+      let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
+      
+      TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
 
-    updates.visit.observation = data.observation;
-
-    this.setState(updates);
-
-    let newData = omit(this.state, ['isReady']);
-
-    if(address){
-      this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
-      simpleToast('Endereço foi atualizado!');
-    } else{
-      this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData);
-      simpleToast('Endereço adicionado com sucesso!');
+      captureException(new Error("Passei pela etapa 5"));
+    } catch(e) {
+      captureException(e);
     }
-
-    let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
-    
-    TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
   }
 }
 

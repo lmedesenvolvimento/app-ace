@@ -1,19 +1,21 @@
 import Expo from 'expo';
 import React from 'react';
-import { StyleSheet, StatusBar, View, Platform } from 'react-native';
 
-import { StyleProvider, Button, Text, getTheme } from 'native-base';
+import Sentry from 'sentry-expo';
 
+import { StyleSheet } from 'react-native';
+
+import { StyleProvider, getTheme } from 'native-base';
 
 import Theme from './constants/Theme';
-import Store, { configureStore } from './constants/Store';
 
 import Auth    from './services/Auth';
 import Session from './services/Session';
-import Network from './services/Network';
 import { getLocationAsync }    from './services/Permissions';
 
 import Navigator from './navigation/Navigator';
+
+import { captureException } from './hooks/CustomError';
 
 export default class App extends React.Component {
   state = {
@@ -38,6 +40,11 @@ export default class App extends React.Component {
   }
 
   async _cacheResourcesAsync(){
+    // Remove this once Sentry is correctly setup.
+    Sentry.enableInExpoDevelopment = true;
+
+    Sentry.config('https://d372673b4ed44d82a8ab68bd308f54cf@sentry.io/1274743').install();
+
     let user;
 
     await Expo.Font.loadAsync({
@@ -63,9 +70,8 @@ export default class App extends React.Component {
       } else{
         this.setState({isReady: true})
       }
-    });
+    });    
   }
-
 }
 
 const styles = StyleSheet.create({
