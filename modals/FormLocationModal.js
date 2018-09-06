@@ -208,10 +208,6 @@ export class FormLocationModal extends React.Component {
         this.setState(updates);
         callback();
       });
-
-      captureException(new Error("Passei pela etapa 1"));
-
-
     } catch(e) {
       captureException(e);
     }    
@@ -227,8 +223,6 @@ export class FormLocationModal extends React.Component {
       
       this.setState(updates);
 
-      captureException(new Error("Passei pela etapa 2"));
-  
       callback();
     } catch(e) {
       captureException(e);
@@ -245,8 +239,6 @@ export class FormLocationModal extends React.Component {
   
       this.setState(updates);
 
-      captureException(new Error("Passei pela etapa 3"));
-  
       callback();
     } catch(e) {
       captureException(e);
@@ -262,8 +254,6 @@ export class FormLocationModal extends React.Component {
       updates.visit.treatment = data;
       
       this.setState(updates);
-
-      captureException(new Error("Passei pela etapa 4"));
   
       callback();
     } catch(e) {
@@ -296,7 +286,6 @@ export class FormLocationModal extends React.Component {
       
       TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
 
-      captureException(new Error("Passei pela etapa 5"));
     } catch(e) {
       captureException(e);
     }

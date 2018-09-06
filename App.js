@@ -15,12 +15,14 @@ import { getLocationAsync }    from './services/Permissions';
 
 import Navigator from './navigation/Navigator';
 
-import { captureException } from './hooks/CustomError';
+import { watchConnection } from './services/Network';
 
-export default class App extends React.Component {
-  state = {
-    isAuthorized: false,
-    isReady: false
+export default class App extends React.Component {  
+  constructor(){
+    this.state = {
+      isAuthorized: false,
+      isReady: false
+    }    
   }
 
   componentWillMount(){
@@ -40,10 +42,13 @@ export default class App extends React.Component {
   }
 
   async _cacheResourcesAsync(){
+    // Start Network Observer
+    watchConnection();
+
     // Remove this once Sentry is correctly setup.
     Sentry.enableInExpoDevelopment = true;
 
-    Sentry.config('https://d372673b4ed44d82a8ab68bd308f54cf@sentry.io/1274743').install();
+    // Sentry.config('https://d372673b4ed44d82a8ab68bd308f54cf@sentry.io/1274743').install();
 
     let user;
 
