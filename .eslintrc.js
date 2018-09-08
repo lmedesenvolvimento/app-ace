@@ -12,9 +12,11 @@ module.exports = {
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "react-native"
     ],
     "rules": {
+        "react/jsx-uses-vars": ["error"],
         "indent": [
             "error",
             2

@@ -17,54 +17,55 @@ import {
   Tab,
   Tabs,
   TabHeading,
-  Fab
+  Fab,
+  Col
 } from 'native-base';
-
-import { DefaultTabBar } from 'react-native-scrollable-tab-view';
-import SearchBar from 'react-native-searchbar';
 
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 
+import ReduxActions from '../redux/actions';
 
-import ReduxActions from "../redux/actions";
-
-import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
-import { VisitType, VisitTypeLocation } from '../types/visit';
+import { VisitType, VisitTranslante } from '../types/visit';
 
 import { simpleToast } from '../services/Toast';
 
-import LogoutButton from '../components/LogoutButton';
+import _ from 'lodash';
+import moment from 'moment';
 
-import * as _ from "lodash";
+import { Grid, Row } from 'react-native-easy-grid';
+
+import TimerMixin from 'react-timer-mixin';
+
+const INITIAL_LIST_SIZE = 10;
 
 class FieldGroupScreen extends React.Component {
-  state = {
-    model: {},
-    addresses: []
-  }
-
   constructor(props) {
     super(props);
+    
+    this.state = {
+      model: {},
+      addresses: [],
+      queryVisited: '',
+      queryNotVisited: ''
+    };
   }
 
   componentDidMount(){
-    this.setState({ addresses: this._getPublicArea().addresses })
+    this.setState({ addresses: this._getPublicArea().addresses });
   }
 
   componentWillReceiveProps(){
-    this.setState({ addresses: this._getPublicArea().addresses })
+    this.setState({ addresses: this._getPublicArea().addresses });
   }
 
   render() {
-    let { currentUser } = this.props;    
-
     return (
       <Container>
         <Header hasTabs={true} style={{ zIndex: 9 }}>
@@ -74,27 +75,17 @@ class FieldGroupScreen extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>{ this.props.publicarea.address || "Atualizando..." }</Title>
+            <Title>{ this.props.publicarea.address || 'Atualizando...' }</Title>
           </Body>
           <Right>
             { this.renderEditButton() }
             { this.renderRemoveButton() }
-            <Button transparent onPress={()=> this.searchBar.show()}>
-              <Icon android="md-search" ios="ios-search" />
-            </Button>
-          </Right>
-          <SearchBar
-            ref={(ref) => this.searchBar = ref}
-            data={this.props.addresses}
-            animate={false}
-            placeholder="Pesquisar"
-            handleSearch={(q)=> this._handleSearch(q)}
-            onBack={ ()=> this._onSearchExit() } />
+          </Right>          
         </Header>
         { this.renderTabs() }
         <Fab
-          direction="up"
-          position="bottomRight"
+          direction='up'
+          position='bottomRight'
           style={{ backgroundColor: Colors.accentColor }}
           onPress={() => {
             Actions.locationModal({ 
@@ -102,7 +93,7 @@ class FieldGroupScreen extends React.Component {
               fieldgroup: this.props.fieldgroup
             });
           }}>
-          <Icon android="md-add" ios="ios-add" size={24} />
+          <Icon android='md-add' ios='ios-add' size={24} />
         </Fab>
       </Container>
     );
@@ -110,13 +101,13 @@ class FieldGroupScreen extends React.Component {
 
   renderTabs(){
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
     if(this.state.addresses && this.state.addresses.length){
       return (
         <Tabs locked={true} initialPage={this.props.activeTab || 0} page={this.props.activeTab}>
           <Tab heading={<TabHeading><Text>A VISITAR</Text></TabHeading>}>
-            <Content padder>
-              <List 
+            <Content>
+              <List
+                initialListSize={INITIAL_LIST_SIZE}
                 dataSource={ ds.cloneWithRows(this._getAddressNotVisited())}
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
@@ -124,104 +115,128 @@ class FieldGroupScreen extends React.Component {
                 enableEmptySections={true}
                 onRowOpen={false}
                 leftOpenValue={75}
-                rightOpenValue={-75}
-                />
+                rightOpenValue={-75} />
             </Content>
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
-            <Content padder>
-              <List 
-                dataSource={ ds.cloneWithRows(this._getAddressVisited())}
+            <Content>
+              <List
+                initialListSize={INITIAL_LIST_SIZE}   
+                dataSource={ ds.cloneWithRows( this._getAddressVisited() )}
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
                 enableEmptySections={true}
                 onRowOpen={false}
                 leftOpenValue={75}
-                rightOpenValue={-75}
-                 />
+                rightOpenValue={-75} />
             </Content>
           </Tab>
         </Tabs>
       );
     } else{
-      return this.renderNotFoundItems()
+      return this.renderNotFoundItems();
     }
   }
+  
+  // renderHeader(key){
+  //   return (
+  //     <Header searchBar rounded style={styles.listHeader}>
+  //       <Item>
+  //         <Icon name="ios-search" />
+  //         <Input placeholder="Buscar rápida" onChangeText={this._handleSearch.bind(this, key)} />
+  //       </Item>          
+  //     </Header>
+  //   );
+  // }
+  
 
   renderItem(address, secId, rowId, rowMap){
-    address.visit = _.last(address.visits)
+    address.visit = _.last(address.visits) || {};
     return(
       <ListItem 
-        icon 
-        style={Layout.listHeight}
+        icon
+        style={[Layout.listHeight, styles.listItem]}
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
-        onPress={()=> {
-          if( _.last(address.visits).hasOwnProperty("id") && this._SyncAddressHasVisit(address)){
-            return false;
-          }
-          Actions.locationModal({ 
-            address: address,
-            publicarea: this.props.publicarea,
-            fieldgroup: this.props.fieldgroup
-          });
-        }} >
+        onPress={this._handleOnPressItem.bind(this, address)}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>Nº {address.number}</Text>
-          <Text note>{address.complement}</Text>
+          <Grid>
+            <Row style={{ alignItems: 'center' }}>
+              <Col>
+                <Text>Nº {address.number}</Text>
+                <Text note>{address.complement}</Text>
+              </Col>
+              { this.renderLastVisit(address) }
+            </Row>
+          </Grid>
         </Body>
       </ListItem>
-
     );
   }
 
   renderNotFoundItems(){
     return (
       <View style={styles.notfoundcontainer}>
-        <Icon android="md-sad" ios="ios-sad-outline" style={styles.notfoundnoteicon}/>
+        <Icon android='md-sad' ios='ios-sad-outline' style={styles.notfoundnoteicon}/>
         <Text style={styles.notfoundtitle}>Comece já a adicionar as residências e visitas.</Text>
       </View>
-    )
+    );
   }
 
   renderRightHiddenRow(data, secId, rowId, rowMap){
-    if(data.hasOwnProperty("id")){
+    if(data.hasOwnProperty('id')){
       return(
         <View></View>
-      )
+      );
     } else{
       return (
         <Button danger onPress={ ()=> this._removeLocation(data, secId, rowId, rowMap) }>
-          <Icon active name="trash" />
+          <Icon active name='trash' />
         </Button>
-      )
+      );
     }
   }
 
-  renderLeftHiddenRow(data, secId, rowId, rowMap){
+  renderLeftHiddenRow(data){
     return (
       <Button full onPress={() => {
         Actions.censoModal({
           address: data,
           publicarea: this.props.publicarea,
           fieldgroup: this.props.fieldgroup
-        })
+        });
       }}>
-        <Icon active size={28} name = "md-list-box" />
+        <Icon active size={28} name = 'md-list-box' />
       </Button>
     );
+  }
+
+  renderLastVisit(address){
+    let visit = _.last(address.visits);
+    if(visit){
+      return(
+        <Col>
+          <Text note>{ VisitTranslante[visit.type] }</Text>
+          <Text note>{ moment(visit.check_in).format('DD/MM/YYYY HH:mm') }</Text>
+        </Col>
+      );
+    } else{
+      return(
+        <Col></Col>
+      );
+    }
   }
 
   renderRemoveButton(){
     if(!this.props.publicarea.hasOwnProperty('id')){
       return(
         <Button transparent onPress={ () => this._removePublicArea()  }>
-          <Icon android="md-trash" ios="ios-trash" />
+          <Icon android='md-trash' ios='ios-trash' />
         </Button>
-      )
+      );
     }
   }
 
@@ -233,29 +248,42 @@ class FieldGroupScreen extends React.Component {
             hide: false,
             publicarea: this.props.publicarea,
             fieldgroup: this.props.fieldgroup,
-          })
+          });
         }}>
-          <Icon android="md-create" ios="ios-create" />
+          <Icon android='md-create' ios='ios-create' />
         </Button>
-      )
+      );
     }
   }
 
+  _handleOnPressItem(address){
+    TimerMixin.requestAnimationFrame(() => {
+      if( _.last(address.visits) && _.last(address.visits).hasOwnProperty('id') && this._SyncAddressHasVisit(address)){
+        return false;
+      }
+      Actions.locationModal({ 
+        address: _.clone(address),
+        publicarea: this.props.publicarea,
+        fieldgroup: this.props.fieldgroup
+      });
+    });
+  }
+
   alertIfSyncAddress(){
-    return simpleToast("Endereço já sincronizados.")
+    return simpleToast('Endereço já sincronizados.');
   }
 
   // DELETE ACTIONS
 
   _removePublicArea(){
     Alert.alert(
-    'Excluir Logradouro',
-    'Você deseja realmente excluir este Logradouro?',
+      'Excluir Logradouro',
+      'Você deseja realmente excluir este Logradouro?',
       [
         {text: 'Não', onPress: () => false, style: 'cancel'},
         {text: 'Sim', onPress: () => {
-          this.props.removePublicArea(this.props.fieldgroup.$id, this.props.publicarea)
-          Actions.pop()
+          this.props.removePublicArea(this.props.fieldgroup.$id, this.props.publicarea);
+          Actions.pop();
         }},
       ],
       { cancelable: true }
@@ -276,24 +304,24 @@ class FieldGroupScreen extends React.Component {
           // Force close animate Row
           rowMap[`${secId}${rowId}`].props.closeRow();          
           // Dispatch Action
-          this.props.removeLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, address)
+          this.props.removeLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, address);
         }},
       ],
       { cancelable: true }
-    )
+    );
   }
 
   // SEARCH BAR
 
   _onSearchExit(){
     this.setState({ addresses: this._getPublicArea().addresses});
-    this.searchBar.hide()
+    this.searchBar.hide();
   }
 
-  _handleSearch(q){
-    // Use Lodash regex for get match locations
-    let result = _.filter(this._getPublicArea().addresses, (i)=> _.isMatch(i.number, q));
-    this.setState({addresses:  result})
+  _handleSearch(key, q){
+    let updates = {};
+    updates[key] = q;
+    this.setState(updates);
   }
 
   // Helpers Queries 
@@ -302,36 +330,53 @@ class FieldGroupScreen extends React.Component {
     let { fieldGroups, fieldgroup, publicarea } = this.props;
     let result = _.chain(fieldGroups.data)
       .find(['$id', fieldgroup.$id])
-      .get("field_group.public_areas")
+      .get('field_group.public_areas')
       .find(['$id', publicarea.$id]).value();
 
     return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta
   }
 
   _SyncAddressHasVisit(address){
-    return !isVisitClosedOrRefused(address.visit.type)
+    return !isVisitClosedOrRefused(address.visit.type);
   }
 
   _getAddressVisited(){
     let result = 
-      _.chain(this.state.addresses).filter((obj, key, array) => {
-        var lastVisit = _.chain(obj.visits).last().value()
-        return lastVisit && !isVisitClosedOrRefused(lastVisit.type)
-      }).orderBy(['number']).value()
+      _.chain(this.state.addresses).filter((obj) => {
+        var lastVisit = _.chain(obj.visits).last().value();
+        return lastVisit && !isVisitClosedOrRefused(lastVisit.type);
+      }).sortBy(sortByNumber).value();
       
-      return result
-    }
+
+    if(!this.state.queryVisited.length) return result;
+
+    result = _.filter( result, (address)=> {
+      return _.isMatch(address.number.toLowerCase(), this.state.queryVisited.toLowerCase());
+    });
+      
+    return result;
+  }
     
   _getAddressNotVisited(){
     let result = 
-    _.chain(this.state.addresses)
-    .filter((obj, key, array) => {
-      var lastVisit = _.chain(obj.visits).last().value()
-      return ( lastVisit && isVisitClosedOrRefused(lastVisit.type) ) || _.isUndefined(lastVisit)
-    }).orderBy(['number']).value()
+      _.chain(this.state.addresses).filter((obj) => {
+        var lastVisit = _.chain(obj.visits).last().value();
+        return ( lastVisit && isVisitClosedOrRefused(lastVisit.type) ) || _.isUndefined(lastVisit);
+      }).sortBy(sortByNumber).value();
 
-    return result
+    if(!this.state.queryNotVisited.length) return result;
+
+    result = _.filter( result, (address)=> {
+      return _.isMatch(address.number.toLowerCase(), this.state.queryNotVisited.toLowerCase());
+    });
+
+    return result;
   }
+}
+
+function sortByNumber(o){
+  let number = parseInt(o.number);
+  return _.isNaN(number) ? -1 : number;
 }
 
 const styles = {
@@ -351,15 +396,21 @@ const styles = {
   },
   notfoundnoteicon: {
     fontSize: 124,
-    color: "#ccc"
+    color: '#ccc'
+  },
+  listHeader: {
+    backgroundColor: '#eeeeee'
+  },
+  listItem: {
+    paddingHorizontal: 16,
   }
-}
+};
 
 function isVisitClosedOrRefused(type){
-  return [VisitType.closed, VisitType.refused].includes(type)
+  return [VisitType.closed, VisitType.refused].includes(type);
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 

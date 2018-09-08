@@ -4,5 +4,6 @@ export const SampleType = {
   b: 2,
   c: 3,
   d1: 4,
-  d2: 5
+  d2: 5,
+  e: 6
 };

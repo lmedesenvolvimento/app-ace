@@ -1,17 +1,19 @@
 import React from 'react';
-import { View, Alert } from 'react-native';
+import { Alert } from 'react-native';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
+
+import { connect } from 'react-redux';
 
 import {
   Header,
   Container,
   Content,
   H2,
+  H3,
   Text,
   Title,
   Left,
-  Right,
   Footer,
   Form,
   Label,
@@ -20,62 +22,68 @@ import {
   Body,
   Button,
   Picker,
+  DatePicker
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import StringMask from 'string-mask';
 import moment from 'moment';
-import momentTimezone from "moment-timezone";
+import momentTimezone from 'moment-timezone';
 
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
-
-import { simpleToast } from '../../../services/Toast';
+import Colors from '../../../constants/Colors';
 
 import { StepBars, Step } from './StepBars';
 
 import { VisitType, VisitTypeLocation } from '../../../types/visit';
 
-export class LocationForm extends React.Component {
-  state = {
-    number: null,
-    complement: null,
-    check_in: moment(),
-    type: VisitType.normal,
-    type_location: VisitTypeLocation.residential,
-    validation: {
-      number: false,
-      check_in_translate: false
-    }
-  }  
+import TimerMixin from 'react-timer-mixin';
 
+export class LocationForm extends React.Component {
+  
   constructor(props){
     super(props);
-    this.state.check_in_translate = this.state.check_in.format('HH:mm')
+    
+    this.state = {
+      number: '',
+      complement: null,
+      check_in: moment(),
+      check_in_translate: moment().format('HH:mm'),
+      type: VisitType.normal,
+      type_location: VisitTypeLocation.residential,
+      processing: false,
+      validation: {
+        number: false,
+        check_in_translate: false
+      }
+    };
   }
 
   componentWillMount(){
-    let updates = {
-      address: this.props.publicarea.address
+    let updates = {};
+
+    if(this.props.payload){
+      let { payload } = this.props;
+
+      if (payload.number){
+        updates.id = payload.id;
+        updates.number = payload.number;
+        updates.complement = payload.complement;
+  
+        if(this.props.payload.visit){
+          updates.type = payload.visit.type;
+          updates.type_location = payload.visit.type_location || VisitTypeLocation.residential;
+          updates.check_in = isVisitClosedOrRefused(payload.visit.type) ? moment() : moment(payload.visit.check_in);
+          updates.check_in_translate = updates.check_in.format('HH:mm');
+        }
+        this.setState(updates);
+      }
     }
-
-    if(this.props.address){
-      let { address } = this.props
-
-      updates.id = address.id
-      updates.number = address.number
-      updates.complement = address.complement
-      updates.type = address.visit.type
-      updates.type_location = address.visit.type_location
-      updates.check_in = isVisitClosedOrRefused(address.visit.type) ? moment() : moment(address.visit.check_in)
-      updates.check_in_translate = updates.check_in.format('HH:mm')
-    }
-
-    this.setState(updates)
   }
 
-  render(){
+  render(){    
     return (
       <Container>
         <Content padder>
@@ -91,36 +99,58 @@ export class LocationForm extends React.Component {
             <H2 style={Layout.padding}>Localização</H2>
 
             <Grid>
-              <Col size={66}>
-                <Item floatingLabel>
-                  <Label>Logradouro</Label>
-                  <Input value={this.state.address}  disabled={true}/>
-                </Item>
-              </Col>
-              <Col size={33}>
-                <Item floatingLabel error={this.state.validation.number}>
-                  <Label>Número</Label>
-                  <Input disabled={this.state.id} value={this.state.number} onChangeText={(number) => this.setState({number})} keyboardType='numeric' />
-                </Item>
-              </Col>
+              <Row>
+                <Col>
+                  <H3 note style={Layout.padding}>{ this.props.publicarea.address }</H3>
+                </Col>
+              </Row>
+              <Row>
+                <Col size={33}>
+                  <Item floatingLabel error={this.state.validation.number}>
+                    <Label>Número</Label>
+                    <Input 
+                      disabled={this.state.id}
+                      value={ _.isNumber(this.state.number) ? this.state.number.toString() : this.state.number} 
+                      onChangeText={(number) => this.setState({number})} />
+                  </Item>
+                </Col>
+                <Col size={66} style={{ justifyContent: 'flex-end' }}>
+                  <Item floatingLabel>
+                    <Label>Complemento</Label>
+                    <Input disabled={this.state.id} value={this.state.complement} onChangeText={(complement) => this.setState({complement})} />
+                  </Item>
+                </Col>
+              </Row>
             </Grid>
 
-            <Grid>
-              <Col size={66} style={{ justifyContent: 'flex-end' }}>
-                <Item floatingLabel>
-                  <Label>Complemento</Label>
-                  <Input disabled={this.state.id} value={this.state.complement} onChangeText={(complement) => this.setState({complement})} />
-                </Item>
-              </Col>
-              <Col size={33}>
-                <Item floatingLabel error={this.state.validation.check_in_translate}>
-                  <Label>Entrada</Label>
-                  <Input
-                    value={this.state.check_in_translate}
-                    keyboardType='numeric'
-                    onChangeText={ this.applyStartDateMask.bind(this) } />
-                </Item>
-              </Col>
+            <Grid style={Layout.padding}>
+              <Row style={{ alignItems: 'flex-end' }}>
+                <Col size={66}>
+                  <Text note>Data</Text>
+                  <DatePicker
+                    defaultDate={ this.state.check_in._d ? this.state.check_in.toDate() : new Date() }
+                    minimumDate={new Date(2018, 1, 1)}
+                    locale={'pt-br'}
+                    timeZoneOffsetInMinutes={undefined}
+                    modalTransparent={false}
+                    animationType={'fade'}
+                    androidMode={'default'}
+                    placeHolderText={ this.state.check_in._d ? this.state.check_in.format('DD/MM/YYYY') : 'Selecione uma data' }
+                    textStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
+                    placeHolderTextStyle={{ color: Colors.iconColor, paddingHorizontal: 0, paddingBottom: 0 }}
+                    onDateChange={ (check_in) => this.setState({ check_in: moment(check_in) }) }
+                  />
+                </Col>
+                <Col size={33}>
+                  <Item floatingLabel error={this.state.validation.check_in_translate}>
+                    <Label>Entrada</Label>
+                    <Input
+                      value={this.state.check_in_translate}
+                      keyboardType='numeric'
+                      onChangeText={ this.applyStartDateMask.bind(this) } />
+                  </Item>
+                </Col>
+              </Row>
             </Grid>
 
             <Grid style={{ marginHorizontal: 12, marginTop: 24 }}>
@@ -131,12 +161,12 @@ export class LocationForm extends React.Component {
                   onValueChange={(type_location) => this.setState({type_location}) }
                   supportedOrientations={['portrait','landscape']}
                   renderHeader={this._renderPickerHeader.bind(this)}
-                  mode="dropdown">
-                  <Item label="Residencial" value={VisitTypeLocation.residential} />
-                  <Item label="Comércio" value={VisitTypeLocation.commerce} />
-                  <Item label="Terreno baldio" value={VisitTypeLocation.wasteland} />
-                  <Item label="Ponto Estratégico" value={VisitTypeLocation.strategic_point} />
-                  <Item label="Outros" value={VisitTypeLocation.others} />
+                  mode='dropdown'>
+                  <Item label='Residencial' value={VisitTypeLocation.residential} />
+                  <Item label='Comércio' value={VisitTypeLocation.commerce} />
+                  <Item label='Terreno baldio' value={VisitTypeLocation.wasteland} />
+                  <Item label='Ponto Estratégico' value={VisitTypeLocation.strategic_point} />
+                  <Item label='Outros' value={VisitTypeLocation.others} />
                 </Picker>
               </Col>
             </Grid>
@@ -149,26 +179,26 @@ export class LocationForm extends React.Component {
                   onValueChange={(type) => this.setState({type}) }
                   supportedOrientations={['portrait','landscape']}
                   renderHeader={this._renderPickerHeader.bind(this)}
-                  mode="dropdown">
-                  <Item label="Normal" value={VisitType.normal} />
-                  <Item label="Recuperada" value={VisitType.recovered} />
-                  <Item label="Fechada" value={VisitType.closed} />
-                  <Item label="Recusada" value={VisitType.refused} />
+                  mode='dropdown'>
+                  <Item label='Normal' value={VisitType.normal} />
+                  <Item label='Recuperada' value={VisitType.recovered} />
+                  <Item label='Fechada' value={VisitType.closed} />
+                  <Item label='Recusada' value={VisitType.refused} />
                 </Picker>
               </Col>
             </Grid>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent onPress={ () => this.props.onCancel() }>
+                <Button full transparent disabled={this.state.busy} onPress={this.onCancel.bind(this)}>
                   <Text>Cancelar</Text>
                 </Button>
               </Col>
               <Col style={[styles.col, styles.colLeftBorder]}>
-                <Button full transparent onPress={ () => this.onSubmit() }>
+                <Button full transparent disabled={this.state.busy} onPress={this.onSubmit.bind(this)}>
                   <Text>Avançar</Text>
                 </Button>
               </Col>
@@ -180,36 +210,60 @@ export class LocationForm extends React.Component {
   }
 
   onSubmit(){
+    if(this.state.processing) return;
+    
+    this.setState({ processing: true });
+    
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
+  }
+
+  _onSubmit() {
+    const omitedAtributes = ['validation', 'check_in_translate', 'processing'];    
+
     if(this.isInvalid()){
-      Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.')
-    } else {
+      if(this.isHasNumberInPublicArea()){
+        Alert.alert('Falha no registro da residência', 'A residência já foi cadastrada.');
+      } else {
+        Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.');
+      }
+      this.setState({ processing: false });
+    } else {    
+      let state = _.clone(this.state);
+      
       // Force instance momment
-      this.state.check_in = moment(this.state.check_in)
+      state.check_in = moment(state.check_in);
       
       // Covert check_in string to Timestamp
-      time = this.state.check_in_translate.split(':')
+      let time = state.check_in_translate.split(':');
     
       // set for translate check_i date
-      this.state.check_in.set({
+      state.check_in.set({
         h: time[0],
         m: time[1]
-      })
+      });
 
-      this.state.check_in = momentTimezone.tz(this.state.check_in, "America/Sao_paulo").format()
+      state.check_in = momentTimezone.tz(state.check_in, 'America/Sao_paulo').format();
 
       // Pass form value parent component
-      let state = _.omit(this.state,['validation','check_in_translate'])
-      this.props.onSubmit(state)
-      // Next step
-      isVisitClosedOrRefused(this.state.type) 
-      ? this.toObservation()
-      : this.props.scrollBy(1)      
+      this.props.onSubmit( _.omit(state, omitedAtributes), () => {
+        this.setState({ processing: false });    
+        // Next step
+        isVisitClosedOrRefused(state.type)
+          ? this.toObservation()
+          : this.props.scrollBy(1);
+      });
+      
     }
   }
 
+  onCancel(){
+    if(this.state.processing) return;
+    this.props.onCancel();
+  }
+
   applyStartDateMask(check_in_translate){
-    check_in_translate = check_in_translate.replace(':','')
-    let result = new StringMask("00:00").apply(check_in_translate)
+    check_in_translate = check_in_translate.replace(':','');
+    let result = new StringMask('00:00').apply(check_in_translate);
     // Is nesscessary for clean field
     this.setState({ check_in_translate: result });
   }
@@ -218,9 +272,9 @@ export class LocationForm extends React.Component {
     const { number, check_in_translate } = this.state;
 
     this.state.validation = {
-      number: _.isEmpty(number),
+      number: _.isEmpty(number.toString()) || this.isHasNumberInPublicArea(),
       check_in_translate: _.isEmpty(check_in_translate),
-    }
+    };
 
     // Update view
     this.setState({
@@ -228,11 +282,26 @@ export class LocationForm extends React.Component {
     });
 
     // Verify if all states has present
-    return _.values(this.state.validation).includes(true)
+    return _.values(this.state.validation).includes(true);
   }
 
+  isHasNumberInPublicArea(){
+    // if registred address has same state number
+    if(this.props.payload && this.props.payload.number == this.state.number){
+      return false;
+    }
+
+    return _.chain(this._getPublicAreas()).find(
+      (a) => {
+        return ( a.number == this.state.number ) && ( a.complement == this.state.complement );
+      } 
+    ).value()
+      ? true 
+      : false;
+  }  
+
   toObservation(){
-    return this.props.scrollBy(4)
+    return this.props.scrollBy(4);
   }
 
   _renderProgress(){
@@ -260,7 +329,20 @@ export class LocationForm extends React.Component {
           <Title style={{textAlign: 'center'}}>Selecione um</Title>
         </Body>
       </Header>
-    )
+    );
+  }
+
+  _getPublicAreas(){
+    let { fieldgroup, fieldGroups, publicarea } = this.props;
+    
+    let result = _.chain(fieldGroups.data)
+      .find(['$id', fieldgroup.$id])
+      .get('field_group.public_areas')
+      .find(['$id', publicarea.$id])
+      .get('addresses')
+      .value();
+
+    return result;
   }
 }
 
@@ -274,7 +356,7 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   },
   progressItem:{
     width: 32,
@@ -289,9 +371,11 @@ const styles = {
     ...this.progressItem,
     backgroundColor: 'red'
   }
-}
+};
 
 // Checks
 function isVisitClosedOrRefused(type){
-  return [VisitType.closed, VisitType.refused].includes(type)
+  return [VisitType.closed, VisitType.refused].includes(type);
 }
+
+export default connect(({ fieldGroups }) => ({ fieldGroups}))(LocationForm);

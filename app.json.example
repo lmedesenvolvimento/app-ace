@@ -1,0 +1,86 @@
+//PROD
+
+{
+  "expo": {
+    "sdkVersion": "27.0.0",
+    "name":"Aedes em Foco Agente",
+    "version": "0.7.57",
+    "description":"Aplicativo para auxiliar os agentes de endemias de cedro no controle das arboviroses",
+    "slug":"aedes-agent-react-native",
+    "privacy": "unlisted",
+    "platforms": ["android"],
+    "orientation": "portrait",
+    "icon": "./assets/images/aedes_em_foco.png",
+    "primaryColor": "#00796B",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./assets/images/aedes_em_foco.png"
+    },
+    "android":{
+      "package": "br.ufc.lme.aedesemfoco.agent",
+      "versionCode": 3,
+      "permissions":[
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "extra":{
+      "baseurl":"https://aedes-agent-cedro-production.herokuapp.com"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "laboratorio-de-midias-eletroni",
+            "project": "aedes-em-foco-agent",
+            "authToken": "92664cc2effa43a0b2a32461d1d45e39717ee435d30641689860833bf4cefc99"
+          }
+        }
+      ]
+    }
+  }
+}
+
+
+//DEV
+
+{
+  "expo": {
+    "sdkVersion": "27.0.0",
+    "name":"Aedes em Foco Agente Teste",
+    "version": "0.7.57",
+    "description":"Aplicativo para auxiliar os agentes de endemias de cedro no controle das arboviroses",
+    "slug":"aedes-agent-react-native-teste",
+    "privacy": "unlisted",
+    "platforms": ["android"],
+    "orientation": "portrait",
+    "icon": "./assets/images/aedes_em_foco.png",
+    "primaryColor": "#00796B",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./assets/images/aedes_em_foco.png"
+    },
+    "android":{
+      "package": "br.ufc.lme.aedesemfoco.agent",
+      "versionCode": 3,
+      "permissions":[
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "extra":{
+      "baseurl":"https://aedes-agent-staging.herokuapp.com"
+    },
+    "hooks": {
+      "postPublish": [
+        {
+          "file": "sentry-expo/upload-sourcemaps",
+          "config": {
+            "organization": "laboratorio-de-midias-eletroni",
+            "project": "aedes-em-foco-agent",
+            "authToken": "92664cc2effa43a0b2a32461d1d45e39717ee435d30641689860833bf4cefc99"
+          }
+        }
+      ]
+    }
+  }
+}

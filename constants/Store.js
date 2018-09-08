@@ -9,9 +9,9 @@ const middleware = [thunk ];
 import reducers from '../redux/reducers';
 
 export function configureStore() {
-  return compose( applyMiddleware(...middleware))(createStore)(reducers)
+  return compose( applyMiddleware(...middleware))(createStore)(reducers);
 }
 
 export default {
   instance: null
-}
+};

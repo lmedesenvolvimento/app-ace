@@ -1,31 +1,27 @@
-import React, { Component } from 'react';
-import { View, Share } from 'react-native';
-import { Actions } from "react-native-router-flux";
+import React from 'react';
+import { Share } from 'react-native';
+import { Actions } from 'react-native-router-flux';
 
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
-import ReduxActions from "../../redux/actions";
+import ReduxActions from '../../redux/actions';
 
-import Colors from "../../constants/Colors";
-import Layout from "../../constants/Layout";
+import Colors from '../../constants/Colors';
+import Layout from '../../constants/Layout';
 
 import {
   Container,
-  Header,
   Content,
   List,
   ListItem,
-  Left,
   Body,
-  Right,
-  Thumbnail,
   Text,
   Title,
-  Subtitle,
+  Subtitle
 } from 'native-base';
 
-class MainMenu extends Component {
+class MainMenu extends React.Component {
   constructor(props){
     super(props);
   }
@@ -40,24 +36,25 @@ class MainMenu extends Component {
         </Body>
         <Content>
           <List>
-            <ListItem style={[this._defineItemStyle('home'), Layout.firstListItem]} first onPress={_=> Actions.home()} >
+            <ListItem style={[this._defineItemStyle('home'), Layout.firstListItem]} first onPress={() => Actions.home()} >
               <Body>
                 <Text style={this._defineItemTextStyle('home')}>Início</Text>
               </Body>
             </ListItem>
 
-            <ListItem style={this._defineItemStyle('profile')}  onPress={_=> Actions.profile()}>
+            <ListItem style={this._defineItemStyle('profile')}  onPress={() => Actions.profile()}>
               <Body>
                 <Text style={this._defineItemTextStyle('profile')}>Perfil</Text>
               </Body>
             </ListItem>
 
-            <ListItem style={this._defineItemStyle('about')} onPress={_=> Actions.about()}>
+            <ListItem style={this._defineItemStyle('about')} onPress={ () => Actions.about()}>
               <Body>
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
               </Body>
             </ListItem>
-            { this._renderSyncItem() }
+            {this._renderForceSyncItem()}
+            {this._renderSyncItem()}
           </List>
         </Content>
       </Container>
@@ -66,24 +63,35 @@ class MainMenu extends Component {
 
   shareCurrentState(){
     Share.share({
-      title: "Estado da Aplicação",
+      title: 'Estado da Aplicação',
       message: JSON.stringify(this.props.state.fieldGroups.data)
-    })
+    });
   }
 
   _defineItemStyle(key){
-    return this.props.activeItemKey == key ? styles.listItemActive : styles.listItem
+    return this.props.activeItemKey == key ? styles.listItemActive : styles.listItem;
   }
   _defineItemTextStyle(key){
-    return this.props.activeItemKey == key ? styles.listItemActiveText : styles.listItemText
+    return this.props.activeItemKey == key ? styles.listItemActiveText : styles.listItemText;
   }
 
   _renderSyncItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('syncDataModal')} last onPress={_ => Actions.syncDataModal()}>
+        <ListItem style={this._defineItemStyle('syncDataModal')} last onPress={ () => Actions.syncDataModal()}>
           <Body>
-            <Text style={this._defineItemTextStyle('syncDataModal')}>Sincronizar Informações</Text>
+            <Text style={this._defineItemTextStyle('syncDataModal')}>Sincronizar Dados</Text>
+          </Body>
+        </ListItem>
+      );
+    }
+  }
+  _renderForceSyncItem(){
+    if (this.props.state.network.isConnected){
+      return(
+        <ListItem style={this._defineItemStyle('clearStorageModal')} onPress={ () => Actions.clearStorageModal()}>
+          <Body>
+            <Text style={this._defineItemTextStyle('clearStorageModal')}>Recarregar Dados</Text>
           </Body>
         </ListItem>
       );
@@ -96,9 +104,9 @@ const styles = {
     flex: 1,
     maxHeight: 160,
     padding: 16,
-    alignSelf:"stretch",
-    alignItems: "flex-start",
-    justifyContent: "flex-end",
+    alignSelf: 'stretch',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-end',
     backgroundColor: Colors.primaryColor,
   },
   listItem: {
@@ -114,7 +122,7 @@ const styles = {
     fontWeight: '800',
     color: Colors.accentColor
   }
-}
+};
 
 function mapStateToProps(state) {
   return {
@@ -123,11 +131,11 @@ function mapStateToProps(state) {
       fieldGroups: state.fieldGroups,
       network: state.network
     }
-  }
+  };
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.userActions, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MainMenu)
+export default connect(mapStateToProps, mapDispatchToProps)(MainMenu);

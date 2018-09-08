@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from 'react-native';
 import { Button, Text }  from 'native-base';
 
 import { connect } from 'react-redux';
@@ -14,9 +15,21 @@ import { simpleToast } from '../services/Toast';
 class LogoutButton extends React.Component {
   render(){
     return (
-      <Button danger disabled={!this.props.network.isConnected} onPress={ () => this.destroySession() } style={Layout.marginVertical}>
+      <Button danger disabled={!this.props.network.isConnected} onPress={this.onPressLogout.bind(this)} style={Layout.marginVertical}>
         <Text>Sair</Text>
       </Button>
+    );
+  }
+
+  onPressLogout(){
+    return Alert.alert(
+      'Confirmação',
+      'Você deseja realmente sair?',
+      [
+        {text: 'Não',  style: 'cancel'},
+        {text: 'Sim', onPress: this.destroySession.bind(this) },
+      ],
+      { cancelable: false }
     );
   }
 
@@ -48,4 +61,4 @@ function mapDispatchToProps(dispatch){
 }
 
 
-export default connect(({ currentUser, network }) => ({ currentUser, network}), mapDispatchToProps)(LogoutButton)
+export default connect(({ currentUser, network }) => ({ currentUser, network}), mapDispatchToProps)(LogoutButton);

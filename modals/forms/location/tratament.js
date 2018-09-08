@@ -1,7 +1,4 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
-
-import numeral from 'numeral';
 
 import {
   Header,
@@ -11,7 +8,6 @@ import {
   Text,
   Title,
   Left,
-  Right,
   Footer,
   Form,
   Label,
@@ -22,38 +18,44 @@ import {
   Picker,
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
-import StringMask from 'string-mask';
-import moment from 'moment';
+import Modal from '../../../components/Modal';
+
+import numeral from 'numeral';
 
 import Colors from '../../../constants/Colors';
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
-
-import { simpleToast } from '../../../services/Toast';
 
 import { StepBars, Step } from './StepBars';
 
-import { TreatmentType } from "../../../types/treatment";
+import { TreatmentType } from '../../../types/treatment';
+
+import TimerMixin from 'react-timer-mixin';
+
+import { omit } from 'lodash';
 
 export class TratamentForm extends React.Component {
-  state = {
-    type: 'larvicida_pyriproxyfen',
-    quantity: 0.0,
-    adulticida_quantity: 0.0
-  }
-
+  
   constructor(props){
     super(props);
-    this.props.state = {
-      
-    }
+    this.props.state = {};
+    
+    this.state = {
+      type: 'larvicida_pyriproxyfen',
+      quantity: 0.0,
+      adulticida_quantity: 0.0,
+      modalIsVisible: false,
+      bigSpoonpQuantity: 0.0,
+      smallSpoonpQuantity: 0.0,
+      processing: false
+    };
   }
 
-  componentWillMount(){    
-    if(this.props.address){
-      this.setState({...this.props.address.visit.treatment})
+  componentWillMount(){
+    let { payload } = this.props;
+    if(payload && payload.visit){
+      this.setState({...payload.visit.treatment});
     }
   }
 
@@ -76,7 +78,7 @@ export class TratamentForm extends React.Component {
             <Grid>
               <Col>
                 <Item floatingLabel >
-                  <Label>Nº de depósitos tratamentos</Label>
+                  <Label>N de depósitos tratados</Label>
                   <Input 
                     keyboardType='numeric'
                     value={this.state.quantity.toString()}
@@ -85,79 +87,156 @@ export class TratamentForm extends React.Component {
                 </Item>
               </Col>
             </Grid>
-            <Grid>
+            <Grid style={{ marginHorizontal: 12, marginTop: 24 }}>
               <Col>
-                <Label>Tipo</Label>
+                <Text note>Tipo de Código</Text>
                 <Picker
                   selectedValue={this.state.type}
                   onValueChange={(type) => this.setState({ ...this.state, type: type})}
                   supportedOrientations={['portrait', 'landscape']}
-                  iosHeader="Selecione um"
-                  mode="dropdown">
-                    <Item label={TreatmentType.larvicida_pyriproxyfen} value={'larvicida_pyriproxyfen'} />
-                    <Item label={TreatmentType.larvicida_spinosad} value={'larvicida_spinosad'} />
+                  iosHeader='Selecione um'
+                  mode='dropdown'>
+                  <Item label={TreatmentType.larvicida_pyriproxyfen} value={'larvicida_pyriproxyfen'} />
+                  <Item label={TreatmentType.larvicida_spinosad} value={'larvicida_spinosad'} />
                 </Picker>                
               </Col>
             </Grid>
             <Grid>
-              <Col>
-                <Item floatingLabel>
-                  <Label>Larvicida gramas</Label>
-                  <Input 
-                    keyboardType='numeric'
-                    value={this.state.adulticida_quantity.toString()}
-                    onChangeText={(adulticida_quantity) => this.setState({adulticida_quantity})} 
-                    onBlur={this.onBlurNumeralState.bind(this, 'adulticida_quantity')} />
-                </Item>
-              </Col>              
+              <Row style={{ alignItems: 'flex-end' }}>
+                <Col>
+                  <Item floatingLabel>
+                    <Label>Larvicida gramas</Label>
+                    <Input 
+                      keyboardType='numeric'
+                      value={this.state.adulticida_quantity.toString()}
+                      onChangeText={(adulticida_quantity) => this.setState({adulticida_quantity})} 
+                      onBlur={this.onBlurNumeralState.bind(this, 'adulticida_quantity')} />
+                  </Item>
+                </Col>
+                <Col>
+                  <Button onPress={this.openModal.bind(this)} primary transparent>
+                    <Text>Calcular Quantidade</Text>
+                  </Button>
+                </Col>
+              </Row>
             </Grid>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full transparent onPress={ () => this.props.scrollBy(-1) }>
+                <Button full transparent disabled={this.state.busy} onPress={this._onCancel.bind(this)}>
                   <Text>Voltar</Text>
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full transparent onPress={this.onSubmit.bind(this)}>
+                <Button full transparent disabled={this.state.busy} onPress={this.onSubmit.bind(this)}>
                   <Text>Avançar</Text>
                 </Button>
               </Col>
             </Row>
           </Grid>
         </Footer>
+        <Modal isVisible={this.state.modalIsVisible} onConfirm={this.onConfirm.bind(this)} onCancel={this.onCancel.bind(this)} title='Calcular quantidade'>
+          <Content padder>
+            <Form>
+              <Item floatingLabel>
+                <Label>Nº de colheres grandes</Label>
+                <Input 
+                  keyboardType='numeric'
+                  value={this.state.bigSpoonpQuantity.toString()}
+                  onChangeText={(bigSpoonpQuantity) => this.setState({bigSpoonpQuantity})} 
+                  onBlur={this.onBlurNumeralState.bind(this, 'bigSpoonpQuantity')} />
+              </Item>
+              <Item floatingLabel>
+                <Label>Nº de colheres pequenas</Label>
+                <Input 
+                  keyboardType='numeric'
+                  value={this.state.smallSpoonpQuantity.toString()}
+                  onChangeText={(smallSpoonpQuantity) => this.setState({smallSpoonpQuantity})} 
+                  onBlur={this.onBlurNumeralState.bind(this, 'smallSpoonpQuantity')} />
+              </Item>
+              <Grid style={Layout.padding}>
+                <Row style={{ alignItems: 'flex-end' }}>
+                  <Col>
+                    <Text>Quantidade total</Text>
+                  </Col>
+                  <Col>
+                    <Text note>{this.calcAdulticidaQuantity()}g</Text>
+                  </Col>
+                </Row>
+              </Grid>
+            </Form>
+          </Content>
+        </Modal>
       </Container>
     );
   }
 
+  openModal(){
+    // reset modal inputs and open modal
+    this.setState({ smallSpoonpQuantity: 0.0, bigSpoonpQuantity: 0.0, modalIsVisible: true });
+  }
+
   updateQuantity(){
-    number = numeral(this.state.quantity)
+    let number = numeral(this.state.quantity);
         
     if(number.value() > 0){
-      this.setState({ quantity: number.value() })  
+      this.setState({ quantity: number.value() });
     } else{      
-      this.setState({ quantity: ( number.value() * -1 ) })  
+      this.setState({ quantity: ( number.value() * -1 ) });
     }
+  }
+
+  toNumeral(str){
+    let number = numeral(str).value();
+    return Math.abs(number);
   }
 
 
   onBlurNumeralState(key){
-    let number = numeral(this.state[key]).value()
-    let updates = {}
+    let updates = {};
 
-    updates[key] = Math.abs(number)
+    updates[key] = this.toNumeral(this.state[key]);
 
-    this.setState(updates)
+    this.setState(updates);
   }
 
   onSubmit(){
-    // Pass form value parent component
-    this.props.onSubmit(this.state)
-    // Next Step
-    this.props.scrollBy(1)
+    if(this.state.processing) return;
+    
+    this.setState({ processing: true });
+
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
+  }
+  
+  _onSubmit(){
+    const omitedAtributes = ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity','processing'];    
+    
+    this.props.onSubmit( omit(this.state, omitedAtributes), () => {
+      this.setState({ processing: false });
+      // Next Step
+      this.props.scrollBy(1);
+    });
+  }
+  
+  
+  _onCancel(){    
+    if(this.state.processing) return;
+    this.props.scrollBy(-1);
+  }
+
+  onConfirm () {
+    this.setState({ modalIsVisible: false, adulticida_quantity: this.calcAdulticidaQuantity() });
+  }
+
+  onCancel () {
+    this.setState({ modalIsVisible: false });
+  }
+
+  calcAdulticidaQuantity(){
+    return ( this.toNumeral(this.state.smallSpoonpQuantity) * 0.1 ) + this.toNumeral(this.state.bigSpoonpQuantity);
   }
 
   _renderPickerHeader(backAction){
@@ -172,7 +251,7 @@ export class TratamentForm extends React.Component {
           <Title style={{textAlign: 'center'}}>Selecione um</Title>
         </Body>
       </Header>
-    )
+    );
   }
 }
 
@@ -186,6 +265,6 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   }
-}
+};

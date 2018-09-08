@@ -2,25 +2,17 @@ import React from 'react';
 import {
   Container,
   Content,
-  Text,
-  Body,
-  Button,
   Form,
   Label,
   Item,
   Input
  } from 'native-base';
 
-import { Actions } from 'react-native-router-flux';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
 
 import ReduxActions from "../redux/actions";
-
-import Colors from '../constants/Colors';
-import Layout from '../constants/Layout';
-import Session from '../services/Session';
 
 import LogoutButton from '../components/LogoutButton';
 import SpinnerLoader from '../components/SpinnerLoader';

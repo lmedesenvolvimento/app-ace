@@ -1,66 +1,52 @@
 import React from 'react';
-import { View, TouchableHighlight } from 'react-native';
+import { Alert, View } from 'react-native';
 
 import {
-  Header,
   Container,
   Content,
   H1,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
   Form,
   Label,
   Item,
   Input,
-  Body,
   Button,
-  Picker,
+  Picker
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
-
-import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
+import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
+import ReduxActions from '../redux/actions';
+
+import { PublicAreaTypes } from '../types/publicarea';
+
+import _ from 'lodash';
 
 export class NewStreetModal extends React.Component {
-  state = {
-    address: undefined,
-    neighborhood: {},
-    addresses: []
-  }
-
+  
   constructor(props) {
     super(props);
+    this.state = {
+      address: undefined,
+      type: PublicAreaTypes.street,
+      neighborhood: {},
+      addresses: []
+    };
   }
 
   componentDidMount(){
-    this.setState({ neighborhood: this.props.fieldgroup.neighborhood })
+    this.setState({ neighborhood: this.props.fieldgroup.neighborhood });
   }
-
-  okModal(){
-    if(!this.state.address){
-      return simpleToast("Logradouro vazio.")
-    }
-    this.props.addPublicArea(this.props.fieldgroup.$id, this.state)
-    this.dismissModal()
-  }
-
-  dismissModal(){
-    Actions.pop();
-  }
-
+  
   render() {
     return (
       <Container>
@@ -69,16 +55,30 @@ export class NewStreetModal extends React.Component {
           <Form>
             <View style={Layout.padding}>
               <Label>Bairro</Label>
-              <Input placeholder="Nome do Bairro" value={this.state.neighborhood.name} disabled={true}/>
+              <Input placeholder='Nome do Bairro' value={this.state.neighborhood.name} disabled={true}/>
+            </View>
+            
+
+            <View style={Layout.padding}>
+              <Text note>Tipo de Imóvel</Text>
+              <Picker
+                selectedValue={this.state.type}
+                onValueChange={(type) => this.setState({type}) }
+                supportedOrientations={['portrait','landscape']}
+                mode='dropdown'>
+                <Item label='Rua' value={PublicAreaTypes.street} />
+                <Item label='Avenida' value={PublicAreaTypes.avenue} />
+                <Item label='Outros' value={PublicAreaTypes.others} />
+              </Picker>
             </View>
 
             <Item stackedLabel>
               <Label>Logradouro</Label>
-              <Input placeholder="Nome do Logradouro" value={this.state.address} onChangeText={(address)=> this.setState({address})} />
+              <Input placeholder='Nome do Logradouro' value={this.state.address} onChangeText={(address)=> this.setState({address})} />
             </Item>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col style={styles.col}>
@@ -88,14 +88,46 @@ export class NewStreetModal extends React.Component {
               </Col>
               <Col style={[styles.col, styles.colLeftBorder]}>
                 <Button full transparent onPress={ () => this.okModal() }>
-                <Text>Novo Logradouro</Text>
-              </Button>
+                  <Text>Novo Logradouro</Text>
+                </Button>
               </Col>
             </Row>
           </Grid>          
         </Footer>
       </Container>
     );
+  }
+
+  okModal() {
+    if (!this.state.address) {
+      return simpleToast('Logradouro vazio.');
+    }
+
+    if (this.isHasAddressInFieldgroup()){
+      return Alert.alert('Falha no registro do Logradouro', 'O logradouro já foi cadastrada.');
+    }
+
+    this.props.addPublicArea(this.props.fieldgroup.$id, this.state);
+    
+    this.dismissModal();
+  }
+
+  dismissModal() {
+    Actions.pop();
+  }
+
+  isHasAddressInFieldgroup() {
+    if (this.props.publicarea && this.props.publicarea.address == this.state.address){
+      return false;
+    }
+
+    return _.chain(this.props.fieldgroup.public_areas).find(
+      (pua) => {
+        return (pua.address == this.state.address) && ( pua.type == this.state.type );
+      }
+    ).value() ?
+      true :
+      false;
   }
 }
 
@@ -106,7 +138,7 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   },
   progressItem:{
     width: 32,
@@ -121,7 +153,7 @@ const styles = {
     ...this.progressItem,
     backgroundColor: 'red'
   }
-}
+};
 
 
 function mapStateToProps(state) {
@@ -130,10 +162,10 @@ function mapStateToProps(state) {
       currentUser: state.currentUser,
       fieldGroups: state.fieldGroups
     }
-  }
+  };
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 

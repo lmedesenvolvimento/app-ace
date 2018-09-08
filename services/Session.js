@@ -4,13 +4,15 @@ let Session = {
   Credential: {
     create: async (credentials) => {
       try {
-        await AsyncStorage.setItem(
+        let response = await AsyncStorage.setItem(
           "@MyCredential",
           JSON.stringify(credentials)
-        )
-      } catch (e) {
-        console.log(e)
-      }
+        );
+        return response;
+      } 
+      catch (e) {
+        return e;
+      };
     },
     get: async () => {
       try{

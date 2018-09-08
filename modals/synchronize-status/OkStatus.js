@@ -1,28 +1,14 @@
 import React from 'react';
-import { View, Platform } from 'react-native';
+import { View } from 'react-native';
 
 import {
-    Header,
-    Container,
-    Content,
-    H1,
-    H3,
-    Text,
-    Title,
-    Left,
-    Right,
-    Footer,
-    Form,
-    Label,
-    Item,
-    Input,
-    Icon,
-    Body,
-    Button,
-    Picker,
+  Container,
+  H1,
+  Text,
+  Icon,
+  Button
 } from 'native-base';
 
-import Colors from '../../constants/Layout';
 import Layout from '../../constants/Layout';
 
 import { connect } from 'react-redux';
@@ -81,19 +67,6 @@ const styles = {
     textAlign: 'center',
     marginVertical: 2
   }
-}
-
-function mapStateToProps(state) {
-    return {
-        state: {
-            network: state.net,
-            fieldGroups: state.fieldGroups
-        }
-    }
-}
-
-function mapDispatchToProps(dispatch, ownProps) {
-    return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
 export default connect(({network}) => ({network}))(OkStatus)

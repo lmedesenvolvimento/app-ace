@@ -1,8 +1,8 @@
-import Config from "../env.json";
-import axios from "axios";
+import Expo from 'expo';
+import axios from 'axios';
 
 let instance = axios.create({
-  baseURL: Config.BASEURL
+  baseURL: Expo.Constants.manifest.extra.baseurl
 });
 
 instance.defaults.headers.post['Accept'] = 'application/json';

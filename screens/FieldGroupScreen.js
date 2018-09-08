@@ -14,7 +14,7 @@ import {
   List,
   ListItem,
   Icon,
-  Fab
+  Fab,
 } from 'native-base';
 
 import SearchBar from 'react-native-searchbar';
@@ -22,26 +22,25 @@ import SearchBar from 'react-native-searchbar';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
-import { bindActionCreators } from "redux";
 import { Actions } from 'react-native-router-flux';
 
-import ReduxActions from "../redux/actions";
 
 import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
-import Session from '../services/Session';
 
-import LogoutButton from '../components/LogoutButton';
+import { PublicAreaTypesTranslate } from '../types/publicarea';
 
-import * as _ from "lodash";
+import _ from 'lodash';
+
+import TimerMixin from 'react-timer-mixin';
 
 class PublicAreaScreen extends React.Component {
-  state = {
-    public_areas: []
-  }
   constructor(props) {
     super(props);
+    this.state = {
+      public_areas: []
+    };
   }
 
   componentDidMount(){
@@ -53,7 +52,6 @@ class PublicAreaScreen extends React.Component {
   }
 
   render() {
-    let { currentUser } = this.props;
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
 
     return (
@@ -74,7 +72,7 @@ class PublicAreaScreen extends React.Component {
           </Right>
           <SearchBar
             ref={(ref) => this.searchBar = ref}
-            dataSource={this.public_areas}
+            dataSource={this.state.public_areas}
             animate={false}
             placeholder="Pesquisar"
             handleSearch={(q)=> this._handleSearch(q)}
@@ -99,17 +97,18 @@ class PublicAreaScreen extends React.Component {
     );
   }
 
-  renderItem(item, sectionID, rowID){
+  renderItem(item){
     return(
       <ListItem
         icon
-        onPress={() => Actions.publicarea({ publicarea: item, title: item.address, fieldgroup: this.props.fieldgroup })}
+        onPress={this._handleItemPress.bind(this, item)}
         style={Layout.listHeight}>
         <Left>
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
           <Text>{item.address}</Text>
+          <Text note>{ PublicAreaTypesTranslate[item.type] }</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />
@@ -118,21 +117,36 @@ class PublicAreaScreen extends React.Component {
     );
   }
 
+  _handleItemPress(item){
+    TimerMixin.requestAnimationFrame(() => {
+      Actions.publicarea({ publicarea: _.omit(item, ['addresses']), title: item.address, fieldgroup: this.props.fieldgroup });
+    });
+  }
+
   _onSearchExit(){
-    this.setState({public_areas: this.props.public_areas});
-    this.searchBar.hide()
+    this.setState({ public_areas: this._getPublicAreas() });
+    this.searchBar.hide();
   }
 
   _handleSearch(q){
     // Use Lodash regex for get match public_areas
-    let result = _.filter( this._getPublicAreas() , (i)=> _.isMatch(i.address, q));
-    this.setState({public_areas:  result})
+    let public_areas = this._getPublicAreas();
+
+    let result = _.filter(public_areas , (pua)=> {
+      return _.isMatch(pua.address.toLowerCase(), q.toLowerCase());
+    });
+
+    this.setState({public_areas:  result});
   }
 
   _getPublicAreas(){    
     let { fieldGroups, fieldgroup } = this.props;
-    let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
-    return _.orderBy(result.field_group.public_areas, ['address']);
+    if(fieldgroup){
+      let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
+      return _.orderBy(result.field_group.public_areas, ['address']);
+    } else{
+      return [];
+    }
   }  
 }
 

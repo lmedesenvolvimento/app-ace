@@ -3,34 +3,23 @@ import React from 'react';
 import { ActivityIndicator, View, Picker, Platform } from 'react-native';
 
 import {
-  Header,
   Container,
   Content,
-  H1,
   H2,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
-  Form,
   Item,
   Label,
   Input,
-  Body,
-  Button,
-  Spinner
+  Button
 } from 'native-base';
 
 import { Grid, Row, Col } from 'react-native-easy-grid';
-
-import Swiper from 'react-native-swiper';
 
 import Colors from '../constants/Layout';
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
-import { getLocationAsync } from '../services/Permissions';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from "redux";
@@ -38,33 +27,29 @@ import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from "../redux/actions";
 
-import { LocationForm } from './forms/location';
-import { InspectionForm } from './forms/location/inspection';
-import { SamplesForm } from './forms/location/samples';
-import { TratamentForm } from './forms/location/tratament';
-import { ObservationForm } from './forms/location/observation';
 
 import { CensoType } from '../types/censo';
 
-import * as _ from 'lodash';
+import _ from 'lodash';
 import numeral from 'numeral';
 
 export class CensoModal extends React.Component {
-  state = {
-    inhabitants: 0,
-    tank: 0,
-    drum: 0,
-    tina: 0,
-    filter: 0,
-    pot: 0,
-    plant_pot: 0,
-    cistern: 0,
-    waterhole: 0,
-    water_box: 0
-  }
   
   constructor(props) {
     super(props);
+    
+    this.state = {
+      inhabitants: 0,
+      tank: 0,
+      drum: 0,
+      tina: 0,
+      filter: 0,
+      pot: 0,
+      plant_pot: 0,
+      cistern: 0,
+      waterhole: 0,
+      water_box: 0
+    };
   }  
 
   componentDidMount(){
@@ -99,6 +84,15 @@ export class CensoModal extends React.Component {
                  />
               </Item>
               <Item>
+                <Label>{CensoType.filter}</Label>
+                <Input
+                  keyboardType='numeric' 
+                  value={this.state.filter.toString()}
+                  onChangeText={filter => this.setState({filter})}
+                  onBlur={this.onBlurNumeralState.bind(this, 'filter')}
+                />
+              </Item>
+              <Item>
                 <Label>{CensoType.tina}</Label>
                 <Input
                   keyboardType='numeric' 
@@ -129,7 +123,7 @@ export class CensoModal extends React.Component {
                 <Label>{CensoType.plant_pot}</Label>
                 <Input
                   keyboardType='numeric' 
-                  value={this.state.plant_pot.toString()}
+                  value={this.state.plant_pot.toString()} 
                   onChangeText={plant_pot => this.setState({plant_pot})}
                   onBlur={this.onBlurNumeralState.bind(this, 'plant_pot')}
                 />
@@ -178,7 +172,7 @@ export class CensoModal extends React.Component {
                 </Col>
               </Row>
             </Grid>
-          </Footer>          
+          </Footer>
         </Container>
       );
     } else{
@@ -201,15 +195,14 @@ export class CensoModal extends React.Component {
 
   okModal(){
     let updates = _.clone(this.props.address);
+    let data = _.chain(this.state).omit(['isReady']).value();
+    
     // set census to updates
     if (_.isEmpty(updates.census)) {
-      updates.census[0] = _.chain(this.state).omit(['isReady']).value();
+      updates.census[0] = data;
     } else{
-      if(updates.census[0].id){
-        var data = _.chain(this.state).omit(['isReady']).value();
-        data.updated = true;
-        updates.census[0] = data;
-      }
+      if(updates.census[0].id) data.updated = true;      
+      updates.census[0] = data;
     }
     // dispath action
     this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, updates);
@@ -235,8 +228,7 @@ export class CensoModal extends React.Component {
     }
 
     // update component state
-    let updates = { ...census
-    };
+    let updates = { ...census };
     this.setState(updates)
   }
 
@@ -275,7 +267,7 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch, ownProps){
+function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 

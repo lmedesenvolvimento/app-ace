@@ -1,51 +1,43 @@
 import React from 'react';
-import { View } from 'react-native';
 
 import {
-  Header,
   Container,
   Content,
   H2,
   Text,
-  Title,
-  Left,
-  Right,
   Footer,
   Form,
   Label,
   Item,
   Input,
-  Body,
   Button,
-  Picker,
 } from 'native-base';
 
-import { Col, Row, Grid } from "react-native-easy-grid";
+import { Col, Row, Grid } from 'react-native-easy-grid';
 
-import StringMask from 'string-mask';
-import moment from 'moment';
-
-import Colors from '../../../constants/Colors';
-import Theme from '../../../constants/Theme';
 import Layout from '../../../constants/Layout';
 
-import { simpleToast } from '../../../services/Toast';
 import { VisitType } from '../../../types/visit';
 
 import { StepBars, Step } from './StepBars';
 
-export class ObservationForm extends React.Component {
-  state = {
-    observation: ''
-  }
+import TimerMixin from 'react-timer-mixin';
 
+import { omit } from 'lodash';
+
+export class ObservationForm extends React.Component {  
   constructor(props){
     super(props);
+    this.state = {
+      observation: '',
+      processing: false
+    };
   }
 
   componentWillMount(){    
-    if(this.props.address){
-      this.setState({observation: this.props.address.visit.observation})
+    let { payload } = this.props;
+    if(payload && payload.visit){
+      this.setState({observation: payload.visit.observation});
     }
   }
 
@@ -54,7 +46,6 @@ export class ObservationForm extends React.Component {
       <Container>
         <Content padder>
           <Form>
-
             <StepBars>
               <Step complete={true}></Step>
               <Step complete={true}></Step>
@@ -74,7 +65,7 @@ export class ObservationForm extends React.Component {
             </Grid>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:"white"}} padder>
+        <Footer style={{backgroundColor:'white'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
@@ -95,16 +86,31 @@ export class ObservationForm extends React.Component {
   }
 
   onBack(){
-    let { visit } = this.props
+    let { visit } = this.props;
+    
+    if(this.state.processing) return;
+    
     isVisitClosedOrRefused(visit.type)
-    ? this.props.scrollBy(-4)
-    : this.props.scrollBy(-1)
+      ? this.props.scrollBy(-4)
+      : this.props.scrollBy(-1);
   }
 
   onSubmit(){
+    if(this.state.processing) return;
+    
+    this.setState({ processing: true });
+
+    TimerMixin.requestAnimationFrame(this._onSubmit.bind(this));
+  }
+  
+  _onSubmit(){
+    const omitedAtributes = ['validation', 'busy'];    
     // Pass form value parent component
-    let state = _.omit(this.state,['validation'])
-    this.props.onSubmit(state)
+    let state = omit(this.state, omitedAtributes);
+    
+    this.props.onSubmit(state, () => {
+      this.setState({ processing: false });
+    });
   }
 }
 
@@ -118,13 +124,13 @@ const styles = {
   },
   colLeftBorder:{
     borderLeftWidth: 1,
-    borderLeftColor: "#eee"
+    borderLeftColor: '#eee'
   },
   textarea: {
     height: 200
   }
-}
+};
 
 function isVisitClosedOrRefused(type){
-  return [VisitType.closed, VisitType.refused].includes(type)
+  return [VisitType.closed, VisitType.refused].includes(type);
 }
