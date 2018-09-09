@@ -9,9 +9,11 @@ import {
   Container,
   Content,
   H2,
+  H3,
   Text,
   Footer,
   Form,
+  Left,
   Label,
   List,
   ListItem,  
@@ -20,7 +22,10 @@ import {
   Body,
   Button,
   Picker,
-  Icon
+  Icon,
+  Header,
+  Title,
+  Right
 } from 'native-base';
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
@@ -32,6 +37,8 @@ import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
 import { SampleType } from '../../../types/sample';
+
+import InterventionalModal from '../../../components/InterventionalModal';
 
 import TimerMixin from 'react-timer-mixin';
 
@@ -46,7 +53,8 @@ export class SamplesForm extends React.Component {
     super(props);
     this.state = {
       newItem: _.clone(initialItem),
-      data: []
+      data: [],
+      modalIsVisible: false
     };
   }
 
@@ -72,62 +80,88 @@ export class SamplesForm extends React.Component {
                 <Step></Step>
                 <Step></Step>
               </StepBars>
-              <H2 style={Layout.padding}>Coleta de Amostra</H2>                
               <Grid>
-                <Row>
+                <Row style={Layout.marginVertical8}>
                   <Col>
-                    <List
-                      dataSource={ds.cloneWithRows(this.state.data)}
-                      renderRow={this.renderItem.bind(this)}
-                      renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
-                      renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
-                      enableEmptySections={true}
-                      onRowOpen={false}
-                      leftOpenValue={0}
-                      rightOpenValue={-75} />
+                    <H2 style={Layout.padding}>Coleta de Amostra</H2>                
                   </Col>
                 </Row>
                 <Row>
                   <Col style={Layout.padding}>
-                    <Text style={{ color: Colors.primaryColor }}>Preencha abaixo a coleta que deseja adicionar</Text>
+                    <H3 style={{ color: Colors.primaryColor }}>Suas Amostras</H3>
                   </Col>
-                </Row>
-                <Row style={{ alignItems: 'flex-end' }}>
-                  <Col>
-                    <Item floatingLabel>
-                      <Label> Nº da Coleta</Label>
-                      <Input
-                        value={this.state.newItem.number.toString()}
-                        keyboardType='numeric'
-                        onChangeText={ (number) => this.setState({ newItem: { ...this.state.newItem, number: number } }) }
-                        onBlur={this.onBlurNumeralState.bind(this, 'number')} />
-                    </Item>
-                  </Col>
-                  <Col>
-                    <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
-                    <Picker
-                      selectedValue={this.state.newItem.type}
-                      onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type} })}
-                      supportedOrientations={['portrait', 'landscape']}
-                      iosHeader='Selecione um'
-                      mode='dropdown'>
-                      <Item label='A1' value={SampleType.a1} />
-                      <Item label='A2' value={SampleType.a2} />
-                      <Item label='B' value={SampleType.b} />
-                      <Item label='C' value={SampleType.c} />
-                      <Item label='D1' value={SampleType.d1} />
-                      <Item label='D2' value={SampleType.d2} />
-                      <Item label='E' value={SampleType.e} />
-                    </Picker>
-                  </Col>
-                </Row>
-                <Row style={Layout.marginVertical8}>
-                  <Col>
-                    <Button bordered primary style={{ alignSelf:'center', marginVertical: 8 }} onPress={this.addSampleItem.bind(this)}>
-                      <Text>+ Adicionar Coleta</Text>
+                  <Col style={{ alignSelf: 'center' }}>
+                    <Button light onPress={this.toggleModal.bind(this)}>
+                      <Text>Adicionar Amostra</Text>
                     </Button>
                   </Col>
                 </Row>
+                <Row>
+                  <Col>
+                    {
+                      this.state.data.length
+                        ? <List
+                          dataSource={ds.cloneWithRows(this.state.data)}
+                          renderRow={this.renderItem.bind(this)}
+                          renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
+                          renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                          enableEmptySections={true}
+                          onRowOpen={false}
+                          leftOpenValue={0}
+                          rightOpenValue={-75} />
+                        : <Text note style={Layout.marginHorizontal}>Esta visita não possui nenhuma amostra.</Text>
+                    }                    
+                  </Col>
+                </Row>                
+                <InterventionalModal isVisible={this.state.modalIsVisible} onConfirm={this.toggleModal.bind(this)} onCancel={this.toggleModal.bind(this)}>
+                  <Header>
+                    <Left>
+                      <Button transparent onPress={() => this.toggleModal()}>
+                        <Icon name='md-arrow-back' />
+                      </Button>
+                    </Left>
+                    <Body>
+                      <Title>Nova Amostra</Title>
+                    </Body>
+                    <Right>
+                      <Button transparent light onPress={() => this.addSampleItem()}>
+                        <Text>Adicionar</Text>
+                      </Button>
+                    </Right>
+                  </Header>
+                  <Content padder>
+                    <Text note style={Layout.marginVertical}>Preencha abaixo os dados referentes a coleta que você deseja adicionar:</Text>
+                    <Row>
+                      <Col style={{ paddingHorizontal: 4 }}>
+                        <Item floatingLabel>
+                          <Label> Nº da Coleta</Label>
+                          <Input
+                            value={this.state.newItem.number.toString()}
+                            keyboardType='numeric'
+                            onChangeText={(number) => this.setState({ newItem: { ...this.state.newItem, number: number } })}
+                            onBlur={this.onBlurNumeralState.bind(this, 'number')} />
+                        </Item>
+                      </Col>
+                      <Col style={{ paddingHorizontal: 4 }}>
+                        <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
+                        <Picker
+                          selectedValue={this.state.newItem.type}
+                          onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type } })}
+                          supportedOrientations={['portrait', 'landscape']}
+                          iosHeader='Selecione um'
+                          mode='dropdown'>
+                          <Item label='A1' value={SampleType.a1} />
+                          <Item label='A2' value={SampleType.a2} />
+                          <Item label='B' value={SampleType.b} />
+                          <Item label='C' value={SampleType.c} />
+                          <Item label='D1' value={SampleType.d1} />
+                          <Item label='D2' value={SampleType.d2} />
+                          <Item label='E' value={SampleType.e} />
+                        </Picker>
+                      </Col>
+                    </Row>
+                  </Content>
+                </InterventionalModal>                
               </Grid>
             </Form>
           </Content>
@@ -150,6 +184,10 @@ export class SamplesForm extends React.Component {
         </Footer>
       </Container>
     );
+  }
+
+  toggleModal(){
+    this.setState({ modalIsVisible: !this.state.modalIsVisible });
   }
 
   onSubmit(){
@@ -221,7 +259,7 @@ export class SamplesForm extends React.Component {
       return true;
     } else{
       this.state.data.push( _.clone(this.state.newItem));
-      this.setState({ data: this.state.data, newItem: initialItem });
+      this.setState({ data: this.state.data, newItem: initialItem, modalIsVisible: false });
     }
   }
 
