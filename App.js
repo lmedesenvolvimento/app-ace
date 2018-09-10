@@ -18,7 +18,9 @@ import Navigator from './navigation/Navigator';
 import { watchConnection } from './services/Network';
 
 export default class App extends React.Component {  
-  constructor(){
+  constructor(props){
+    super(props);
+    
     this.state = {
       isAuthorized: false,
       isReady: false
