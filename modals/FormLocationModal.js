@@ -209,7 +209,12 @@ export class FormLocationModal extends React.Component {
         callback();
       });
     } catch(e) {
+      // Notificando Error
       captureException(e);
+      // exit visit
+      Actions.pop();
+
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
     }    
   }
   
@@ -225,7 +230,12 @@ export class FormLocationModal extends React.Component {
 
       callback();
     } catch(e) {
+      // Notificando Error
       captureException(e);
+      // exit visit
+      Actions.pop();
+      
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
     }
   }
 
@@ -257,7 +267,12 @@ export class FormLocationModal extends React.Component {
   
       callback();
     } catch(e) {
+      // Notificando Error
       captureException(e);
+      // exit visit
+      Actions.pop();
+      
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
     }
   }
   
@@ -287,7 +302,12 @@ export class FormLocationModal extends React.Component {
       TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
 
     } catch(e) {
+      // Notificando Error
       captureException(e);
+      // exit visit
+      Actions.pop();
+      
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
     }
   }
 }
