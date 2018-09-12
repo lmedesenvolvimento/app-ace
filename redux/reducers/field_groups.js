@@ -29,10 +29,12 @@ export default function reducer(state = initialState, action) {
     var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
     var indexOfPublicArea = getPublicAreaIndex(state, action, record.$id);
 
+    var oldRecord = state.data[indexOfFieldGroup].field_group.public_areas[indexOfPublicArea];
+
     state
       .data[indexOfFieldGroup]
       .field_group
-      .public_areas[indexOfPublicArea] = { ...record, ...newData };                  
+      .public_areas[indexOfPublicArea] = { ...oldRecord, ...newData };
 
     return { ...state, data: state.data };
 
