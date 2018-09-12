@@ -182,8 +182,6 @@ export class FormLocationModal extends React.Component {
       updates.visit.check_in = data.check_in;
       updates.visit.type_location = data.type_location;
 
-      console.log(data);
-
       if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
         updates.visit.registred_at = moment(updates.check_in).format();
       }
