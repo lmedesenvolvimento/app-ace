@@ -29,8 +29,7 @@ import {
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import StringMask from 'string-mask';
-import moment from 'moment';
-import momentTimezone from 'moment-timezone';
+import moment from '../../../services/Timestamp';
 
 import Layout from '../../../constants/Layout';
 import Colors from '../../../constants/Colors';
@@ -242,7 +241,7 @@ export class LocationForm extends React.Component {
         m: time[1]
       });
 
-      state.check_in = momentTimezone.tz(state.check_in, 'America/Sao_paulo').format();
+      state.check_in = moment(state.check_in).format();
 
       // Pass form value parent component
       this.props.onSubmit( _.omit(state, omitedAtributes), () => {

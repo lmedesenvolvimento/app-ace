@@ -10,8 +10,7 @@ import { getLocationAsync } from '../services/Permissions';
 
 import { captureException } from '../hooks/CustomError';
 
-import moment from 'moment';
-import momentTimezone from 'moment-timezone';
+import moment from '../services/Timestamp';
 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
@@ -183,8 +182,10 @@ export class FormLocationModal extends React.Component {
       updates.visit.check_in = data.check_in;
       updates.visit.type_location = data.type_location;
 
+      console.log(data);
+
       if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
-        updates.visit.registred_at = momentTimezone.tz(updates.check_in, 'America/Sao_paulo').format();
+        updates.visit.registred_at = moment(updates.check_in).format();
       }
 
       // Save Current Geo Location

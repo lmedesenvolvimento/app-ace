@@ -37,7 +37,7 @@ import { VisitType, VisitTranslante } from '../types/visit';
 import { simpleToast } from '../services/Toast';
 
 import _ from 'lodash';
-import moment from 'moment';
+import moment from '../services/Timestamp';
 
 import { Grid, Row } from 'react-native-easy-grid';
 
