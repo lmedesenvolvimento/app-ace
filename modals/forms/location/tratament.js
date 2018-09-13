@@ -236,7 +236,7 @@ export class TratamentForm extends React.Component {
   }
 
   calcAdulticidaQuantity(){
-    return ( this.toNumeral(this.state.smallSpoonpQuantity) * 0.1 ) + this.toNumeral(this.state.bigSpoonpQuantity);
+    return ( ( this.toNumeral(this.state.smallSpoonpQuantity) * 0.1 ) + this.toNumeral(this.state.bigSpoonpQuantity) ).toFixed(2);
   }
 
   _renderPickerHeader(backAction){
