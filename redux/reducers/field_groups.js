@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { MappingStatus } from '../../types/mapping';
 import field_groups_types from '../types/field_groups_types';
 import { genSecureHex } from '../../services/SecureRandom';
 import { VisitType } from '../../types/visit';
@@ -9,8 +10,19 @@ const initialState = {
 
 export default function reducer(state = initialState, action) {
   switch (action.type) {
+  
   case field_groups_types.UPDATE_FIELD_GROUPS:
     return { ...state, data: action.data };
+  
+  case field_groups_types.TOGGLE_MAPPING_STATUS:
+    var { fieldGroupId } = action.data;
+    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
+
+    state.data[indexOfFieldGroup].status = 
+      state.data[indexOfFieldGroup].status ? MappingStatus.not_finished : MappingStatus.finished;
+
+    return { ...state, data: state.data };
+
   case field_groups_types.PUSH_PUBLIC_AREA:
     var { fieldGroupId, newData } = action.data;
 
@@ -18,7 +30,7 @@ export default function reducer(state = initialState, action) {
     newData.$id = genSecureHex();
 
     // Adicionando novo Logradouro
-    _.find(state.data, ['$id', fieldGroupId]).field_group.public_areas.push(newData)
+    _.find(state.data, ['$id', fieldGroupId]).field_group.public_areas.push(newData);
 
     return { ...state, data: state.data };
 

@@ -17,6 +17,15 @@ export function setFieldGroups(data){
   };
 }
 
+export function toggleMappingStatus(fieldGroupId){
+  return {
+    type: Types.TOGGLE_MAPPING_STATUS,
+    data: {
+      fieldGroupId
+    }
+  };
+}
+
 export function getFieldGroups(callback, onFail){
   return (dispatch, getState) => {
     let state = getState();
@@ -165,6 +174,7 @@ let gql_get_field_groups = {
     mappings{
       id,
       cycle_id,
+      status,
       field_group {
         id,
         name,

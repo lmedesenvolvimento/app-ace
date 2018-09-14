@@ -11,10 +11,13 @@ import {
   Right,
   Body,
   Button,
+  Switch,
   List,
   ListItem,
   Icon,
   Fab,
+  Row,
+  Col,
 } from 'native-base';
 
 import SearchBar from 'react-native-searchbar';
@@ -22,14 +25,17 @@ import SearchBar from 'react-native-searchbar';
 import { MaterialIcons } from '@expo/vector-icons';
 
 import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 
+import ReduxActions from '../redux/actions';
 
 import Theme from '../constants/Theme';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
 import { PublicAreaTypesTranslate } from '../types/publicarea';
+import { MappingStatus } from '../types/mapping';
 
 import _ from 'lodash';
 
@@ -39,7 +45,8 @@ class PublicAreaScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      public_areas: []
+      public_areas: [],
+      status: MappingStatus.not_finished
     };
   }
 
@@ -53,7 +60,8 @@ class PublicAreaScreen extends React.Component {
 
   render() {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
+    const mapping = _.find(this.props.fieldGroups.data, { $id: this.props.fieldgroup.$id });
+    
     return (
       <Container>
         <Header style={{ zIndex: 9 }}>
@@ -79,6 +87,11 @@ class PublicAreaScreen extends React.Component {
             onBack={ ()=> this._onSearchExit() } />
         </Header>
         <Content padder>
+          <Row style={{ maxHeight: 48, paddingLeft: 24, paddingRight: 8 }}>
+            <Col></Col>
+            <Text note style={{ lineHeight: 48, marginRight: 8 }}>Quarteirão finalizado?</Text>
+            <Switch value={ mapping.status ? true : false } onValueChange={() => this.props.toggleMappingStatus(mapping.$id)}  />
+          </Row>
           <List style={Layout.listMargin}>
             <ListView
               dataSource={ ds.cloneWithRows(this.state.public_areas)}
@@ -150,4 +163,8 @@ class PublicAreaScreen extends React.Component {
   }  
 }
 
-export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}))(PublicAreaScreen);
+function mapDispatchToProps(dispatch){
+  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+}
+
+export default connect(({currentUser, fieldGroups}) => ({currentUser, fieldGroups}), mapDispatchToProps)(PublicAreaScreen);
