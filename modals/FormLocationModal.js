@@ -203,17 +203,20 @@ export class FormLocationModal extends React.Component {
           this.setState(updates);
           callback();
         }
-      }).catch(() => {
+      }).catch((error) => {
+        // Notificando Error
+        simpleToast(error.message);
+        captureException(error);
+        // Update currente state and dispatch callback
         this.setState(updates);
         callback();
       });
     } catch(e) {
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
       captureException(e);
       // exit visit
       Actions.pop();
-
-      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
     }    
   }
   
@@ -229,12 +232,11 @@ export class FormLocationModal extends React.Component {
 
       callback();
     } catch(e) {
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
       captureException(e);
       // exit visit
-      Actions.pop();
-      
-      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
+      Actions.pop();      
     }
   }
 
@@ -266,12 +268,12 @@ export class FormLocationModal extends React.Component {
   
       callback();
     } catch(e) {
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
       captureException(e);
       // exit visit
       Actions.pop();
       
-      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
     }
   }
   
@@ -299,14 +301,12 @@ export class FormLocationModal extends React.Component {
       let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
       
       TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
-
     } catch(e) {
+      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
       captureException(e);
       // exit visit
-      Actions.pop();
-      
-      simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
+      Actions.pop();      
     }
   }
 }

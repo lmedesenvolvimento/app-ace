@@ -1,19 +1,21 @@
 import Expo from 'expo';
-import { simpleToast } from "./Toast";
 
 export async function getLocationAsync() {
   const { Location, Permissions } = Expo;
-  const { status } = await Permissions.askAsync(Permissions.LOCATION);
-  if (status === 'granted') {
-      try{
-        return await Location.getCurrentPositionAsync({enableHighAccuracy: true});
-      } 
-      catch(e){
-        simpleToast('Serviço de Localização está desabilitado');
-        return false;
-      }
-  } else {
-    simpleToast('Permissão de acesso a localização negada, por favor habilite o acesso a localização.');
-    return false
+  try{
+    const { status } = await Permissions.askAsync(Permissions.LOCATION);
+
+    if (status === 'granted') {
+        try{
+          return await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+        } 
+        catch(error){
+          throw new Error('Falha, por favor habilite a alta precisão de localização em seu dispositivo.');
+        }
+    } else {
+      throw new Error('Permissão de acesso a localização negada, por favor habilite o acesso a localização.');
+    }
+  } catch(error){
+    throw error;
   }
 };

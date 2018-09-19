@@ -11,7 +11,8 @@ import Theme from './constants/Theme';
 
 import Auth    from './services/Auth';
 import Session from './services/Session';
-import { getLocationAsync }    from './services/Permissions';
+import { getLocationAsync } from './services/Permissions';
+import { simpleToast } from './services/Toast';
 
 import Navigator from './navigation/Navigator';
 
@@ -63,7 +64,9 @@ export default class App extends React.Component {
     });
     
     // Permissions
-    await getLocationAsync();
+    await getLocationAsync().catch(error => {
+      simpleToast(error.message);
+    });
 
     Session.Credential.get().then((user) => {
       if(user){
