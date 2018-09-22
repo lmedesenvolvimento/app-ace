@@ -21,30 +21,46 @@ export default class _Modal extends React.Component {
   render() {
     return (
       <Modal isVisible={this.props.isVisible}>
-        <View style={styles.container}>
+        <View style={this.props.small ? styles.containerSm : styles.container }>
           <Container style={styles.modalContainer}>
-            <View style={styles.modalHeader}>
-              <H3 style={styles.modalHeaderTitle}>{this.props.title}</H3>
-            </View>
+            {this.renderHeader()}
             <View style={{ flex: 1, justifyContent: 'center'}}>
               { this.props.children }
             </View>
-            <Grid style={styles.modalFooter}>              
-              <Col>
-                <Button transparent full primary onPress={this.props.onCancel}>
-                  <Text>Cancelar</Text>
-                </Button>
-              </Col>
-              <Col>
-                <Button transparent full primary onPress={this.props.onConfirm}>
-                  <Text>Ok</Text>
-                </Button>
-              </Col>
-            </Grid>
+            {this.renderFooter()}
           </Container>
         </View>
       </Modal>
     );
+  }
+
+  renderHeader(){
+    if(!this.props.hideHeader){
+      return(
+        <View style={styles.modalHeader}>
+          <H3 style={styles.modalHeaderTitle}>{this.props.title}</H3>
+        </View>
+      );
+    }
+  }
+
+  renderFooter(){
+    if(!this.props.hideFooter){
+      return(
+        <Grid style={styles.modalFooter}>
+          <Col>
+            <Button transparent full primary onPress={this.props.onCancel}>
+              <Text>Cancelar</Text>
+            </Button>
+          </Col>
+          <Col>
+            <Button transparent full primary onPress={this.props.onConfirm}>
+              <Text>Ok</Text>
+            </Button>
+          </Col>
+        </Grid>
+      );
+    }
   }
 }
 
@@ -54,6 +70,12 @@ const styles = {
     flexDirection: 'column',
     justifyContent: 'center',
     maxHeight: 360
+  },
+  containerSm: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    maxHeight: 90
   },
   modalContainer: {
     backgroundColor: '#ffffff',

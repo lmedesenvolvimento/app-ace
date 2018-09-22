@@ -32,6 +32,10 @@ import PublicAreaScreen from '../screens/PublicAreaScreen';
 import CensoModal from '../modals/CensoModal';
 import ClearStorageModal from '../modals/ClearStorageModal';
 
+// Webviews
+import ReportCardScreen from '../screens/ReportCardScreen';
+
+
 // Sync Flux
 import SynchronizeModal from '../modals/SynchronizeModal';
 
@@ -102,6 +106,10 @@ class Navigator extends React.Component {
                     key='about'
                     component={AboutScreen}
                     title='Sobre o App' />
+                  <Scene
+                    key='reportcard'
+                    component={ReportCardScreen}
+                    title='Boletim Diário' />
                   <Scene
                     key='profile'
                     component={ProfileScreen}

@@ -53,6 +53,7 @@ class MainMenu extends React.Component {
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
               </Body>
             </ListItem>
+            {this._renderReportCardItem()}
             {this._renderForceSyncItem()}
             {this._renderSyncItem()}
           </List>
@@ -73,6 +74,18 @@ class MainMenu extends React.Component {
   }
   _defineItemTextStyle(key){
     return this.props.activeItemKey == key ? styles.listItemActiveText : styles.listItemText;
+  }
+
+  _renderReportCardItem(){
+    if (this.props.state.network.isConnected){
+      return(
+        <ListItem style={this._defineItemStyle('reportcard')} last onPress={ () => Actions.reportcard()}>
+          <Body>
+            <Text style={this._defineItemTextStyle('reportcard')}>Boletim Diário</Text>
+          </Body>
+        </ListItem>
+      );
+    }
   }
 
   _renderSyncItem(){
