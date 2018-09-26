@@ -9,7 +9,6 @@ import {
   Text,
   Container,
   Spinner,
-  Content,
   Row,
   Col
 } from 'native-base';
@@ -26,8 +25,9 @@ class ReportCardScreen extends React.Component {
     super(props);
     this.state = {
       headers: {},
+      uri: `${Expo.Constants.manifest.extra.baseurl}/report/agent/work/embed`,
       ready: false
-    }
+    };
   }
   componentWillMount(){
     let { data } = this.props.currentUser;
@@ -40,11 +40,11 @@ class ReportCardScreen extends React.Component {
   }
 
   render() {
-    let uri = `${Expo.Constants.manifest.extra.baseurl}/report/agent/work`;
     return (
       <Container>
         <WebView
-          source={{ uri, headers: this.state.headers }}
+          source={{ uri: this.state.uri, headers: this.state.headers }}
+          onLoadStart={(navState) => this.setState({uri: navState.nativeEvent.url})}
           onLoadEnd={() => this.setState({ready: true})}
         />
         <Modal isVisible={!this.state.ready} small={true} hideHeader={true} hideFooter={true}>
@@ -62,8 +62,8 @@ class ReportCardScreen extends React.Component {
           </Container>
         </Modal>
       </Container>
-      );
-    }
+    );
+  }
 }
 
 export default connect(({currentUser}) => ({currentUser}))(ReportCardScreen);

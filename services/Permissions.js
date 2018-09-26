@@ -7,7 +7,7 @@ export async function getLocationAsync() {
 
     if (status === 'granted') {
         try{
-          return await Location.getCurrentPositionAsync({enableHighAccuracy: true});
+          return await Location.getCurrentPositionAsync({enableHighAccuracy: false});
         } 
         catch(error){
           throw new Error('Falha, por favor habilite a alta precisão de localização em seu dispositivo.');

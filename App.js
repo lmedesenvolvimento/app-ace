@@ -1,7 +1,7 @@
 import Expo from 'expo';
 import React from 'react';
 
-import Sentry from 'sentry-expo';
+// import Sentry from 'sentry-expo';
 
 import { StyleSheet } from 'react-native';
 
@@ -49,9 +49,9 @@ export default class App extends React.Component {
     watchConnection();
 
     // Remove this once Sentry is correctly setup.
-    Sentry.enableInExpoDevelopment = true;
+    // Sentry.enableInExpoDevelopment = true;
 
-    Sentry.config('https://d372673b4ed44d82a8ab68bd308f54cf@sentry.io/1274743').install();
+    // Sentry.config('https://d372673b4ed44d82a8ab68bd308f54cf@sentry.io/1274743').install();
 
     let user;
 

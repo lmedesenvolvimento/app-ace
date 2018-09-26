@@ -8,7 +8,7 @@ import Colors from '../constants/Layout';
 import { simpleToast } from '../services/Toast';
 import { getLocationAsync } from '../services/Permissions';
 
-import { captureException } from '../hooks/CustomError';
+// import { captureException } from '../hooks/CustomError';
 
 import moment from '../services/Timestamp';
 
@@ -206,7 +206,7 @@ export class FormLocationModal extends React.Component {
       }).catch((error) => {
         // Notificando Error
         simpleToast(error.message);
-        captureException(error);
+        // captureException(error);
         // Update currente state and dispatch callback
         this.setState(updates);
         callback();
@@ -214,7 +214,7 @@ export class FormLocationModal extends React.Component {
     } catch(e) {
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
-      captureException(e);
+      // captureException(e);
       // exit visit
       Actions.pop();
     }    
@@ -234,7 +234,7 @@ export class FormLocationModal extends React.Component {
     } catch(e) {
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
-      captureException(e);
+      // captureException(e);
       // exit visit
       Actions.pop();      
     }
@@ -252,7 +252,7 @@ export class FormLocationModal extends React.Component {
 
       callback();
     } catch(e) {
-      captureException(e);
+      // captureException(e);
     }
   }
   
@@ -270,7 +270,7 @@ export class FormLocationModal extends React.Component {
     } catch(e) {
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
-      captureException(e);
+      // captureException(e);
       // exit visit
       Actions.pop();
       
@@ -304,7 +304,7 @@ export class FormLocationModal extends React.Component {
     } catch(e) {
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
-      captureException(e);
+      // captureException(e);
       // exit visit
       Actions.pop();      
     }

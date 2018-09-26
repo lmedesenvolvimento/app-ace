@@ -25,7 +25,7 @@
     },
     "extra":{
       "baseurl":"https://aedes-agent-cedro-production.herokuapp.com"
-    },    
+    }  
   }
 }
 
