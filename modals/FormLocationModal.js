@@ -21,7 +21,7 @@ import ReduxActions from '../redux/actions';
 import LocationForm from './forms/location';
 import { InspectionForm } from './forms/location/inspection';
 import { SamplesForm } from './forms/location/samples';
-import { TratamentForm } from './forms/location/tratament';
+import { TreatmentForm } from './forms/location/treatment';
 import { ObservationForm } from './forms/location/observation';
 
 import { VisitType } from '../types/visit';
@@ -111,7 +111,7 @@ export class FormLocationModal extends React.Component {
               isReady={this.state.isTransitionEnd} />
           </View>
           <View style={styles.slide}>
-            <TratamentForm
+            <TreatmentForm
               payload={this.state} 
               fieldgroup={this.props.fieldgroup}
               publicarea={this.props.publicarea}
