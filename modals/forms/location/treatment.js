@@ -13,6 +13,8 @@ import {
   Footer,
   Form,
   Label,
+  List,
+  ListItem,
   Item,
   Input,
   Icon,
@@ -22,6 +24,8 @@ import {
 } from 'native-base';
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
+
+import { Alert, ListView, View } from 'react-native';
 
 import Modal from '../../../components/Modal';
 import InterventionalModal from '../../../components/InterventionalModal';
@@ -33,14 +37,14 @@ import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
 
-import { TreatmentType } from '../../../types/treatment';
+import { TreatmentType, TreatmentTypeI18n } from '../../../types/treatment';
 
 import TimerMixin from 'react-timer-mixin';
 
-import { omit } from 'lodash';
+import { omit, find } from 'lodash';
 
 const initialForm = {
-  type: 'larvicida_pyriproxyfen',
+  type: "larvicida_pyriproxyfen",
   quantity: 0.0,
   adulticida_quantity: 0.0,
 }
@@ -65,11 +69,20 @@ export class TreatmentForm extends React.Component {
   componentWillMount(){
     let { payload } = this.props;
     if(payload && payload.visit){
-      this.setState({...payload.visit.treatment});
+    if(payload.visit.treatment){
+        let { treatment } = payload.visit;
+        this.state.treatments.push(treatment);
+        this.setState({ treatments: this.state.treatments });
+      } 
+      else if(payload.visit.treatments.length){
+        this.setState({ treatments: payload.visit.treatments });
+      }
     }
   }
 
   render(){
+    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
+
     return (
       <Container>
         <Content padder>
@@ -95,6 +108,23 @@ export class TreatmentForm extends React.Component {
                   </Button>                
                 </Col>
               </Row>
+              <Row>
+                <Col>
+                  {
+                    this.state.treatments.length
+                      ? <List
+                        dataSource={ds.cloneWithRows(this.state.treatments)}
+                        renderRow={this.renderItem.bind(this)}
+                        renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
+                        renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                        enableEmptySections={true}
+                        onRowOpen={false}
+                        leftOpenValue={0}
+                        rightOpenValue={-75} />
+                      : <Text note style={Layout.marginHorizontal}>Esta visita não possui nenhum tratamento.</Text>
+                  }
+                </Col>
+              </Row>
             </Grid>
 
             <InterventionalModal isVisible={this.state.interModalIsVisible}>
@@ -108,7 +138,7 @@ export class TreatmentForm extends React.Component {
                   <Title>Novo Tratamento</Title>
                 </Body>
                 <Right>
-                  <Button transparent light onPress={() => this.addTreament()}>
+                  <Button transparent light onPress={() => this.addTreatmentItem()}>
                     <Text>Adicionar</Text>
                   </Button>
                 </Right>
@@ -146,8 +176,8 @@ export class TreatmentForm extends React.Component {
                       supportedOrientations={['portrait', 'landscape']}
                       iosHeader='Selecione um'
                       mode='dropdown'>
-                      <Item label={TreatmentType.larvicida_pyriproxyfen} value={'larvicida_pyriproxyfen'} />
-                      <Item label={TreatmentType.larvicida_spinosad} value={'larvicida_spinosad'} />
+                      <Item label={TreatmentType.larvicida_pyriproxyfen} value={"larvicida_pyriproxyfen"} />
+                       <Item label={TreatmentType.larvicida_spinosad} value={"larvicida_spinosad"} />
                     </Picker>                
                   </Col>
                 </Grid>
@@ -284,12 +314,16 @@ export class TreatmentForm extends React.Component {
 
     updates[key] = this.toNumeral(this.state.form[key]);
 
+    console.log(updates);
+
     this.setState(prevState => ({
       form: {
         ...prevState.form,
-        ...updates
+        updates
       }
     }));
+
+    return updates[key];
   }
 
   onBlurNumeralState(key){
@@ -312,7 +346,7 @@ export class TreatmentForm extends React.Component {
   }
   
   _onSubmit(){
-    const omitedAtributes = ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity','processing'];    
+    const omitedAtributes = ['modalIsVisible','bigSpoonpQuantity','smallSpoonpQuantity','processing', 'form'];
     
     this.props.onSubmit( omit(this.state, omitedAtributes), () => {
       this.setState({ processing: false });
@@ -327,10 +361,53 @@ export class TreatmentForm extends React.Component {
     this.props.scrollBy(-1);
   }
 
+  addTreatmentItem() {
+    let quantity = this.onFormBlurNumeralState('quantity');
+    let adulticida_quantity = this.onFormBlurNumeralState('adulticida_quantity');
+
+    this.state.form.quantity = quantity;
+    this.state.form.adulticida_quantity = adulticida_quantity;
+
+    if (this.state.form.quantity <= 0.0 || this.state.form.adulticida_quantity <= 0.0 ) {
+      Alert.alert(
+        'Falha na quantidade do tratamento',
+        'O N de depósitos tratados e Larvicida gramas não pode ser igual a zero',
+        [
+          { text: 'Ok', onPress: () => false, style: 'cancel' },
+        ],
+        { cancelable: true }
+      );
+      return true;
+    }
+    else if( find(this.state.treatments, { type: this.state.form.type })){
+      Alert.alert(
+        'Falha tipo de Código',
+        'Tipo de Código já existente',
+        [
+          { text: 'Ok', onPress: () => false, style: 'cancel' },
+        ],
+        { cancelable: true }
+      );
+      return true;
+    }
+    else {
+      this.state.treatments.push( _.clone(this.state.form) );
+      this.setState({ data: this.state.treatments, form: initialForm, interModalIsVisible: false });
+    }
+  }
+
+
+  removeTreatmentItem(secId, rowId, rowMap){
+    // Force close row
+    rowMap[`${secId}${rowId}`].props.closeRow();
+    this.state.treatments.splice(rowId, 1);
+    this.setState({ treatments: this.state.treatments });
+  }
+
   
   // Renders
 
-  _renderPickerHeader(backAction) {
+  _renderPickerHeader(backAction){
     return (
       <Header>
         <Left style={styles.container}>
@@ -345,13 +422,13 @@ export class TreatmentForm extends React.Component {
     );
   }
   
-
-  renderItem(item) {
+  renderItem(item){
     return (
       <ListItem>
         <Body>
-          <Text>{`Nº da Coleta ${item.number}`}</Text>
-          <Text note> Tipo da coleta: {Object.keys(SampleType)[item.type].toUpperCase()}</Text>
+          <Text>{`N de depósitos tratados ${item.quantity}`}</Text>
+          <Text>{`Larvicida gramas ${item.adulticida_quantity}`}</Text>
+          <Text note> Tipo de Código: { TreatmentType[item.type].toUpperCase() }</Text>
         </Body>
       </ListItem>
     );
@@ -359,13 +436,13 @@ export class TreatmentForm extends React.Component {
 
   renderRightHiddenRow(data, secId, rowId, rowMap) {
     return (
-      <Button danger onPress={this.removeSampleItem.bind(this, secId, rowId, rowMap)}>
+      <Button danger onPress={this.removeTreatmentItem.bind(this, secId, rowId, rowMap)}>
         <Icon active name='trash' />
       </Button>
     );
   }
 
-  renderLeftHiddenRow() {
+  renderLeftHiddenRow(){
     return (
       <View></View>
     );

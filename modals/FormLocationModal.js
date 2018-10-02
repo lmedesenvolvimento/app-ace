@@ -48,7 +48,8 @@ export class FormLocationModal extends React.Component {
         longitude: null,
         samples: [],
         inspect: {},
-        treatment: {}
+        treatments: [],
+        treatment: null
       }
     };
   }  
@@ -262,7 +263,8 @@ export class FormLocationModal extends React.Component {
         visit: this.state.visit
       };
       
-      updates.visit.treatment = data;
+      updates.visit.treatment ? delete updates.visit.treatment : false
+      updates.visit.treatments = data.treatments;
       
       this.setState(updates);
   
