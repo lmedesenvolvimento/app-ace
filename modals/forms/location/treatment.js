@@ -44,10 +44,10 @@ import TimerMixin from 'react-timer-mixin';
 import { omit, find } from 'lodash';
 
 const initialForm = {
-  type: "larvicida_pyriproxyfen",
+  type: TreatmentType.larvicida_pyriproxyfen,
   quantity: 0.0,
-  adulticida_quantity: 0.0,
-}
+  adulticida_quantity: 0.0
+};
 
 export class TreatmentForm extends React.Component {
   
@@ -69,8 +69,10 @@ export class TreatmentForm extends React.Component {
   componentWillMount(){
     let { payload } = this.props;
     if(payload && payload.visit){
-    if(payload.visit.treatment){
-        let { treatment } = payload.visit;
+      if(payload.visit.treatment){
+        let { treatment } = payload.visit;        
+        treatment.type = TreatmentType[treatment.type];
+
         this.state.treatments.push(treatment);
         this.setState({ treatments: this.state.treatments });
       } 
@@ -176,8 +178,8 @@ export class TreatmentForm extends React.Component {
                       supportedOrientations={['portrait', 'landscape']}
                       iosHeader='Selecione um'
                       mode='dropdown'>
-                      <Item label={TreatmentType.larvicida_pyriproxyfen} value={"larvicida_pyriproxyfen"} />
-                       <Item label={TreatmentType.larvicida_spinosad} value={"larvicida_spinosad"} />
+                      <Item label={TreatmentTypeI18n.larvicida_pyriproxyfen} value={TreatmentType.larvicida_pyriproxyfen} />
+                      <Item label={TreatmentTypeI18n.larvicida_spinosad} value={TreatmentType.larvicida_spinosad} />
                     </Picker>                
                   </Col>
                 </Grid>
@@ -275,11 +277,11 @@ export class TreatmentForm extends React.Component {
 
   onConfirmModal() {
     this.setState(prevState => ({
-       modalIsVisible: false, 
-       form:{
-         ...prevState.form,
-         adulticida_quantity: this.calcAdulticidaQuantity()
-       }
+      modalIsVisible: false, 
+      form:{
+        ...prevState.form,
+        adulticida_quantity: this.calcAdulticidaQuantity()
+      }
     }));
   }
 
@@ -314,12 +316,10 @@ export class TreatmentForm extends React.Component {
 
     updates[key] = this.toNumeral(this.state.form[key]);
 
-    console.log(updates);
-
     this.setState(prevState => ({
       form: {
         ...prevState.form,
-        updates
+        ...updates
       }
     }));
 
@@ -428,7 +428,7 @@ export class TreatmentForm extends React.Component {
         <Body>
           <Text>{`N de depósitos tratados ${item.quantity}`}</Text>
           <Text>{`Larvicida gramas ${item.adulticida_quantity}`}</Text>
-          <Text note> Tipo de Código: { TreatmentType[item.type].toUpperCase() }</Text>
+          <Text note> Tipo de Código: { Object.keys(TreatmentType)[item.type].toUpperCase() }</Text>
         </Body>
       </ListItem>
     );
