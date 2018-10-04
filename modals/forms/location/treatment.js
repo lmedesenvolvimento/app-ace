@@ -71,12 +71,12 @@ export class TreatmentForm extends React.Component {
     if(payload && payload.visit){
       if(payload.visit.treatment){
         let { treatment } = payload.visit;        
-        treatment.type = TreatmentType[treatment.type];
+        treatment.type = TreatmentType.larvicida_pyriproxyfen;
 
         this.state.treatments.push(treatment);
         this.setState({ treatments: this.state.treatments });
       } 
-      else if(payload.visit.treatments.length){
+      else if (payload.visit.treatments && payload.visit.treatments.length){
         this.setState({ treatments: payload.visit.treatments });
       }
     }
