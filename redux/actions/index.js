@@ -1,11 +1,11 @@
+import * as UIActions from './ui_actions';
 import * as NetworkActions from './network_actions';
 import * as UserActions from './user_actions';
 import * as FieldGroupsActions from './field_groups_actions';
-import * as VisitActions from './visit_actions';
 
 export default {
+  UIActions: UIActions,
   userActions: UserActions,
   networkActions: NetworkActions,
-  fieldGroupsActions: FieldGroupsActions,
-  visitActions: VisitActions
+  fieldGroupsActions: FieldGroupsActions
 };

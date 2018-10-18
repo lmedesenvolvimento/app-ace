@@ -1,3 +1,4 @@
+import UITypes from '../types/ui_types';
 import Types from '../types/field_groups_types';
 import Session from '../../services/Session';
 
@@ -51,6 +52,7 @@ export function getFieldGroups(callback, onFail){
     });
   };
 }
+
 // Use for dev tests
 // export function _fetchFieldGroupsInGraph(callback, onFail){
 //   return (dispatch, getState) => {
@@ -58,11 +60,16 @@ export function getFieldGroups(callback, onFail){
 //   };
 // }
 
-function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
+function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){  
+  // Open Loading Modal
+  dispatch({type: UITypes.OPEN_LOADING});
+
   client(gql_get_field_groups)
     .then((response) => {
       // Criando ids únicos para todas as entidades recebidos
       let field_groups = response.data.mappings.map(createUniqueIds);
+      // Close Loading Modal
+      dispatch({type: UITypes.CLOSE_LOADING});
       // Enviando para Store
       dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
       // Guardando Alterações no Banco
@@ -90,6 +97,9 @@ function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
         simpleToast(msg);
         break;
       }
+
+      // Close Loading Modal
+      dispatch({type: UITypes.CLOSE_LOADING});
 
       return onFail ? onFail(msg) : false;
     });
@@ -193,6 +203,7 @@ let gql_get_field_groups = {
             visits{
               id,
               type,
+              type_location,
               check_in
             },
             census {

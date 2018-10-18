@@ -1,4 +1,4 @@
-import Types from "../types/user_types";
+import Types from '../types/user_types';
 
 export function setUser(data){
   return {

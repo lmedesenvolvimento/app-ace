@@ -16,8 +16,10 @@ import {
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
 import Layout from '../../../constants/Layout';
+import Store from '../../../constants/Store';
 
 import { VisitType } from '../../../types/visit';
+import UITypes from '../../../redux/types/ui_types';
 
 import { StepBars, Step } from './StepBars';
 
@@ -97,6 +99,8 @@ export class ObservationForm extends React.Component {
 
   onSubmit(){
     if(this.state.processing) return;
+
+    Store.instance.dispatch({ type: UITypes.OPEN_LOADING });
     
     this.setState({ processing: true });
 

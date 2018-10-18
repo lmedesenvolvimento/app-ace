@@ -3,20 +3,24 @@ import React from 'react';
 
 // import Sentry from 'sentry-expo';
 
+import { StyleProvider, getTheme, Container, Col, Grid, Row, Spinner, Text } from 'native-base';
+
 import { StyleSheet } from 'react-native';
 
-import { StyleProvider, getTheme } from 'native-base';
+import Auth from './services/Auth';
+import Session from './services/Session';
+import { simpleToast } from './services/Toast';
+import { getLocationAsync } from './services/Permissions';
 
 import Theme from './constants/Theme';
-
-import Auth    from './services/Auth';
-import Session from './services/Session';
-import { getLocationAsync } from './services/Permissions';
-import { simpleToast } from './services/Toast';
+import Colors from './constants/Colors';
+import Store from './constants/Store';
 
 import Navigator from './navigation/Navigator';
 
 import { watchConnection } from './services/Network';
+
+import Modal from './components/Modal';
 
 export default class App extends React.Component {  
   constructor(props){
@@ -32,11 +36,11 @@ export default class App extends React.Component {
     this._cacheResourcesAsync();
   }
 
-  render() {
+  render() {  
     if(this.state.isReady){
       return (
         <StyleProvider style={getTheme(Theme)}>
-          <Navigator authorized={this.state.isAuthorized}></Navigator>
+          <Navigator authorized={this.state.isAuthorized}></Navigator>          
         </StyleProvider>
       );
     } else{

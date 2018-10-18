@@ -55,12 +55,12 @@ export class ClearStorageModal extends React.Component {
       if(this.state.busy){
         return(
           <Container>
-            <Row>
+            {/* <Row>
               <Col style={{ justifyContent: 'center' }}>
                 <Text note style={[Layout.marginVertical16, styles.textCenter]}>Sincronizando</Text>
                 <ActivityIndicator size={Platform.OS == 'ios' ? 1 : 64} color={Colors.accentColor} />
               </Col>
-            </Row>
+            </Row> */}
           </Container>
         );
       } else {

@@ -24,7 +24,10 @@ import { SamplesForm } from './forms/location/samples';
 import { TreatmentForm } from './forms/location/treatment';
 import { ObservationForm } from './forms/location/observation';
 
+import Store from '../constants/Store';
+
 import { VisitType } from '../types/visit';
+import UITypes from '../redux/types/ui_types';
 
 import TimerMixin from 'react-timer-mixin';
 
@@ -147,6 +150,7 @@ export class FormLocationModal extends React.Component {
     TimerMixin.requestAnimationFrame(() =>  {
       Actions.refresh({ activeTab: targetTab });
       callback();
+      Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });
     });
   }
 
@@ -163,7 +167,7 @@ export class FormLocationModal extends React.Component {
   }
 
   scrollBy (index) {
-    this.swiper.scrollBy(index);    
+    this.swiper.scrollBy(index, false);    
   }
 
   onCancel () {
@@ -263,7 +267,7 @@ export class FormLocationModal extends React.Component {
         visit: this.state.visit
       };
       
-      updates.visit.treatment ? delete updates.visit.treatment : false
+      updates.visit.treatment ? delete updates.visit.treatment : false;
       updates.visit.treatments = data.treatments;
       
       this.setState(updates);
@@ -280,8 +284,9 @@ export class FormLocationModal extends React.Component {
   }
   
   onObservationFormSubmit (data, callback) {
-    try {
+    try {    
       let { address } = this.props;
+      
       let updates = {
         visit: this.state.visit
       };
@@ -304,6 +309,8 @@ export class FormLocationModal extends React.Component {
       
       TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
     } catch(e) {
+      Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });
+
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
       // captureException(e);

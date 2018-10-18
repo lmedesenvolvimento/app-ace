@@ -69,13 +69,15 @@ const styles = {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    maxHeight: 360
+    maxHeight: 360,
+    zIndex: 99
   },
   containerSm: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'center',
-    maxHeight: 90
+    maxHeight: 90,
+    zIndex: 99
   },
   modalContainer: {
     backgroundColor: '#ffffff',
