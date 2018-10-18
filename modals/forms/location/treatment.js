@@ -9,7 +9,6 @@ import {
   Text,
   Title,
   Left,
-  Right,
   Footer,
   Form,
   Label,
@@ -28,7 +27,6 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import { Alert, ListView, View } from 'react-native';
 
 import Modal from '../../../components/Modal';
-import InterventionalModal from '../../../components/InterventionalModal';
 
 import numeral from 'numeral';
 
@@ -97,17 +95,86 @@ export class TreatmentForm extends React.Component {
               <Step></Step>
             </StepBars>
 
-            <H2 style={Layout.padding}>Tratamento focal/perifocal</H2>
+            <Grid>
+              <Col style={Layout.padding}>
+                <H2>Tratamento focal/perifocal</H2>
+                <Text style={[Layout.marginVertical8, { color: Colors.primaryColor }]}>Larvicída</Text>
+              </Col>
+            </Grid>
+
+            <Grid>
+              <Col>
+                <Item floatingLabel >
+                  <Label>N de depósitos tratados</Label>
+                  <Input 
+                    keyboardType='numeric'
+                    value={this.state.form.quantity.toString()}
+                    onChangeText={(quantity) => this.setState(prevState => ({
+                      form: {
+                        ...prevState.form,
+                        quantity
+                      }
+                    }))} 
+                    onBlur={this.onFormBlurNumeralState.bind(this, 'quantity')} />
+                </Item>
+              </Col>
+            </Grid>
+            <Grid style={{ marginTop: 24, marginBottom: 16 }}>
+              <Col>
+                <Text note>Tipo de Código</Text>
+                <Picker
+                  selectedValue={this.state.form.type}
+                  onValueChange={(type) => this.setState(prevState => ({
+                    form: {
+                      ...prevState.form,
+                      type
+                    }
+                  }))}
+                  supportedOrientations={['portrait', 'landscape']}
+                  iosHeader='Selecione um'
+                  mode='dropdown'>
+                  <Item label={TreatmentTypeI18n.larvicida_pyriproxyfen} value={TreatmentType.larvicida_pyriproxyfen} />
+                  <Item label={TreatmentTypeI18n.larvicida_spinosad} value={TreatmentType.larvicida_spinosad} />
+                </Picker>                
+              </Col>
+            </Grid>
+            <Grid>
+              <Row style={{ alignItems: 'flex-end' }}>
+                <Col>
+                  <Item floatingLabel>
+                    <Label>Larvicida gramas</Label>
+                    <Input 
+                      keyboardType='numeric'
+                      value={this.state.form.adulticida_quantity.toString()}
+                      onChangeText={(adulticida_quantity) => this.setState(prevState => ({
+                        form: {
+                          ...prevState.form,
+                          adulticida_quantity
+                        }
+                      }))} 
+                      onBlur={this.onFormBlurNumeralState.bind(this, 'adulticida_quantity')} />
+                  </Item>
+                </Col>
+                <Col>
+                  <Button onPress={this.openModal.bind(this)} primary transparent>
+                    <Text>Calc. Quantidade</Text>
+                  </Button>
+                </Col>
+              </Row>
+
+              <Row style={Layout.marginVertical16}>
+                <Col/>
+                <Button primary onPress={this.addTreatmentItem.bind(this)}>
+                  <Text>Adicionar Tratamento +</Text>
+                </Button>    
+                <Col/>
+              </Row>
+            </Grid>
 
             <Grid>
               <Row>
                 <Col style={Layout.padding}>
                   <H3 style={{ color: Colors.primaryColor }}>Seus Tratamentos</H3>
-                </Col>
-                <Col style={{ alignSelf: 'center' }}>
-                  <Button light onPress={this.toggleInterModal.bind(this)}>
-                    <Text>Adicionar</Text>
-                  </Button>                
                 </Col>
               </Row>
               <Row>
@@ -127,88 +194,7 @@ export class TreatmentForm extends React.Component {
                   }
                 </Col>
               </Row>
-            </Grid>
-
-            <InterventionalModal isVisible={this.state.interModalIsVisible}>
-              <Header>
-                <Left>
-                  <Button transparent onPress={() => this.toggleInterModal()}>
-                    <Icon name='md-arrow-back' />
-                  </Button>
-                </Left>
-                <Body>
-                  <Title>Novo Tratamento</Title>
-                </Body>
-                <Right>
-                  <Button transparent light onPress={() => this.addTreatmentItem()}>
-                    <Text>Adicionar</Text>
-                  </Button>
-                </Right>
-              </Header>
-              <Content padder style={{ paddingHorizontal: 8, paddingVertical: 24 }}>
-                <Text style={{ color: Colors.primaryColor }}>Larvicída</Text>
-                <Grid>
-                  <Col>
-                    <Item floatingLabel >
-                      <Label>N de depósitos tratados</Label>
-                      <Input 
-                        keyboardType='numeric'
-                        value={this.state.form.quantity.toString()}
-                        onChangeText={(quantity) => this.setState(prevState => ({
-                          form: {
-                            ...prevState.form,
-                            quantity
-                          }
-                        }))} 
-                        onBlur={this.onFormBlurNumeralState.bind(this, 'quantity')} />
-                    </Item>
-                  </Col>
-                </Grid>
-                <Grid style={{ marginTop: 24, marginBottom: 16 }}>
-                  <Col>
-                    <Text note>Tipo de Código</Text>
-                    <Picker
-                      selectedValue={this.state.form.type}
-                      onValueChange={(type) => this.setState(prevState => ({
-                        form: {
-                          ...prevState.form,
-                          type
-                        }
-                      }))}
-                      supportedOrientations={['portrait', 'landscape']}
-                      iosHeader='Selecione um'
-                      mode='dropdown'>
-                      <Item label={TreatmentTypeI18n.larvicida_pyriproxyfen} value={TreatmentType.larvicida_pyriproxyfen} />
-                      <Item label={TreatmentTypeI18n.larvicida_spinosad} value={TreatmentType.larvicida_spinosad} />
-                    </Picker>                
-                  </Col>
-                </Grid>
-                <Grid>
-                  <Row style={{ alignItems: 'flex-end' }}>
-                    <Col>
-                      <Item floatingLabel>
-                        <Label>Larvicida gramas</Label>
-                        <Input 
-                          keyboardType='numeric'
-                          value={this.state.form.adulticida_quantity.toString()}
-                          onChangeText={(adulticida_quantity) => this.setState(prevState => ({
-                            form: {
-                              ...prevState.form,
-                              adulticida_quantity
-                            }
-                          }))} 
-                          onBlur={this.onFormBlurNumeralState.bind(this, 'adulticida_quantity')} />
-                      </Item>
-                    </Col>
-                    <Col>
-                      <Button onPress={this.openModal.bind(this)} primary transparent>
-                        <Text>Calc. Quantidade</Text>
-                      </Button>
-                    </Col>
-                  </Row>
-                </Grid>
-              </Content>
-            </InterventionalModal>
+            </Grid>            
 
             <Modal isVisible={this.state.modalIsVisible} onConfirm={this.onConfirmModal.bind(this)} onCancel={this.onCancelModal.bind(this)} title='Calcular quantidade'>
               <Content padder>
@@ -264,12 +250,7 @@ export class TreatmentForm extends React.Component {
     );
   }
 
-  // Modals
-
-  toggleInterModal(){
-    this.setState({ interModalIsVisible: !this.state.interModalIsVisible });
-  }
-
+  // Modals  
   openModal(){
     // reset modal inputs and open modal
     this.setState({ smallSpoonpQuantity: 0.0, bigSpoonpQuantity: 0.0, modalIsVisible: true });
@@ -338,6 +319,19 @@ export class TreatmentForm extends React.Component {
   // Form
 
   onSubmit(){
+    if(this.state.form.quantity && !this.state.treatments.length){
+      Alert.alert(
+        'Falha no tratamento',
+        'O campo Nº de depósitos tratads possui um valor, porém tratamento está vazio.',
+        [
+          { text: 'Ok', onPress: () => false, style: 'cancel' },          
+        ],
+        { cancelable: true }
+      );
+
+      return false;  
+    }
+
     if(this.state.processing) return;
     
     this.setState({ processing: true });
@@ -392,7 +386,7 @@ export class TreatmentForm extends React.Component {
     }
     else {
       this.state.treatments.push( _.clone(this.state.form) );
-      this.setState({ data: this.state.treatments, form: initialForm, interModalIsVisible: false });
+      this.setState({ data: this.state.treatments, form: initialForm });
     }
   }
 
