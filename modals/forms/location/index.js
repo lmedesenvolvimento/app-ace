@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert } from 'react-native';
+import { Alert, TouchableOpacity } from 'react-native';
 
 import _ from 'lodash';
 
@@ -25,8 +25,9 @@ import {
   DatePicker
 } from 'native-base';
 
-
 import { Col, Row, Grid } from 'react-native-easy-grid';
+
+import DateTimePicker from 'react-native-modal-datetime-picker';
 
 import StringMask from 'string-mask';
 import moment from '../../../services/Timestamp';
@@ -52,6 +53,7 @@ export class LocationForm extends React.Component {
       check_in_translate: moment().format('HH:mm'),
       type: VisitType.normal,
       type_location: VisitTypeLocation.residential,
+      isDateTimePickerVisible: false,
       processing: false,
       validation: {
         number: false,
@@ -141,13 +143,18 @@ export class LocationForm extends React.Component {
                   />
                 </Col>
                 <Col size={33}>
-                  <Item floatingLabel error={this.state.validation.check_in_translate}>
-                    <Label>Entrada</Label>
-                    <Input
-                      value={this.state.check_in_translate}
-                      keyboardType='numeric'
-                      onChangeText={ this.applyStartDateMask.bind(this) } />
-                  </Item>
+                  <Text note>Entrada</Text>
+                  
+                  <TouchableOpacity onPress={this.toggleDateTimePicker.bind(this)}>
+                    <Text>{this.state.check_in_translate}</Text>
+                  </TouchableOpacity>
+
+                  <DateTimePicker
+                    mode={'time'}
+                    isVisible={this.state.isDateTimePickerVisible}
+                    onConfirm={this.handleDatePicked.bind(this)}
+                    onCancel={this.toggleDateTimePicker.bind(this)}
+                  />                  
                 </Col>
               </Row>
             </Grid>
@@ -203,7 +210,7 @@ export class LocationForm extends React.Component {
               </Col>
             </Row>
           </Grid>
-        </Footer>
+        </Footer>        
       </Container>
     );
   }
@@ -314,6 +321,16 @@ export class LocationForm extends React.Component {
         </Row>
       </Grid>
     );
+  }
+
+  toggleDateTimePicker(){
+    this.setState({ isDateTimePickerVisible: !this.state.isDateTimePickerVisible });
+  }
+
+  handleDatePicked(date){    
+    let time = moment(date).format('HH:mm');
+    this.applyStartDateMask(time);
+    this.toggleDateTimePicker();
   }
 
   _renderPickerHeader(backAction){
