@@ -299,10 +299,14 @@ export class FormLocationModal extends React.Component {
   
       if(address){
         this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
-        simpleToast('Endereço foi atualizado!');
+        if(Platform.OS === 'android'){
+          simpleToast('Endereço foi atualizado!');
+        }
       } else{
         this.props.addLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, newData);
-        simpleToast('Endereço adicionado com sucesso!');
+        if(Platform.OS === 'android'){
+          simpleToast('Endereço adicionado com sucesso!');
+        }
       }
   
       let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
