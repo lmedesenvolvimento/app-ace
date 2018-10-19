@@ -103,4 +103,4 @@ const styles = {
     justifyContent: 'center',
     borderTopColor: '#cccccc',
   }
-}
+};

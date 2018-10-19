@@ -32,14 +32,14 @@ import ReduxActions from '../redux/actions';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
-import { VisitType, VisitTranslante } from '../types/visit';
+import { VisitType, VisitTranslante, VisitTypeLocation, VisitTypeLocationTranslate } from '../types/visit';
 
 import { simpleToast } from '../services/Toast';
 
 import _ from 'lodash';
 import moment from '../services/Timestamp';
 
-import { Grid, Row } from 'react-native-easy-grid';
+import { Grid } from 'react-native-easy-grid';
 
 import TimerMixin from 'react-timer-mixin';
 
@@ -160,17 +160,17 @@ class FieldGroupScreen extends React.Component {
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
         onPress={this._handleOnPressItem.bind(this, address)}>
         <Left>
-          <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
+          <MaterialIcons name={this.renderItemIcon(address.visit.type_location)} size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
           <Grid>
-            <Row style={{ alignItems: 'center' }}>
-              <Col>
-                <Text>Nº {address.number}</Text>
-                <Text note>{address.complement}</Text>
-              </Col>
-              { this.renderLastVisit(address) }
-            </Row>
+            <Col size={66} style={{ justifyContent: 'center'}}>
+              <Text>Nº {address.number}</Text>
+              <Text note>
+                { `${VisitTypeLocationTranslate[address.visit.type_location]} - ${VisitTranslante[address.visit.type]}` }
+              </Text>                
+            </Col>
+            { this.renderLastVisit(address) }
           </Grid>
         </Body>
       </ListItem>
@@ -184,6 +184,23 @@ class FieldGroupScreen extends React.Component {
         <Text style={styles.notfoundtitle}>Comece já a adicionar as residências e visitas.</Text>
       </View>
     );
+  }
+
+  renderItemIcon(type){
+    switch (type) {
+    case VisitTypeLocation.residential:        
+      return 'business';
+    case VisitTypeLocation.commerce:
+      return 'store';
+    case VisitTypeLocation.wasteland:
+      return 'business';
+    case VisitTypeLocation.strategic_point:
+      return 'pin-drop';
+    case VisitTypeLocation.others:
+      return 'help-circle';
+    default:
+      return 'business';
+    }
   }
 
   renderRightHiddenRow(data, secId, rowId, rowMap){
@@ -218,14 +235,22 @@ class FieldGroupScreen extends React.Component {
     let visit = _.last(address.visits);
     if(visit){
       return(
-        <Col>
-          <Text note>{ VisitTranslante[visit.type] }</Text>
-          <Text note>{ moment(visit.check_in).format('DD/MM/YYYY HH:mm') }</Text>
+        <Col size={33} style={{ justifyContent: 'center', alignItems: 'flex-end' }}>
+          <Grid style={{alignItems: 'center'}}>
+            { address.id 
+              ? <MaterialIcons size={16} name="sync" /> 
+              : <MaterialIcons size={16} name="sync-disabled" /> 
+            }
+            <Col>
+              <Text style={{ textAlign: 'right' }} note>{ moment(visit.check_in).format('DD/MM/YYYY') }</Text>
+              <Text style={{ textAlign: 'right' }} note>{ moment(visit.check_in).format('HH:mm') }</Text>
+            </Col>
+          </Grid>
         </Col>
       );
     } else{
       return(
-        <Col></Col>
+        <Col size={33}></Col>
       );
     }
   }

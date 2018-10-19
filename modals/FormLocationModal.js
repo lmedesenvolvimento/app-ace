@@ -148,7 +148,9 @@ export class FormLocationModal extends React.Component {
   okModal(targetTab, callback){
     Actions.pop();
     TimerMixin.requestAnimationFrame(() =>  {
-      Actions.refresh({ activeTab: targetTab });
+      if(Platform.OS ===  'android'){
+        Actions.refresh({ activeTab: targetTab });
+      }
       callback();
       Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });
     });
