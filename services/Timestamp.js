@@ -1,6 +1,6 @@
 import moment from 'moment-timezone';
 
-moment.tz.setDefault('America/Sao_paulo');
+moment.tz.setDefault('America/Fortaleza');
 moment.locale('pt-br');
 
 
