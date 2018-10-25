@@ -203,7 +203,6 @@ class FieldGroupScreen extends React.Component {
 
   renderAddressDescription(address){
     let visit = _.last(address.visits);
-    visit = null;
     if(visit){
       return(
         <Text note>{`${VisitTypeLocationTranslate[address.visit.type_location]} - ${VisitTranslante[address.visit.type]}`}</Text>
