@@ -166,9 +166,7 @@ class FieldGroupScreen extends React.Component {
           <Grid>
             <Col size={66} style={{ justifyContent: 'center'}}>
               <Text>Nº {address.number}</Text>
-              <Text note>
-                { `${VisitTypeLocationTranslate[address.visit.type_location]} - ${VisitTranslante[address.visit.type]}` }
-              </Text>                
+              { this.renderAddressDescription(address) }
             </Col>
             { this.renderLastVisit(address) }
           </Grid>
@@ -200,6 +198,20 @@ class FieldGroupScreen extends React.Component {
       return 'help-circle';
     default:
       return 'business';
+    }
+  }
+
+  renderAddressDescription(address){
+    let visit = _.last(address.visits);
+    visit = null;
+    if(visit){
+      return(
+        <Text note>{`${VisitTypeLocationTranslate[address.visit.type_location]} - ${VisitTranslante[address.visit.type]}`}</Text>
+        ) ;
+    } else {
+      return(
+        <Text note>{`${VisitTranslante[address.visit.type]}`}</Text>
+      );
     }
   }
 

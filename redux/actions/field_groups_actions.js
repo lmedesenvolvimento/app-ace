@@ -200,6 +200,7 @@ let gql_get_field_groups = {
             id,
             number,
             complement,
+            type,
             visits{
               id,
               type,
