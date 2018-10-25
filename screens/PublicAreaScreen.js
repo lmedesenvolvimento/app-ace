@@ -250,13 +250,15 @@ class FieldGroupScreen extends React.Component {
       return(
         <Col size={33} style={{ justifyContent: 'center', alignItems: 'flex-end' }}>
           <Grid style={{alignItems: 'center'}}>
-            { address.id 
-              ? <MaterialIcons size={16} name="sync" /> 
-              : <MaterialIcons size={16} name="sync-disabled" /> 
-            }
             <Col>
               <Text style={{ textAlign: 'right' }} note>{ moment(visit.check_in).format('DD/MM/YYYY') }</Text>
-              <Text style={{ textAlign: 'right' }} note>{ moment(visit.check_in).format('HH:mm') }</Text>
+              <Text style={{ lineHeight: 14, textAlign: 'right' }} note>
+                { address.id 
+                  ? <MaterialIcons size={14} name="sync" /> 
+                  : <MaterialIcons size={14} name="sync-disabled" /> 
+                }
+                { moment(visit.check_in).format('HH:mm') }
+              </Text>
             </Col>
           </Grid>
         </Col>
