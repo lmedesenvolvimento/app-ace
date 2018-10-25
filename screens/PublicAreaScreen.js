@@ -165,7 +165,9 @@ class FieldGroupScreen extends React.Component {
         <Body style={Layout.listItemBody}>
           <Grid>
             <Col size={66} style={{ justifyContent: 'center'}}>
-              <Text>Nº {address.number}</Text>
+              <Text numberOfLines={1} ellipsizeMode='tail'>  Nº {address.number} 
+                <Text note>{ address.complement ? ` - ${address.complement }` : '' }</Text>
+              </Text>
               { this.renderAddressDescription(address) }
             </Col>
             { this.renderLastVisit(address) }
@@ -206,7 +208,7 @@ class FieldGroupScreen extends React.Component {
     if(visit){
       return(
         <Text note>{`${VisitTypeLocationTranslate[address.visit.type_location]} - ${VisitTranslante[address.visit.type]}`}</Text>
-        ) ;
+      ) ;
     } else {
       return(
         <Text note>{`${VisitTranslante[address.visit.type]}`}</Text>
