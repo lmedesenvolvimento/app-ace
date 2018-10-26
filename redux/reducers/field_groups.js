@@ -141,6 +141,22 @@ export default function reducer(state = initialState, action) {
 
     return { ...state, data: state.data }
 
+  case field_groups_types.UPDATE_CENSUS:
+      var { fieldGroupId, publicareaId, record, newData } = action.data;
+
+      var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
+      var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId);
+      var indexOfAddress = getLocationIndex(state, action, record.$id);
+
+      // Atualizando Cencus
+      state
+        .data[indexOfFieldGroup]
+        .field_group
+        .public_areas[indexOfPublicArea]
+        .addresses[indexOfAddress] = newData;
+
+      return { ...state, data: state.data };
+      
   default:
     return state;
   }

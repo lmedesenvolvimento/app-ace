@@ -145,6 +145,14 @@ export function updateLocationInPublicArea(fieldGroupId, publicareaId, record, n
   };
 }
 
+export function updateCensus(fieldGroupId, publicareaId, record, newData){
+  return (dispatch, getState) => {
+    dispatch({ type: Types.EDIT_LOCATION, data: { fieldGroupId, publicareaId, record, newData } });
+    // Update LocalStorage
+    commit(getState);
+  };
+}
+
 export function removeLocationInPublicArea(fieldGroupId, publicareaId, record){
   return (dispatch, getState) => {
     dispatch({ type: Types.REMOVE_LOCATION, data: { fieldGroupId, publicareaId, record } });

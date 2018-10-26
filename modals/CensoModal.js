@@ -205,7 +205,7 @@ export class CensoModal extends React.Component {
       updates.census[0] = data;
     }
     // dispath action
-    this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, updates);
+    this.props.updateCensus(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, updates);
     // feedback user
     simpleToast('Censo atualizado com successo!');
     // close modal
