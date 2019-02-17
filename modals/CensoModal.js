@@ -65,107 +65,141 @@ export class CensoModal extends React.Component {
           <H2 style={Layout.padding}>Registrar Censo</H2>
           <Content padder>
             <View style={{paddingBottom: 48}}>
-              <Item>
-                <Label>{CensoType.inhabitants}</Label>
-                <Input 
-                  keyboardType='numeric' 
-                  value={this.state.inhabitants.toString()}
-                  onChangeText={inhabitants => this.setState({inhabitants})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'inhabitants')} 
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.tank}</Label>
-                <Input 
-                  keyboardType='numeric' 
-                  value={this.state.tank.toString()}
-                  onChangeText={tank => this.setState({tank})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'tank')}
-                 />
-              </Item>
-              <Item>
-                <Label>{CensoType.filter}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.filter.toString()}
-                  onChangeText={filter => this.setState({filter})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'filter')}
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.tina}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.tina.toString()}
-                  onChangeText={tina => this.setState({tina})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'tina')}
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.drum}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.drum.toString()}
-                  onChangeText={drum => this.setState({drum})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'drum')}
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.pot}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.pot.toString()}
-                  onChangeText={pot => this.setState({pot})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'pot')}
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.plant_pot}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.plant_pot.toString()} 
-                  onChangeText={plant_pot => this.setState({plant_pot})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'plant_pot')}
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.cistern}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.cistern.toString()}
-                  onChangeText={cistern => this.setState({cistern})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'cistern')}
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.waterhole}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.waterhole.toString()}
-                  onChangeText={waterhole => this.setState({waterhole})}
-                  onBlur={this.onBlurNumeralState.bind(this, 'waterhole')}
-                />
-              </Item>
-              <Item>
-                <Label>{CensoType.water_box}</Label>
-                <Input
-                  keyboardType='numeric' 
-                  value={this.state.water_box.toString()}
-                  onChangeText={water_box => this.setState({water_box}) }
-                  onBlur={this.onBlurNumeralState.bind(this, 'water_box')}
-                />
-              </Item>
+              <Grid style={styles.row}>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.inhabitants}</Label>
+                    <Input 
+                      keyboardType='numeric' 
+                      value={this.state.inhabitants.toString()}
+                      onChangeText={inhabitants => this.setState({inhabitants})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'inhabitants')} 
+                    />
+                  </Item>
+                </Col>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.tank}</Label>
+                    <Input 
+                      keyboardType='numeric' 
+                      value={this.state.tank.toString()}
+                      onChangeText={tank => this.setState({tank})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'tank')}
+                    />
+                  </Item>
+                </Col>
+              </Grid>
+
+              <Grid style={styles.row}>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.filter}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.filter.toString()}
+                      onChangeText={filter => this.setState({filter})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'filter')}
+                    />
+                  </Item>
+                </Col>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.tina}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.tina.toString()}
+                      onChangeText={tina => this.setState({tina})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'tina')}
+                    />
+                  </Item>
+                </Col>
+              </Grid>
+
+              <Grid style={styles.row}>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.drum}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.drum.toString()}
+                      onChangeText={drum => this.setState({drum})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'drum')}
+                    />
+                  </Item>
+                </Col>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.pot}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.pot.toString()}
+                      onChangeText={pot => this.setState({pot})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'pot')}
+                    />
+                  </Item>
+                </Col>
+              </Grid>
+
+              <Grid style={styles.row}>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.plant_pot}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.plant_pot.toString()} 
+                      onChangeText={plant_pot => this.setState({plant_pot})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'plant_pot')}
+                    />
+                  </Item>
+                </Col>
+                <Col style={styles.item}>
+                <Item stackedLabel>
+                  <Label>{CensoType.cistern}</Label>
+                  <Input
+                    keyboardType='numeric' 
+                    value={this.state.cistern.toString()}
+                    onChangeText={cistern => this.setState({cistern})}
+                    onBlur={this.onBlurNumeralState.bind(this, 'cistern')}
+                  />
+                </Item>
+                </Col>
+              </Grid>
+
+              <Grid style={styles.row}>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.waterhole}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.waterhole.toString()}
+                      onChangeText={waterhole => this.setState({waterhole})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'waterhole')}
+                    />
+                  </Item>
+                </Col>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.water_box}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.water_box.toString()}
+                      onChangeText={water_box => this.setState({water_box}) }
+                      onBlur={this.onBlurNumeralState.bind(this, 'water_box')}
+                    />
+                  </Item>
+                </Col>
+              </Grid>
             </View>
           </Content>
           <Footer style={{backgroundColor:"white"}} padder>
-            <Grid>
+            <Grid style={styles.row}>
               <Row style={{alignItems: 'center'}}>
-                <Col>
+                <Col style={styles.item}>
                   <Button full transparent onPress={this.dismissModal.bind(this)}>
                     <Text>Voltar</Text>
                   </Button>
                 </Col>
-                <Col style={styles.colLeftBorder}>
+                <Col style={styles.item} style={styles.colLeftBorder}>
                   <Button full transparent onPress={this.okModal.bind(this)}>
                     <Text>Atualizar</Text>
                   </Button>
@@ -255,6 +289,12 @@ const styles = {
   colLeftBorder: {
     borderLeftWidth: 1,
     borderLeftColor: "#eee"
+  },
+  row: {
+    marginVertical: 4
+  },
+  item: {
+    paddingHorizontal: 4
   }
 }
 

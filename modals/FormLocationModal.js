@@ -211,8 +211,9 @@ export class FormLocationModal extends React.Component {
           callback();
         }
       }).catch((error) => {
+        // console.log(error);
         // Notificando Error
-        simpleToast(error.message);
+        // simpleToast(error.message);
         // captureException(error);
         // Update currente state and dispatch callback
         this.setState(updates);

@@ -15,11 +15,15 @@ import {
   Content,
   List,
   ListItem,
+  Left,
   Body,
   Text,
   Title,
   Subtitle
 } from 'native-base';
+
+import { MaterialIcons } from '@expo/vector-icons';
+
 
 class MainMenu extends React.Component {
   constructor(props){
@@ -42,20 +46,30 @@ class MainMenu extends React.Component {
               </Body>
             </ListItem>
 
-            <ListItem style={this._defineItemStyle('profile')}  onPress={() => Actions.profile()}>
+            <ListItem style={this._defineItemStyle('profile')}  onPress={() => Actions.profile()} last>
               <Body>
                 <Text style={this._defineItemTextStyle('profile')}>Perfil</Text>
               </Body>
             </ListItem>
-
-            <ListItem style={this._defineItemStyle('about')} onPress={ () => Actions.about()}>
+            
+            <ListItem itemHeader first>
+              <Text note>Dados</Text>
+            </ListItem>
+            {this._renderForceSyncItem()}
+            {this._renderSyncItem()}
+            
+            <ListItem itemHeader first>
+              <Text note>Outros</Text>
+            </ListItem>
+            {this._renderReportCardItem()}
+            <ListItem icon style={this._defineItemStyle('about')} onPress={() => Actions.about()} last>
+              <Left>
+                <MaterialIcons name="info" style={styles.iconSize} />
+              </Left>
               <Body>
                 <Text style={this._defineItemTextStyle('about')}>Sobre</Text>
               </Body>
             </ListItem>
-            {this._renderReportCardItem()}
-            {this._renderForceSyncItem()}
-            {this._renderSyncItem()}
           </List>
         </Content>
       </Container>
@@ -79,7 +93,10 @@ class MainMenu extends React.Component {
   _renderReportCardItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('reportcard')} last onPress={ () => Actions.reportcard()}>
+        <ListItem icon style={this._defineItemStyle('reportcard')} last onPress={ () => Actions.reportcard()}>
+          <Left>
+            <MaterialIcons name="book" style={styles.iconSize} />
+          </Left>
           <Body>
             <Text style={this._defineItemTextStyle('reportcard')}>Boletim Diário</Text>
           </Body>
@@ -87,11 +104,14 @@ class MainMenu extends React.Component {
       );
     }
   }
-
+  
   _renderSyncItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('syncDataModal')} last onPress={ () => Actions.syncDataModal()}>
+        <ListItem icon style={this._defineItemStyle('syncDataModal')} onPress={ () => Actions.syncDataModal()} last>
+          <Left>
+            <MaterialIcons name="sync" style={styles.iconSize} />
+          </Left>
           <Body>
             <Text style={this._defineItemTextStyle('syncDataModal')}>Sincronizar Dados</Text>
           </Body>
@@ -102,7 +122,10 @@ class MainMenu extends React.Component {
   _renderForceSyncItem(){
     if (this.props.state.network.isConnected){
       return(
-        <ListItem style={this._defineItemStyle('clearStorageModal')} onPress={ () => Actions.clearStorageModal()}>
+        <ListItem icon style={this._defineItemStyle('clearStorageModal')} last onPress={ () => Actions.clearStorageModal()}>
+          <Left>
+            <MaterialIcons name="restore" style={styles.iconSize} />
+          </Left>
           <Body>
             <Text style={this._defineItemTextStyle('clearStorageModal')}>Recarregar Dados</Text>
           </Body>
@@ -134,6 +157,9 @@ const styles = {
   listItemActiveText:{
     fontWeight: '800',
     color: Colors.accentColor
+  },
+  iconSize:{
+    fontSize: 24
   }
 };
 

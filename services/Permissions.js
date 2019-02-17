@@ -1,7 +1,6 @@
-import Expo from 'expo';
+import Expo, { Location, Permissions } from 'expo';
 
 export async function getLocationAsync() {
-  const { Location, Permissions } = Expo;
   try{
     const { status } = await Permissions.askAsync(Permissions.LOCATION);
 
