@@ -1,17 +1,22 @@
 import React from 'react';
 
-import { ActivityIndicator, View, Picker, Platform } from 'react-native';
+import { ActivityIndicator, View, Platform } from 'react-native';
 
 import {
   Container,
   Content,
   H2,
   Text,
+  Header,
+  Left,
   Footer,
+  Body,
   Item,
   Label,
+  Title,
   Input,
-  Button
+  Picker,
+  Button,
 } from 'native-base';
 
 import { Grid, Row, Col } from 'react-native-easy-grid';
@@ -48,7 +53,8 @@ export class CensoModal extends React.Component {
       plant_pot: 0,
       cistern: 0,
       waterhole: 0,
-      water_box: 0
+      water_box: 0,
+      water_box_status: 0
     };
   }  
 
@@ -189,6 +195,20 @@ export class CensoModal extends React.Component {
                   </Item>
                 </Col>
               </Grid>
+              <Grid style={styles.row}>
+                <Col style={styles.item}>
+                  <Text note>{CensoType.water_box_status}</Text>
+                  <Picker
+                    selectedValue={this.state.water_box_status}
+                    onValueChange={(water_box_status) => this.setState({ water_box_status })}
+                    supportedOrientations={['portrait', 'landscape']}
+                    renderHeader={this._renderPickerHeader.bind(this)}
+                    mode='dropdown'>
+                    <Item label='Aberto' value={CensoType.water_box_statuses.opened} />
+                    <Item label='Fechado' value={CensoType.water_box_statuses.closed} />
+                  </Picker>
+                </Col>
+              </Grid>
             </View>
           </Content>
           <Footer style={{backgroundColor:"white"}} padder>
@@ -216,6 +236,21 @@ export class CensoModal extends React.Component {
         </View>
       )
     }
+  }
+
+  _renderPickerHeader(backAction) {
+    return (
+      <Header>
+        <Left style={styles.container}>
+          <Button transparent onPress={backAction}>
+            <Text>Voltar</Text>
+          </Button>
+        </Left>
+        <Body style={{ flex: 2 }}>
+          <Title style={{ textAlign: 'center' }}>Selecione um</Title>
+        </Body>
+      </Header>
+    );
   }
 
   onBlurNumeralState(key) {

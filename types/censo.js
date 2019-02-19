@@ -8,5 +8,10 @@ export const CensoType = {
   plant_pot: 'Vaso de Planta',
   cistern: 'Cisterna',
   waterhole: 'Poço de Água',
-  water_box: 'Caixa de Água'
+  water_box: 'Caixa de Água',
+  water_box_status: 'Caixa de Água Status',
+  water_box_statuses: {
+    opened: 0,
+    closed: 1
+  }
 };

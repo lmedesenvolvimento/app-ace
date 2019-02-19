@@ -226,6 +226,7 @@ let gql_get_field_groups = {
               tank
               tina
               water_box
+              water_box_status
               waterhole
             }
           }
