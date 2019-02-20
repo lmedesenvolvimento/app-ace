@@ -32,7 +32,6 @@ import { Actions } from 'react-native-router-flux';
 
 import ReduxActions from "../redux/actions";
 
-
 import { CensoType } from '../types/censo';
 
 import _ from 'lodash';
@@ -54,7 +53,7 @@ export class CensoModal extends React.Component {
       cistern: 0,
       waterhole: 0,
       water_box: 0,
-      water_box_status: 0
+      water_box_status: undefined
     };
   }  
 
@@ -195,20 +194,25 @@ export class CensoModal extends React.Component {
                   </Item>
                 </Col>
               </Grid>
-              <Grid style={styles.row}>
-                <Col style={styles.item}>
-                  <Text note>{CensoType.water_box_status}</Text>
-                  <Picker
-                    selectedValue={this.state.water_box_status}
-                    onValueChange={(water_box_status) => this.setState({ water_box_status })}
-                    supportedOrientations={['portrait', 'landscape']}
-                    renderHeader={this._renderPickerHeader.bind(this)}
-                    mode='dropdown'>
-                    <Item label='Aberto' value={CensoType.water_box_statuses.opened} />
-                    <Item label='Fechado' value={CensoType.water_box_statuses.closed} />
-                  </Picker>
-                </Col>
-              </Grid>
+                  {
+                    this.state.water_box ?
+                      <Grid style={styles.row}>
+                        <Col style={styles.item}>
+                          <Text note>{CensoType.water_box_status}</Text>
+                          <Picker
+                            selectedValue={this.state.water_box_status}
+                            onValueChange={(water_box_status) => this.setState({ water_box_status })}
+                            supportedOrientations={['portrait', 'landscape']}
+                            renderHeader={this._renderPickerHeader.bind(this)}
+                            mode='dropdown'>
+                            <Item label='Selecione um' value={undefined} />
+                            <Item label='Fechado' value={CensoType.water_box_statuses.closed} />
+                            <Item label='Aberto' value={CensoType.water_box_statuses.opened} />
+                          </Picker>
+                        </Col>
+                      </Grid>
+                    : false
+                  }
             </View>
           </Content>
           <Footer style={{backgroundColor:"white"}} padder>
@@ -270,7 +274,7 @@ export class CensoModal extends React.Component {
     if (_.isEmpty(updates.census)) {
       updates.census[0] = data;
     } else{
-      if(updates.census[0].id) data.updated = true;      
+      if(updates.census[0].id) data.updated = true;
       updates.census[0] = data;
     }
     // dispath action
