@@ -211,7 +211,7 @@ class FieldGroupScreen extends React.Component {
       ) ;
     } else {
       return(
-        <Text note>{`${VisitTranslante[address.visit.type]}`}</Text>
+        <Text note>{`${VisitTranslante[address.type]}`}</Text>
       );
     }
   }
