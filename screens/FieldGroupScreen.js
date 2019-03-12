@@ -146,7 +146,7 @@ class PublicAreaScreen extends React.Component {
     let public_areas = this._getPublicAreas();
 
     let result = _.filter(public_areas , (pua)=> {
-      return _.isMatch(pua.address.toLowerCase(), q.toLowerCase());
+      return _.includes(pua.address.toLowerCase(), q.toLowerCase());
     });
 
     this.setState({public_areas:  result});
