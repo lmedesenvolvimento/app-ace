@@ -3,7 +3,7 @@ import React from 'react';
 
 import { WebView } from 'react-native';
 
-import Expo from "expo";
+import Constants from 'expo-constants';
 
 import {
   Text,
@@ -25,7 +25,7 @@ class ReportCardScreen extends React.Component {
     super(props);
     this.state = {
       headers: {},
-      uri: `${Expo.Constants.manifest.extra.baseurl}/report/agent/work/embed`,
+      uri: `${Constants.manifest.extra.baseurl}/report/agent/work/embed`,
       ready: false
     };
   }

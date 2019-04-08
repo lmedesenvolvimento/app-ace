@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, BackHandler, StyleSheet, View } from 'react-native';
+import { Alert, BackHandler, StyleSheet, View, StatusBar } from 'react-native';
 import { Container } from 'native-base';
 import { connect, Provider } from 'react-redux';
 
@@ -156,7 +156,7 @@ export default Navigator;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 24,
+    paddingTop: StatusBar.currentHeight,
     backgroundColor: Colors.primaryColor
   },
   navigationBarStyle: {

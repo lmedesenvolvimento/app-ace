@@ -3,12 +3,14 @@
 {
   "expo": {
     "sdkVersion": "30.0.0",
-    "name":"Aedes em Foco Agente",
-    "version": "0.8.7.2",
-    "description":"Aplicativo para auxiliar os agentes de endemias de cedro no controle das arboviroses",
-    "slug":"aedes-agent-react-native",
+    "name": "Aedes em Foco Agente",
+    "version": "0.8.6.2",
+    "description": "Aplicativo para auxiliar os agentes de endemias de cedro no controle das arboviroses",
+    "slug": "aedes-agent-react-native",
     "privacy": "unlisted",
-    "platforms": ["android"],
+    "platforms": [
+      "android"
+    ],
     "orientation": "portrait",
     "icon": "./assets/images/aedes_em_foco.png",
     "primaryColor": "#00796B",
@@ -16,16 +18,16 @@
       "backgroundColor": "#ffffff",
       "image": "./assets/images/aedes_em_foco.png"
     },
-    "android":{
+    "android": {
       "package": "br.ufc.lme.aedesemfoco.agent",
-      "versionCode": 13,
-      "permissions":[
+      "versionCode": 12,
+      "permissions": [
         "ACCESS_FINE_LOCATION"
       ]
     },
-    "extra":{
-      "baseurl":"https://aedes-agent-cedro-production.herokuapp.com"
-    }  
+    "extra": {
+      "baseurl": "https://aedes-agent-cedro-production.herokuapp.com"
+    }
   }
 }
 

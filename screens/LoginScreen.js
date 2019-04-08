@@ -109,8 +109,7 @@ const styles = {
   },
   img: {
     width: 256,
-    height: 256,
-    resizeMode: Image.resizeMode.contain
+    height: 256
   },
   buttonTitle: {
     textTransform: 'uppercase'

@@ -1,4 +1,5 @@
 import Expo from 'expo';
+import Constants from 'expo-constants';
 import React from 'react';
 import { View } from 'react-native';
 
@@ -27,7 +28,7 @@ class AboutScreen extends React.Component {
     super(props);
   }
   render() {
-    let { manifest } = Expo.Constants;
+    let { manifest } = Constants;
     return (
       <Container style={Layout.padding}>
         <View style={Layout.marginVertical8}>

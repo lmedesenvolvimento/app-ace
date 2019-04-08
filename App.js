@@ -1,4 +1,3 @@
-import Expo from 'expo';
 import React from 'react';
 
 // import Sentry from 'sentry-expo';
@@ -19,8 +18,6 @@ import Store from './constants/Store';
 import Navigator from './navigation/Navigator';
 
 import { watchConnection } from './services/Network';
-
-import Modal from './components/Modal';
 
 export default class App extends React.Component {  
   constructor(props){
