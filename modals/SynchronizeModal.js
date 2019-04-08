@@ -111,13 +111,13 @@ onStartSyncSuccess(){
   // Limpando States
   this.props.setFieldGroups(emptyArray)
  
-  // Limpando Storage
+  // Limpando Storage quando for nescessário testar a sincronia
   // Session.Storage.destroy(currentUser.data.email)
  
   // Carregando novo estado da Aplicação
-  this.props.getFieldGroups(() => {
-    this.setState({status: SynchronizeStatus.done})
-  })
+  this.props.getFieldGroups()
+
+  this.setState({ status: SynchronizeStatus.done })
 }
 
 onStartSyncFail(err){

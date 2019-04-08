@@ -29,6 +29,7 @@ export function toggleMappingStatus(fieldGroupId){
 
 export function getFieldGroups(callback, onFail){
   return (dispatch, getState) => {
+
     let state = getState();
 
     if(state.fieldGroups.data.length){
@@ -211,8 +212,8 @@ let gql_get_field_groups = {
             type,
             visits{
               id,
-              type,
               type_location,
+              type,
               check_in
             },
             census {
