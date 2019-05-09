@@ -39,7 +39,7 @@ import { TreatmentType, TreatmentTypeI18n } from '../../../types/treatment';
 
 import TimerMixin from 'react-timer-mixin';
 
-import { omit, find } from 'lodash';
+import { omit, find, clone } from 'lodash';
 
 const initialForm = {
   type: TreatmentType.larvicida_pyriproxyfen,
@@ -385,7 +385,7 @@ export class TreatmentForm extends React.Component {
       return true;
     }
     else {
-      this.state.treatments.push( _.clone(this.state.form) );
+      this.state.treatments.push( clone(this.state.form) );
       this.setState({ data: this.state.treatments, form: initialForm });
     }
   }
