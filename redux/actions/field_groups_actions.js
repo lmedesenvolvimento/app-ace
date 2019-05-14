@@ -224,6 +224,7 @@ let gql_get_field_groups = {
               filter
               plant_pot
               pot
+              pool
               tank
               tina
               water_box

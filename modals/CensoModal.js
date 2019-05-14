@@ -49,6 +49,7 @@ export class CensoModal extends React.Component {
       tina: 0,
       filter: 0,
       pot: 0,
+      pool: 0,
       plant_pot: 0,
       cistern: 0,
       waterhole: 0,
@@ -182,6 +183,19 @@ export class CensoModal extends React.Component {
                     />
                   </Item>
                 </Col>
+                <Col style={styles.item}>
+                  <Item stackedLabel>
+                    <Label>{CensoType.pool}</Label>
+                    <Input
+                      keyboardType='numeric' 
+                      value={this.state.pool.toString()}
+                      onChangeText={pool => this.setState({pool})}
+                      onBlur={this.onBlurNumeralState.bind(this, 'pool')}
+                    />
+                  </Item>
+                </Col>
+              </Grid>
+              <Grid>
                 <Col style={styles.item}>
                   <Item stackedLabel>
                     <Label>{CensoType.water_box}</Label>
