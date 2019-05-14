@@ -10,7 +10,6 @@ import _ from 'lodash';
 
 import { ActionConst, Actions } from 'react-native-router-flux';
 
-
 export function setFieldGroups(data){
   return {
     type: Types.UPDATE_FIELD_GROUPS,

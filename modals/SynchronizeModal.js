@@ -104,16 +104,16 @@ onStartSync(){
   setTimeout(this.startSync.bind(this), 1400);
 }
 
-onStartSyncSuccess(){
-  // let { currentUser } = this.props.state;
+onStartSyncSuccess(response){
+  let { currentUser } = this.props.state;
   let emptyArray = []
     
   // Limpando States
   this.props.setFieldGroups(emptyArray)
  
-  // Limpando Storage quando for nescessário testar a sincronia
-  // Session.Storage.destroy(currentUser.data.email)
- 
+  // Limpando gravações antigas do usuário
+  Session.Storage.destroy(currentUser.data.email)
+
   // Carregando novo estado da Aplicação
   this.props.getFieldGroups()
 
@@ -123,6 +123,8 @@ onStartSyncSuccess(){
 onStartSyncFail(err){
   let { response } = err;
   let { msg, error } = response.data;
+
+  console.log(err);
 
   switch (response.status) {
     case 200:
