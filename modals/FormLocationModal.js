@@ -6,9 +6,6 @@ import Swiper from 'react-native-swiper';
 import Colors from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
-import { getLocationAsync } from '../services/Permissions';
-
-// import { captureException } from '../hooks/CustomError';
 
 import moment from '../services/Timestamp';
 
@@ -182,6 +179,8 @@ export class FormLocationModal extends React.Component {
       let updates = {
         number: data.number,
         complement: data.complement,
+        latitude: data.latitude,
+        longitude: data.longitude,
         visit: clone(this.state.visit)
       };
 
@@ -191,34 +190,40 @@ export class FormLocationModal extends React.Component {
 
       if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
         updates.visit.registred_at = moment(updates.check_in).format();
+        updates.visit.latitude = data.latitude;
+        updates.visit.longitude = data.longitude;
       }
 
       // Save Current Geo Location
-      getLocationAsync().then((data) => {
-        if (data) {
-          let { latitude, longitude } = data.coords;
-          updates.latitude = latitude;
-          updates.longitude = longitude;
-          if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
-            updates.visit.latitude = latitude;
-            updates.visit.longitude = longitude;
-          }
-          this.setState(updates);
+      this.setState(updates);
 
-          callback();
-        } else {
-          this.setState(updates);
-          callback();
-        }
-      }).catch((error) => {
-        // console.log(error);
-        // Notificando Error
-        // simpleToast(error.message);
-        // captureException(error);
-        // Update currente state and dispatch callback
-        this.setState(updates);
-        callback();
-      });
+      callback();
+      
+      // getLocationAsync().then((data) => {
+      //   if (data) {
+      //     let { latitude, longitude } = data.coords;
+      //     updates.latitude = latitude;
+      //     updates.longitude = longitude;
+      //     if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
+      //       updates.visit.latitude = latitude;
+      //       updates.visit.longitude = longitude;
+      //     }
+      //     this.setState(updates);
+
+      //     callback();
+      //   } else {
+      //     this.setState(updates);
+      //     callback();
+      //   }
+      // }).catch((error) => {
+      //   // console.log(error);
+      //   // Notificando Error
+      //   // simpleToast(error.message);
+      //   // captureException(error);
+      //   // Update currente state and dispatch callback
+      //   this.setState(updates);
+      //   callback();
+      // });
     } catch(e) {
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
       // Notificando Error
@@ -282,7 +287,6 @@ export class FormLocationModal extends React.Component {
       // captureException(e);
       // exit visit
       Actions.pop();
-      
     }
   }
   
@@ -299,7 +303,7 @@ export class FormLocationModal extends React.Component {
       this.setState(updates);
   
       let newData = omit(this.state, ['isReady']);
-  
+
       if(address){
         this.props.updateLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, newData);
         if(Platform.OS === 'android'){

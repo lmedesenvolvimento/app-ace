@@ -1,9 +1,12 @@
 import React from 'react';
+
 import { Alert, TouchableOpacity } from 'react-native';
 
 import _ from 'lodash';
 
 import { connect } from 'react-redux';
+
+import { getLocationAsync } from '../../../services/Permissions';
 
 import {
   Header,
@@ -53,6 +56,8 @@ export class LocationForm extends React.Component {
       check_in_translate: moment().format('HH:mm'),
       type: VisitType.normal,
       type_location: VisitTypeLocation.residential,
+      latitude: null,
+      longitude: null,
       isDateTimePickerVisible: false,
       processing: false,
       validation: {
@@ -76,10 +81,26 @@ export class LocationForm extends React.Component {
         if(this.props.payload.visit){
           updates.type = payload.visit.type;
           updates.type_location = payload.visit.type_location || VisitTypeLocation.residential;
+          updates.latitude = payload.visit.latitude;
+          updates.longitude = payload.visit.longitude;
           updates.check_in = isVisitClosedOrRefused(payload.visit.type) ? moment() : moment(payload.visit.check_in);
           updates.check_in_translate = updates.check_in.format('HH:mm');
+        } else { 
+          getLocationAsync().then((data) => {
+            if (data) {
+              let { latitude, longitude } = data.coords;
+              this.setState({ latitude, longitude });
+            }
+          });
         }
         this.setState(updates);
+      } else {
+        getLocationAsync().then((data) => {
+          if (data) {
+            let { latitude, longitude } = data.coords;
+            this.setState({ latitude, longitude });
+          }
+        });
       }
     }
   }
@@ -296,6 +317,8 @@ export class LocationForm extends React.Component {
     if(this.props.payload && this.props.payload.number == this.state.number){
       return false;
     }
+
+    if (this.state.id ) return true
 
     return _.chain(this._getPublicAreas()).find(
       (a) => {
