@@ -48,7 +48,7 @@ import { Grid } from 'react-native-easy-grid';
 
 import TimerMixin from 'react-timer-mixin';
 
-const INITIAL_LIST_SIZE = 5;
+const INITIAL_LIST_SIZE = 15;
 
 class FieldGroupScreen extends React.Component {
   constructor(props) {
@@ -58,9 +58,7 @@ class FieldGroupScreen extends React.Component {
       model: {},
       addresses: [],
       queryVisited: '',
-      queryNotVisited: '',
-      visitedPaginationSize: 5,
-      notVisitedPaginationSize: 5
+      queryNotVisited: ''
     };
   }
 
@@ -134,8 +132,6 @@ class FieldGroupScreen extends React.Component {
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
                 enableEmptySections={true}
-                onEndReachedThreshold={200}
-                onEndReached={this.onEndReachedVisited}
                 onRowOpen={false}
                 leftOpenValue={75}
                 rightOpenValue={-75} />
@@ -217,7 +213,7 @@ class FieldGroupScreen extends React.Component {
     if(visit){
       return(
         <Text note>{`${VisitTypeLocationTranslate[address.visit.type_location]} - ${VisitTranslante[address.visit.type]}`}</Text>
-      ) ;
+      );
     } else {
       return(
         <Text note>{`${VisitTypeLocationTranslate[address.type]}`}</Text>
@@ -262,7 +258,7 @@ class FieldGroupScreen extends React.Component {
             <Col>
               <Text style={{ textAlign: 'right' }} note>{ moment(visit.check_in).format('DD/MM/YYYY') }</Text>
               <Text style={{ lineHeight: 18, textAlign: 'right' }} note>
-                { address.id 
+                {_.last(address.visits) && _.last(address.visits).id
                   ? <MaterialIcons size={14} name="sync" /> 
                   : <MaterialIcons size={14} name="sync-disabled" /> 
                 }
@@ -397,7 +393,6 @@ class FieldGroupScreen extends React.Component {
         return lastVisit && !isVisitClosedOrRefused(lastVisit.type);
       })
         .sortBy(sortByNumber)
-        .take(this.state.visitedPaginationSize)
         .value();
       
 
@@ -418,7 +413,6 @@ class FieldGroupScreen extends React.Component {
         return ( lastVisit && isVisitClosedOrRefused(lastVisit.type) ) || _.isUndefined(lastVisit);
       })
         .sortBy(sortByNumber)
-        .take(this.state.notVisitedPaginationSize)
         .value();
 
     if(!this.state.queryNotVisited.length) return result;

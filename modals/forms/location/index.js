@@ -180,7 +180,7 @@ export class LocationForm extends React.Component {
               </Row>
             </Grid>
 
-            <Grid style={{ marginHorizontal: 12, marginTop: 24 }}>
+            <Grid style={Layout.padding}>
               <Col>
                 <Text note>Tipo de Imóvel</Text>
                 <Picker
@@ -196,9 +196,6 @@ export class LocationForm extends React.Component {
                   <Item label='Outros' value={VisitTypeLocation.others} />
                 </Picker>
               </Col>
-            </Grid>
-
-            <Grid style={Layout.padding}>
               <Col>
                 <Text note>Pendência</Text>
                 <Picker
