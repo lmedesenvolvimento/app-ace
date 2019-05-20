@@ -32,7 +32,12 @@ import ReduxActions from '../redux/actions';
 import Colors from '../constants/Colors';
 import Layout from '../constants/Layout';
 
-import { VisitType, VisitTranslante, VisitTypeLocation, VisitTypeLocationTranslate } from '../types/visit';
+import { 
+  VisitType, 
+  VisitTranslante, 
+  VisitTypeLocation, 
+  VisitTypeLocationTranslate 
+} from '../types/visit';
 
 import { simpleToast } from '../services/Toast';
 
@@ -43,7 +48,7 @@ import { Grid } from 'react-native-easy-grid';
 
 import TimerMixin from 'react-timer-mixin';
 
-const INITIAL_LIST_SIZE = 10;
+const INITIAL_LIST_SIZE = 5;
 
 class FieldGroupScreen extends React.Component {
   constructor(props) {
@@ -53,7 +58,9 @@ class FieldGroupScreen extends React.Component {
       model: {},
       addresses: [],
       queryVisited: '',
-      queryNotVisited: ''
+      queryNotVisited: '',
+      visitedPaginationSize: 5,
+      notVisitedPaginationSize: 5
     };
   }
 
@@ -111,7 +118,7 @@ class FieldGroupScreen extends React.Component {
                 dataSource={ ds.cloneWithRows(this._getAddressNotVisited())}
                 renderRow={this.renderItem.bind(this)}
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
-                renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
+                renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}                
                 enableEmptySections={true}
                 onRowOpen={false}
                 leftOpenValue={75}
@@ -127,6 +134,8 @@ class FieldGroupScreen extends React.Component {
                 renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
                 renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
                 enableEmptySections={true}
+                onEndReachedThreshold={200}
+                onEndReached={this.onEndReachedVisited}
                 onRowOpen={false}
                 leftOpenValue={75}
                 rightOpenValue={-75} />
@@ -353,16 +362,16 @@ class FieldGroupScreen extends React.Component {
 
   // SEARCH BAR
 
-  _onSearchExit(){
-    this.setState({ addresses: this._getPublicArea().addresses});
-    this.searchBar.hide();
-  }
+  // _onSearchExit(){
+  //   this.setState({ addresses: this._getPublicArea().addresses});
+  //   this.searchBar.hide();
+  // }
 
-  _handleSearch(key, q){
-    let updates = {};
-    updates[key] = q;
-    this.setState(updates);
-  }
+  // _handleSearch(key, q){
+  //   let updates = {};
+  //   updates[key] = q;
+  //   this.setState(updates);
+  // }
 
   // Helpers Queries 
 
@@ -382,10 +391,14 @@ class FieldGroupScreen extends React.Component {
 
   _getAddressVisited(){
     let result = 
-      _.chain(this.state.addresses).filter((obj) => {
+      _.chain(this.state.addresses)
+      .filter((obj) => {
         var lastVisit = _.chain(obj.visits).last().value();
         return lastVisit && !isVisitClosedOrRefused(lastVisit.type);
-      }).sortBy(sortByNumber).value();
+      })
+        .sortBy(sortByNumber)
+        .take(this.state.visitedPaginationSize)
+        .value();
       
 
     if(!this.state.queryVisited.length) return result;
@@ -399,10 +412,14 @@ class FieldGroupScreen extends React.Component {
     
   _getAddressNotVisited(){
     let result = 
-      _.chain(this.state.addresses).filter((obj) => {
+      _.chain(this.state.addresses)
+      .filter((obj) => {
         var lastVisit = _.chain(obj.visits).last().value();
         return ( lastVisit && isVisitClosedOrRefused(lastVisit.type) ) || _.isUndefined(lastVisit);
-      }).sortBy(sortByNumber).value();
+      })
+        .sortBy(sortByNumber)
+        .take(this.state.notVisitedPaginationSize)
+        .value();
 
     if(!this.state.queryNotVisited.length) return result;
 
@@ -412,7 +429,12 @@ class FieldGroupScreen extends React.Component {
 
     return result;
   }
+  // onEndReached
+  onEndReachedVisited(){
+    console.log("NEW LIST")
+  }
 }
+
 
 function sortByNumber(o){
   let number = parseInt(o.number);
