@@ -252,7 +252,7 @@ class FieldGroupScreen extends React.Component {
           <Grid style={{alignItems: 'center'}}>
             <Col>
               <Text style={{ textAlign: 'right' }} note>{ moment(visit.check_in).format('DD/MM/YYYY') }</Text>
-              <Text style={{ lineHeight: 14, textAlign: 'right' }} note>
+              <Text style={{ lineHeight: 18, textAlign: 'right' }} note>
                 { address.id 
                   ? <MaterialIcons size={14} name="sync" /> 
                   : <MaterialIcons size={14} name="sync-disabled" /> 
