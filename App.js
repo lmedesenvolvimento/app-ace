@@ -29,6 +29,14 @@ export default class App extends React.Component {
     }    
   }
 
+  componentDidMount(){
+    // Permissions
+    getLocationAsync()
+      .catch(error => {
+      simpleToast(error.message);
+    });
+  }
+
   componentWillMount(){
     this._cacheResourcesAsync();
   }
@@ -54,8 +62,6 @@ export default class App extends React.Component {
 
     // Sentry.config('https://d372673b4ed44d82a8ab68bd308f54cf@sentry.io/1274743').install();
 
-    let user;
-
     await Expo.Font.loadAsync({
       'Arial': require('./assets/fonts/arial.ttf'),
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
@@ -63,11 +69,7 @@ export default class App extends React.Component {
       'Ionicons': require("@expo/vector-icons/fonts/Ionicons.ttf"),
       'MaterialIcons': require("@expo/vector-icons/fonts/MaterialIcons.ttf")
     });
-    
-    // Permissions
-    await getLocationAsync().catch(error => {
-      simpleToast(error.message);
-    });
+        
 
     Session.Credential.get().then((user) => {
       if(user){
@@ -81,7 +83,7 @@ export default class App extends React.Component {
       } else{
         this.setState({isReady: true})
       }
-    });    
+    });        
   }
 }
 
