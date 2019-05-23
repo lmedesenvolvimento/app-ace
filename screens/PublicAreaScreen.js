@@ -202,7 +202,7 @@ class FieldGroupScreen extends React.Component {
     case VisitTypeLocation.strategic_point:
       return 'pin-drop';
     case VisitTypeLocation.others:
-      return 'help-circle';
+      return 'help';
     default:
       return 'business';
     }

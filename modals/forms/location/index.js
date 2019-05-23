@@ -80,7 +80,7 @@ export class LocationForm extends React.Component {
   
         if(this.props.payload.visit){
           updates.type = payload.visit.type;
-          updates.type_location = payload.visit.type_location || VisitTypeLocation.residential;
+          updates.type_location = (payload.visit.type_location || payload.type || VisitTypeLocation.residential);
           updates.latitude = payload.visit.latitude;
           updates.longitude = payload.visit.longitude;
           updates.check_in = isVisitClosedOrRefused(payload.visit.type) ? moment() : moment(payload.visit.check_in);
