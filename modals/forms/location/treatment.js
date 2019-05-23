@@ -70,8 +70,6 @@ export class TreatmentForm extends React.Component {
       if(payload.visit.treatment){
         let { treatment } = payload.visit;        
         treatment.type = TreatmentType.larvicida_pyriproxyfen;
-
-        this.state.treatments.push(treatment);
         this.setState({ treatments: this.state.treatments });
       } 
       else if (payload.visit.treatments && payload.visit.treatments.length){
@@ -385,7 +383,7 @@ export class TreatmentForm extends React.Component {
       return true;
     }
     else {
-      this.state.treatments.push( clone(this.state.form) );
+      this.state.treatments.unshift( clone(this.state.form) );
       this.setState({ data: this.state.treatments, form: initialForm });
     }
   }
