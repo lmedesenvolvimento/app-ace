@@ -2,15 +2,16 @@ import React from 'react';
 import { View } from 'react-native';
 
 import {
-  Header,
   Container,
   Content,
   Text,
-  Title,
   Left,
   Body,
   List,
   ListItem,
+  Tabs,
+  Tab,
+  TabHeading,
   Icon
 } from 'native-base';
 
@@ -24,8 +25,9 @@ import ReduxActions from '../redux/actions';
 
 import Theme from '../constants/Theme';
 import Layout from '../constants/Layout';
+import { MappingStatus } from '../types/mapping';
 
-import { omit} from 'lodash';
+import { omit, filter } from 'lodash';
 
 import TimerMixin from 'react-timer-mixin';
 
@@ -41,17 +43,24 @@ class HomeScreen extends React.Component {
   render() {
     let { fieldGroups } = this.props.state;
     let items = fieldGroups.data;
+
+    const finished = filter(items, { status: MappingStatus.finished })
+    const not_finished = filter(items, { status: MappingStatus.not_finished })
     
     return (
       <Container>
-        <Header>
-          <Left>
-            <Title>Quadras</Title>
-          </Left>
-        </Header>
-        <Content padder>
-          <List dataArray={items} renderRow={this.renderItem.bind(this)} />
-        </Content>
+        <Tabs locked={true}>
+          <Tab heading={<TabHeading><Text>NÂO FINALIZADOS</Text></TabHeading>}>
+            <Content>
+              <List dataArray={not_finished} renderRow={this.renderItem.bind(this)} />
+            </Content>
+          </Tab>
+          <Tab heading={<TabHeading><Text>FINALIZADOS</Text></TabHeading>}>
+            <Content>
+              <List dataArray={finished} renderRow={this.renderItem.bind(this)} />
+            </Content>
+          </Tab>
+        </Tabs>          
       </Container>
     );    
   }
