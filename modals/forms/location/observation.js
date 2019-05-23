@@ -88,13 +88,19 @@ export class ObservationForm extends React.Component {
   }
 
   onBack(){
-    let { visit } = this.props;
-    
-    if(this.state.processing) return;
-    
-    isVisitClosedOrRefused(visit.type)
-      ? this.props.scrollBy(-4)
-      : this.props.scrollBy(-1);
+    if(this.state.processing) return;    
+    if(this.props.payload.backTo){
+      switch (this.props.payload.backTo) {
+        case 'index':          
+          this.props.scrollBy(-4);
+          break;
+        case 'inspections':
+          this.props.scrollBy(-3);
+          break;
+      }
+    } else {
+      this.props.scrollBy(-1);
+    }
   }
 
   onSubmit(){

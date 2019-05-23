@@ -27,8 +27,7 @@ import { StepBars, Step } from './StepBars';
 
 import TimerMixin from 'react-timer-mixin';
 
-export class InspectionForm extends React.Component {
-  
+export class InspectionForm extends React.Component {  
   constructor(props){
     super(props);
     this.state = {
@@ -186,6 +185,10 @@ export class InspectionForm extends React.Component {
     );
   }
 
+  toObservation() {
+    return this.props.scrollBy(3);
+  }
+
   onSubmit(){
     if(this.state.processing) return;
 
@@ -199,13 +202,23 @@ export class InspectionForm extends React.Component {
     // Pass form value parent component
     let state = _.omit(this.state, omitedAtributes);
     
-    // Otimize swipper transition
-    this.props.onSubmit(state, () => {
-      this.setState({ processing: false });
-      // Next step
-      this.props.scrollBy(1);
-    });
-    
+    if (!state.total_items && !state.removed) {
+      state.backTo = 'inspections';
+      
+      // Otimize swipper transition
+      this.props.onSubmit(state, () => {
+        this.setState({ processing: false });
+        // go to observation
+        this.toObservation();
+      });
+    } else {
+      // Otimize swipper transition
+      this.props.onSubmit(state, () => {
+        this.setState({ processing: false });
+        // Next step
+        this.props.scrollBy(1);
+      });
+    }
   }
   
   onCancel(){

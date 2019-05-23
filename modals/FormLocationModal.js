@@ -36,6 +36,7 @@ export class FormLocationModal extends React.Component {
     this.state = {
       isReady: false,
       isTransitionEnd: false,
+      backTo: null,
       number: null,
       complement: null,
       visit: {
@@ -181,6 +182,7 @@ export class FormLocationModal extends React.Component {
         complement: data.complement,
         latitude: data.latitude,
         longitude: data.longitude,
+        backTo: data.backTo,
         visit: clone(this.state.visit)
       };
 
@@ -198,37 +200,8 @@ export class FormLocationModal extends React.Component {
       this.setState(updates);
 
       callback();
-      
-      // getLocationAsync().then((data) => {
-      //   if (data) {
-      //     let { latitude, longitude } = data.coords;
-      //     updates.latitude = latitude;
-      //     updates.longitude = longitude;
-      //     if (!this.props.address || !this.props.address.visit.hasOwnProperty('registred_at')) {
-      //       updates.visit.latitude = latitude;
-      //       updates.visit.longitude = longitude;
-      //     }
-      //     this.setState(updates);
-
-      //     callback();
-      //   } else {
-      //     this.setState(updates);
-      //     callback();
-      //   }
-      // }).catch((error) => {
-      //   // console.log(error);
-      //   // Notificando Error
-      //   // simpleToast(error.message);
-      //   // captureException(error);
-      //   // Update currente state and dispatch callback
-      //   this.setState(updates);
-      //   callback();
-      // });
     } catch(e) {
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
-      // Notificando Error
-      // captureException(e);
-      // exit visit
       Actions.pop();
     }    
   }
@@ -236,6 +209,7 @@ export class FormLocationModal extends React.Component {
   onInspectionFormSubmit (data, callback) {
     try{
       let updates = {
+        backTo: data.backTo,
         visit: this.state.visit
       };
       

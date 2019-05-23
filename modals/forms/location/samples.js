@@ -243,7 +243,7 @@ export class SamplesForm extends React.Component {
       );
       return true;
     } else{
-      this.state.data.push( _.clone(this.state.newItem));
+      this.state.data.unshift( _.clone(this.state.newItem));
       this.setState({ data: this.state.data, newItem: initialItem });
     }
   }

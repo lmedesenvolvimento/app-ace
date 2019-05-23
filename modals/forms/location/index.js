@@ -79,7 +79,7 @@ export class LocationForm extends React.Component {
         updates.complement = payload.complement;
   
         if(this.props.payload.visit){
-          updates.type = payload.visit.type;
+          updates.type = payload.visit.type || VisitType.normal;
           updates.type_location = (payload.visit.type_location || payload.type || VisitTypeLocation.residential);
           updates.latitude = payload.visit.latitude;
           updates.longitude = payload.visit.longitude;
@@ -251,9 +251,14 @@ export class LocationForm extends React.Component {
         Alert.alert('Falha na Validação', 'Por favor cheque se todos os campos estão preenchidos.');
       }
       this.setState({ processing: false });
-    } else {    
+    } else {
       let state = _.clone(this.state);
       
+      // Set if skip steps form
+      isVisitClosedOrRefused(state.type)
+        ? state.backTo = 'index'
+        : false;
+
       // Force instance momment
       state.check_in = moment(state.check_in);
       
