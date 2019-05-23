@@ -18,6 +18,8 @@ import { Col, Row, Grid } from 'react-native-easy-grid';
 import Layout from '../../../constants/Layout';
 import Store from '../../../constants/Store';
 
+import { simpleToast } from '../../../services/Toast';
+
 import { VisitType } from '../../../types/visit';
 import UITypes from '../../../redux/types/ui_types';
 
@@ -106,6 +108,11 @@ export class ObservationForm extends React.Component {
   onSubmit(){
     if(this.state.processing) return;
 
+    if (!isVisitClosedOrRefused(this.props.payload.visit.type) && !this.props.payload.visit.inspect.total_item === undefined) {
+      simpleToast("Error desconhecido ao tentar registrar visita, tente novamente");
+      return false;
+    }
+
     Store.instance.dispatch({ type: UITypes.OPEN_LOADING });
     
     this.setState({ processing: true });
@@ -116,7 +123,7 @@ export class ObservationForm extends React.Component {
   _onSubmit(){
     const omitedAtributes = ['validation', 'busy'];    
     // Pass form value parent component
-    let state = omit(this.state, omitedAtributes);
+    let state = omit(this.state, omitedAtributes);    
     
     this.props.onSubmit(state, () => {
       this.setState({ processing: false });

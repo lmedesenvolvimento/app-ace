@@ -50,7 +50,7 @@ class HomeScreen extends React.Component {
     return (
       <Container>
         <Tabs locked={true}>
-          <Tab heading={<TabHeading><Text>NÂO FINALIZADOS</Text></TabHeading>}>
+          <Tab heading={<TabHeading><Text>ABERTOS</Text></TabHeading>}>
             <Content>
               <List dataArray={not_finished} renderRow={this.renderItem.bind(this)} />
             </Content>
