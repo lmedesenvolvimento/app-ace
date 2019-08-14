@@ -167,14 +167,14 @@ function createUniqueIds(mapping){
   mapping.$id = genSecureHex();
   
   field_group.mapping_id = mapping.id;
-  field_group.public_areas.map(createUniqueIdsForPublicAreas.bind(this));
+  field_group.field_group_public_areas.map(createUniqueIdsForFieldGroupPublicAreas.bind(this));
   return mapping;
 }
 
-function createUniqueIdsForPublicAreas(public_area){
-  public_area.$id = genSecureHex();
-  public_area.addresses.map(createUniqueIdsForAddresses);
-  return public_area;
+function createUniqueIdsForFieldGroupPublicAreas(fpa){
+  fpa.public_area.$id = genSecureHex();
+  fpa.public_area.addresses.map(createUniqueIdsForAddresses);
+  return fpa;
 }
 
 function createUniqueIdsForAddresses(address){
@@ -201,7 +201,7 @@ let gql_get_field_groups = {
         },
         field_group_public_areas {
           id,
-          public_area 
+          public_area
           {
             id,
             address,
@@ -236,40 +236,7 @@ let gql_get_field_groups = {
             }
           }
         }
-        public_areas {
-          id,
-          type,
-          address,
-          addresses
-          {
-            id,
-            number,
-            complement,
-            type,
-            visits{
-              id,
-              type_location,
-              type,
-              check_in
-            },
-            census {
-              id
-              inhabitants
-              cistern
-              drum
-              filter
-              plant_pot
-              pot
-              pool
-              tank
-              tina
-              water_box
-              water_box_status
-              waterhole
-            }
-          }
-        }
-      }
+      }        
     }
   }`
 };
