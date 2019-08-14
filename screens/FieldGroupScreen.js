@@ -120,8 +120,8 @@ class PublicAreaScreen extends React.Component {
           <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>{item.address}</Text>
-          <Text note>{ PublicAreaTypesTranslate[item.type] }</Text>
+          <Text>{item.public_area.address}</Text>
+          <Text note>{PublicAreaTypesTranslate[item.public_area.type] }</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />
@@ -132,7 +132,7 @@ class PublicAreaScreen extends React.Component {
 
   _handleItemPress(item){
     TimerMixin.requestAnimationFrame(() => {
-      Actions.publicarea({ publicarea: _.omit(item, ['addresses']), title: item.address, fieldgroup: this.props.fieldgroup });
+      Actions.publicarea({ publicarea: _.omit(item, ['addresses']), title: item.public_area.address, fieldgroup: this.props.fieldgroup });
     });
   }
 
@@ -156,7 +156,10 @@ class PublicAreaScreen extends React.Component {
     let { fieldGroups, fieldgroup } = this.props;
     if(fieldgroup){
       let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
-      return _.orderBy(result.field_group.public_areas, ['address']);
+      return _.orderBy(
+        result.field_group.field_group_public_areas, 
+        fpa => fpa.public_area.address
+      );
     } else{
       return [];
     }

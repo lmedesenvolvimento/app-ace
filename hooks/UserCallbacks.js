@@ -9,7 +9,6 @@ import { applyApolloMiddleware } from '../services/ApolloClient';
 import * as UserActions from '../redux/actions/user_actions';
 import * as AuthActions from '../redux/actions/auth_actions';
 
-
 export default {
   signInWithEmailAndPasswordSuccess: (credential) => {
     let { user } = credential;
@@ -25,6 +24,11 @@ export default {
   },
   signInWithEmailAndPasswordFail: (error) => {
     Store.instance.dispatch(AuthActions.toDone());
-    simpleToast(error.response.data.error);
+    if (error){
+      if (error.response) {
+        return simpleToast(error.response.data.error);
+      }
+      return simpleToast('Error na conexão, por favor tente novamente!')
+    }
   }
 };

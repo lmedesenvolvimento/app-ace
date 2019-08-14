@@ -199,6 +199,43 @@ let gql_get_field_groups = {
         neighborhood {
           name
         },
+        field_group_public_areas {
+          id,
+          public_area 
+          {
+            id,
+            address,
+            type
+          },
+          addresses
+          {
+            id,
+            number,
+            complement,
+            type,
+            visits{
+              id,
+              type_location,
+              type,
+              check_in
+            },
+            census {
+              id
+              inhabitants
+              cistern
+              drum
+              filter
+              plant_pot
+              pot
+              pool
+              tank
+              tina
+              water_box
+              water_box_status
+              waterhole
+            }
+          }
+        }
         public_areas {
           id,
           type,
