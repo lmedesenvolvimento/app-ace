@@ -2,7 +2,7 @@ import Constants from 'expo-constants';
 import { createApolloFetch } from 'apollo-fetch';
 
 const baseurl = Constants.manifest.extra.baseurl;
-const uri = `${baseurl}graphql`;
+const uri = `${baseurl}/graphql`;
 
 export function applyApolloMiddleware(credential){
   client.use(({ options }, next) => {

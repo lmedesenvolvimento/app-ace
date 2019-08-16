@@ -76,11 +76,15 @@ function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
       commit(getState);
       // sucess callback
       return callback ? callback(field_groups) : false;
-    }).catch(({ response }) => {
+    }).catch((error) => {
+      let { response } = error;
       let msg = null;
 
       if(!response) {
         simpleToast('Error desconhecido. Por favor informe ao administrador');
+        dispatch({ type: UITypes.CLOSE_LOADING });
+        console.log(error, response)
+        return;
       }
 
       switch (response.status) {
@@ -166,14 +170,16 @@ function createUniqueIds(mapping){
 
   mapping.$id = genSecureHex();
   
+  console.log('mapping')
+
   field_group.mapping_id = mapping.id;
-  field_group.field_group_public_areas.map(createUniqueIdsForFieldGroupPublicAreas.bind(this));
+  field_group.field_group_public_areas.map(createUniqueIdsForFieldGroupPublicAreas);
   return mapping;
 }
 
 function createUniqueIdsForFieldGroupPublicAreas(fpa){
-  fpa.public_area.$id = genSecureHex();
-  fpa.public_area.addresses.map(createUniqueIdsForAddresses);
+  fpa.$id = genSecureHex();
+  fpa.addresses.map(createUniqueIdsForAddresses);
   return fpa;
 }
 
