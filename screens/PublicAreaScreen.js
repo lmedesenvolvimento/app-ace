@@ -375,8 +375,6 @@ class FieldGroupScreen extends React.Component {
   _getPublicArea(){
     let { fieldGroups, fieldgroup, publicarea } = this.props;
 
-    console.log(publicarea.$id, fieldgroup.$id)
-
     let result = _.chain(fieldGroups.data)
       .find(['$id', fieldgroup.$id])
       .get('field_group.field_group_public_areas')

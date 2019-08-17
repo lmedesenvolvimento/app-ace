@@ -83,7 +83,6 @@ function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
       if(!response) {
         simpleToast('Error desconhecido. Por favor informe ao administrador');
         dispatch({ type: UITypes.CLOSE_LOADING });
-        console.log(error, response)
         return;
       }
 
@@ -169,8 +168,6 @@ function createUniqueIds(mapping){
   let { field_group } = mapping;
 
   mapping.$id = genSecureHex();
-  
-  console.log('mapping')
 
   field_group.mapping_id = mapping.id;
   field_group.field_group_public_areas.map(createUniqueIdsForFieldGroupPublicAreas);

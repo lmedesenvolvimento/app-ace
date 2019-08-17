@@ -204,16 +204,16 @@ export class LocationForm extends React.Component {
                   supportedOrientations={['portrait','landscape']}
                   renderHeader={this._renderPickerHeader.bind(this)}
                   mode='dropdown'>
-                  <Item label='Normal' value={VisitType.normal} />
-                  <Item label='Recuperada' value={VisitType.recovered} />
-                  <Item label='Fechada' value={VisitType.closed} />
-                  <Item label='Recusada' value={VisitType.refused} />
+                  <Picker.Item label='Normal' value={VisitType.normal} />
+                  <Picker.Item label='Recuperada' value={VisitType.recovered} />
+                  <Picker.Item label='Fechada' value={VisitType.closed} />
+                  <Picker.Item label='Recusada' value={VisitType.refused} />
                 </Picker>
               </Col>
             </Grid>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:'white'}} padder>
+        <Footer style={{backgroundColor: '#FFFFFF'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>

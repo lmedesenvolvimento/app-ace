@@ -154,7 +154,7 @@ export class TreatmentForm extends React.Component {
                   </Item>
                 </Col>
                 <Col>
-                  <Button onPress={this.openModal.bind(this)} primary transparent>
+                  <Button onPress={this.openModal.bind(this)} transparent>
                     <Text>Calc. Quantidade</Text>
                   </Button>
                 </Col>
@@ -194,7 +194,7 @@ export class TreatmentForm extends React.Component {
               </Row>
             </Grid>            
 
-            <Modal isVisible={this.state.modalIsVisible} onConfirm={this.onConfirmModal.bind(this)} onCancel={this.onCancelModal.bind(this)} title='Calcular quantidade'>
+            {/* <Modal isVisible={this.state.modalIsVisible} onConfirm={this.onConfirmModal.bind(this)} onCancel={this.onCancelModal.bind(this)} title='Calcular quantidade'>
               <Content padder>
                 <Form>
                   <Item floatingLabel>
@@ -225,10 +225,10 @@ export class TreatmentForm extends React.Component {
                   </Grid>
                 </Form>
               </Content>
-            </Modal>                                
+            </Modal> */}
           </Form>
         </Content>
-        <Footer style={{backgroundColor:'white'}} padder>
+        <Footer style={{backgroundColor: '#FFFFFF'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>

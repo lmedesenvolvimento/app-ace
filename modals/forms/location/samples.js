@@ -99,13 +99,13 @@ export class SamplesForm extends React.Component {
                       supportedOrientations={['portrait', 'landscape']}
                       iosHeader='Selecione um'
                       mode='dropdown'>
-                      <Item label='A1' value={SampleType.a1} />
-                      <Item label='A2' value={SampleType.a2} />
-                      <Item label='B' value={SampleType.b} />
-                      <Item label='C' value={SampleType.c} />
-                      <Item label='D1' value={SampleType.d1} />
-                      <Item label='D2' value={SampleType.d2} />
-                      <Item label='E' value={SampleType.e} />
+                      <Picker.Item label='A1' value={SampleType.a1} />
+                      <Picker.Item label='A2' value={SampleType.a2} />
+                      <Picker.Item label='B' value={SampleType.b} />
+                      <Picker.Item label='C' value={SampleType.c} />
+                      <Picker.Item label='D1' value={SampleType.d1} />
+                      <Picker.Item label='D2' value={SampleType.d2} />
+                      <Picker.Item label='E' value={SampleType.e} />
                     </Picker>
                   </Col>
                 </Row>
@@ -142,16 +142,28 @@ export class SamplesForm extends React.Component {
             </Form>
           </Content>
         </KeyboardAwareScrollView>
-        <Footer style={{backgroundColor:'white'}} padder>
+        <Footer style={{backgroundColor: '#FFFFFF'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>
-                <Button full disabled={this.state.busy} transparent onPress={this.onCancel.bind(this)}>
+                <Button 
+                  full 
+                  transparent 
+                  disabled={this.state.busy} 
+                  onPress={this.onCancel.bind(this)}
+                  style={{ backgroundColor: 'transparent', elevation: 0 }}
+                  >
                   <Text>Voltar</Text>
                 </Button>
               </Col>
               <Col style={styles.colLeftBorder}>
-                <Button full disabled={this.state.busy} transparent onPress={this.onSubmit.bind(this)}>
+                <Button 
+                  full 
+                  transparent 
+                  disabled={this.state.busy} 
+                  onPress={this.onSubmit.bind(this)}
+                  style={{ backgroundColor: 'transparent', elevation: 0 }}
+                >
                   <Text>Avançar</Text>
                 </Button>
               </Col>

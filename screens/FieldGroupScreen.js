@@ -152,12 +152,12 @@ class PublicAreaScreen extends React.Component {
     this.setState({public_areas:  result});
   }
 
-  _getPublicAreas(){    
+  _getPublicAreas(){
     let { fieldGroups, fieldgroup } = this.props;
     if(fieldgroup){
       let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
       return _.orderBy(
-        result.field_group.field_group_public_areas, 
+        result.field_group.field_group_public_areas,
         fpa => fpa.public_area.address
       );
     } else{

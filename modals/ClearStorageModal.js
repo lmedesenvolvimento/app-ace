@@ -91,7 +91,7 @@ export class ClearStorageModal extends React.Component {
                 </Col>
               </Row>
             </Grid>
-            <Footer style={{backgroundColor:'white'}} padder>
+            <Footer style={{backgroundColor: '#FFFFFF'}} padder>
               <Grid>
                 <Row>
                   <Col>

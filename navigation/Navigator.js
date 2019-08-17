@@ -166,6 +166,6 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   sceneStyle: {
-    backgroundColor: 'white'
+    backgroundColor: '#FFFFFF'
   }
 });

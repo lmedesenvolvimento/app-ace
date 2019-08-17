@@ -44,10 +44,11 @@ class EditStreetModal extends NewStreetModal {
   }
 
   componentDidMount(){
-    this.setState({ neighborhood: this.props.fieldgroup.neighborhood, ...this.props.publicarea });
+    this.setState({ neighborhood: this.props.fieldgroup.neighborhood, ...this.props.publicarea.public_area });
   }  
 
   render() {
+    const { state } = this;
     return (
       <Container>
         <Content padder>
@@ -55,13 +56,13 @@ class EditStreetModal extends NewStreetModal {
           <Form>
             <View style={Layout.padding}>
               <Label>Bairro</Label>
-              <Input placeholder='Nome do Bairro' value={this.state.neighborhood.name} disabled={true}/>
+              <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
             </View>
 
             <View style={Layout.padding}>
               <Text note>Tipo de Imóvel</Text>
               <Picker
-                selectedValue={this.state.type}
+                selectedValue={state.type}
                 onValueChange={(type) => this.setState({type}) }
                 supportedOrientations={['portrait','landscape']}
                 mode='dropdown'>
@@ -73,11 +74,11 @@ class EditStreetModal extends NewStreetModal {
 
             <Item stackedLabel>
               <Label>Logradouro</Label>
-              <Input placeholder='Nome do Logradouro' value={this.state.address} onChangeText={(address)=> this.setState({address})} />
+              <Input placeholder='Nome do Logradouro' value={state.address} onChangeText={(address)=> this.setState({address})} />
             </Item>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:'white'}} padder>
+        <Footer style={{backgroundColor: '#FFFFFF'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col style={styles.col}>
@@ -86,7 +87,7 @@ class EditStreetModal extends NewStreetModal {
                 </Button>
               </Col>
               <Col style={[styles.col, styles.colLeftBorder]}>
-                <Button full transparent onPress={ () => this.okModal() }>
+                <Button full transparent onPress={this.okModal}>
                   <Text>Atualizar</Text>
                 </Button>
               </Col>
@@ -97,20 +98,34 @@ class EditStreetModal extends NewStreetModal {
     );
   }
 
-  dismissModalBeforeModal() {
-    Actions.pop({
-      publicarea: this.state
-    });
+  dismissModalBeforeModal = () => {
+    const { 
+      address,
+      type
+     } = this.state;
+
+    const publicarea = {
+       public_area: {
+         address,
+         type
+       }
+     }
+
+    Actions.pop({ publicarea });
 
     TimerMixin.setTimeout(() => {
-      Actions.refresh({
-        publicarea: this.state
-      });
+      Actions.refresh({ publicarea });
     });
   }
 
-  okModal() {
-    if (!this.state.address) {
+  okModal = () => {
+    const { props } = this;
+    const {
+      address,
+      type
+    } = this.state;
+
+    if (!address) {
       return simpleToast('Logradouro vazio.');
     }
 
@@ -118,7 +133,14 @@ class EditStreetModal extends NewStreetModal {
       return Alert.alert('Falha no registro do Logradouro', 'O logradouro já foi cadastrada.');
     }
 
-    this.props.editPublicArea(this.props.fieldgroup.$id, this.props.publicarea, this.state);
+    const payload = {
+      public_area: {
+        address,
+        type
+      }
+    }
+
+    props.editPublicArea(props.fieldgroup.$id, props.publicarea, payload);
 
     this.dismissModalBeforeModal();
   }
@@ -148,11 +170,11 @@ const styles = {
   }
 };
 
-function mapStateToProps(state) {
+mapStateToProps = ({ currentUser, fieldGroups }) => {
   return {
     state: {
-      currentUser: state.currentUser,
-      fieldGroups: state.fieldGroups
+      currentUser,
+      fieldGroups
     }
   };
 }

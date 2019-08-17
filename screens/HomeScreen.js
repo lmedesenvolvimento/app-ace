@@ -93,11 +93,11 @@ class HomeScreen extends React.Component {
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ currentUser, fieldGroups }) {
   return {
     state: {
-      currentUser: state.currentUser,
-      fieldGroups: state.fieldGroups
+      currentUser,
+      fieldGroups
     }
   };
 }

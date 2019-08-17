@@ -165,7 +165,7 @@ export class InspectionForm extends React.Component {
             </Form>
           </Content>
         </KeyboardAwareScrollView>
-        <Footer style={{backgroundColor:'white'}} padder>
+        <Footer style={{backgroundColor: '#FFFFFF'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col>

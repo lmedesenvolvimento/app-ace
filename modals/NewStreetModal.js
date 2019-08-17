@@ -32,7 +32,6 @@ import { PublicAreaTypes } from '../types/publicarea';
 import _ from 'lodash';
 
 export class NewStreetModal extends React.Component {
-  
   constructor(props) {
     super(props);
     this.state = {
@@ -48,6 +47,7 @@ export class NewStreetModal extends React.Component {
   }
   
   render() {
+    const { state } = this;
     return (
       <Container>
         <Content padder>
@@ -55,14 +55,14 @@ export class NewStreetModal extends React.Component {
           <Form>
             <View style={Layout.padding}>
               <Label>Bairro</Label>
-              <Input placeholder='Nome do Bairro' value={this.state.neighborhood.name} disabled={true}/>
+              <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
             </View>
             
 
             <View style={Layout.padding}>
               <Text note>Tipo de Imóvel</Text>
               <Picker
-                selectedValue={this.state.type}
+                selectedValue={state.type}
                 onValueChange={(type) => this.setState({type}) }
                 supportedOrientations={['portrait','landscape']}
                 mode='dropdown'>
@@ -74,11 +74,11 @@ export class NewStreetModal extends React.Component {
 
             <Item stackedLabel>
               <Label>Logradouro</Label>
-              <Input placeholder='Nome do Logradouro' value={this.state.address} onChangeText={(address)=> this.setState({address})} />
+              <Input placeholder='Nome do Logradouro' value={state.address} onChangeText={(address)=> this.setState({ address })} />
             </Item>
           </Form>
         </Content>
-        <Footer style={{backgroundColor:'white'}} padder>
+        <Footer style={{backgroundColor: '#FFFFFF'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col style={styles.col}>
@@ -87,7 +87,7 @@ export class NewStreetModal extends React.Component {
                 </Button>
               </Col>
               <Col style={[styles.col, styles.colLeftBorder]}>
-                <Button full transparent onPress={ () => this.okModal() }>
+                <Button full transparent onPress={this.okModal}>
                   <Text>Novo Logradouro</Text>
                 </Button>
               </Col>
@@ -98,8 +98,16 @@ export class NewStreetModal extends React.Component {
     );
   }
 
-  okModal() {
-    if (!this.state.address) {
+  okModal = () => {
+    const { props } = this;
+    const {
+      address,
+      type,
+      neighborhood,
+      addresses
+    } = this.state;
+
+    if (!address) {
       return simpleToast('Logradouro vazio.');
     }
 
@@ -107,27 +115,40 @@ export class NewStreetModal extends React.Component {
       return Alert.alert('Falha no registro do Logradouro', 'O logradouro já foi cadastrada.');
     }
 
-    this.props.addPublicArea(this.props.fieldgroup.$id, this.state);
+    const payload = {
+      public_area: {
+        address,
+        type
+      },
+      neighborhood,
+      addresses
+    }
+
+    props.addPublicArea(this.props.fieldgroup.$id, payload);
     
     this.dismissModal();
   }
 
-  dismissModal() {
+  dismissModal = () => {
     Actions.pop();
   }
 
-  isHasAddressInFieldgroup() {
-    if (this.props.publicarea && this.props.publicarea.address == this.state.address){
+  isHasAddressInFieldgroup = () => {
+    const { props, state } = this;
+    const { publicarea, fieldgroup } = props;
+
+    if (publicarea && publicarea.public_area.address == state.address){
       return false;
     }
 
-    return _.chain(this.props.fieldgroup.public_areas).find(
-      (pua) => {
-        return (pua.address == this.state.address) && ( pua.type == this.state.type );
-      }
-    ).value() ?
-      true :
-      false;
+    const { field_group_public_areas } = fieldgroup;
+
+    const result = 
+      _.chain(field_group_public_areas)
+        .find(fpa => (fpa.public_area.address == state.address) && (fpa.public_area.type == state.type ))
+        .value() 
+
+    return result ? true : false
   }
 }
 
@@ -156,17 +177,18 @@ const styles = {
 };
 
 
-function mapStateToProps(state) {
+mapStateToProps = ({ currentUser, fieldGroups }) => {
   return {
     state: {
-      currentUser: state.currentUser,
-      fieldGroups: state.fieldGroups
+      currentUser,
+      fieldGroups
     }
   };
 }
 
-function mapDispatchToProps(dispatch){
+mapDispatchToProps = (dispatch) => {
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewStreetModal);
+

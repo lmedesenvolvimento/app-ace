@@ -294,6 +294,7 @@ export class FormLocationModal extends React.Component {
       
       TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
     } catch(e) {
+      console.log(e);
       Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });
 
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');

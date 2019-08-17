@@ -65,6 +65,6 @@ export default {
     height: '100%'
   },
   modalBody: {
-    backgroundColor: 'white'
+    backgroundColor: '#FFFFFF'
   }
 }
