@@ -45,10 +45,10 @@ import { VisitType, VisitTypeLocation } from '../../../types/visit';
 import TimerMixin from 'react-timer-mixin';
 
 export class LocationForm extends React.Component {
-  
   constructor(props){
     super(props);
-    
+
+    this.inputs = {};
     this.state = {
       number: '',
       complement: null,
