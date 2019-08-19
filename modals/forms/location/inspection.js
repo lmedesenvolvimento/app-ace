@@ -79,7 +79,9 @@ export class InspectionForm extends React.Component {
                       keyboardType='numeric' 
                       value={this.state.a1.toString()} 
                       onChangeText={(a1) => this.setState({a1})}
-                      onBlur={this.onBlurNumeralState.bind(this,'a1', 'a2')} />
+                      onBlur={this.onBlurNumeralState.bind(this,'a1')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'a1', 'a2')}
+                    />
                   </Item>
                 </Col>
                 <Col style={{ width: 64 }}>
@@ -89,7 +91,9 @@ export class InspectionForm extends React.Component {
                       getRef={ref => this.inputs.a2 = ref} 
                       keyboardType='numeric' value={this.state.a2.toString()} 
                       onChangeText={(a2) => this.setState({a2})}
-                      onBlur={this.onBlurNumeralState.bind(this,'a2', 'b')} />
+                      onBlur={this.onBlurNumeralState.bind(this,'a2')} 
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'a2', 'b')}
+                    />
                   </Item>
                 </Col>
                 <Col style={{ width: 64 }}>
@@ -100,7 +104,9 @@ export class InspectionForm extends React.Component {
                       keyboardType='numeric'
                       value={this.state.b.toString()}
                       onChangeText={(b) => this.setState({b})}              
-                      onBlur={this.onBlurNumeralState.bind(this,'b', 'c')} />
+                      onBlur={this.onBlurNumeralState.bind(this,'b')} 
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'b', 'c')}
+                    />
                   </Item>
                 </Col>
                 <Col style={{ width: 64 }}>
@@ -111,7 +117,9 @@ export class InspectionForm extends React.Component {
                       keyboardType='numeric'
                       value={this.state.c.toString()}
                       onChangeText={(c) => this.setState({c})}              
-                      onBlur={this.onBlurNumeralState.bind(this,'c', 'd1')} />                      
+                      onBlur={this.onBlurNumeralState.bind(this,'c')} 
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'c', 'd1')}
+                    />                      
                   </Item>
                 </Col>
               </Grid>
@@ -124,7 +132,9 @@ export class InspectionForm extends React.Component {
                       keyboardType='numeric'
                       value={this.state.d1.toString()}
                       onChangeText={(d1) => this.setState({d1})}              
-                      onBlur={this.onBlurNumeralState.bind(this,'d1', 'd2')} />                      
+                      onBlur={this.onBlurNumeralState.bind(this,'d1')} 
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'd1', 'd2')}
+                    />                      
                   </Item>
                 </Col>
                 <Col style={{ width: 64 }}>
@@ -135,7 +145,9 @@ export class InspectionForm extends React.Component {
                       keyboardType='numeric'
                       value={this.state.d2.toString()}
                       onChangeText={(d2) => this.setState({d2})}              
-                      onBlur={this.onBlurNumeralState.bind(this,'d2', 'e')} />
+                      onBlur={this.onBlurNumeralState.bind(this,'d2')} 
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'd2', 'e')}
+                    />
                   </Item>
                 </Col>
                 <Col style={{ width: 64 }}>
@@ -146,7 +158,8 @@ export class InspectionForm extends React.Component {
                       keyboardType='numeric'
                       value={this.state.e.toString()}
                       onChangeText={(e) => this.setState({e})}              
-                      onBlur={this.onBlurNumeralState.bind(this,'e')} />
+                      onBlur={this.onBlurNumeralState.bind(this,'e')} 
+                    />
                   </Item>
                 </Col>
               </Grid>

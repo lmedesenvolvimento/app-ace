@@ -97,7 +97,8 @@ class FieldGroupScreen extends React.Component {
           onPress={() => {
             Actions.locationModal({ 
               publicarea: this.props.publicarea, 
-              fieldgroup: this.props.fieldgroup
+              fieldgroup: this.props.fieldgroup,
+              onSubmit: this._onSubmitLocationModal
             });
           }}>
           <Icon android='md-add' ios='ios-add' size={24} />
