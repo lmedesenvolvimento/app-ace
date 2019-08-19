@@ -165,12 +165,12 @@ startSync = () => {
 }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ network, currentUser, fieldGroups }) {
   return {
     state: {
-      network: state.network,
-      currentUser: state.currentUser,
-      fieldGroups: state.fieldGroups
+      network,
+      currentUser,
+      fieldGroups
     }
   }
 }

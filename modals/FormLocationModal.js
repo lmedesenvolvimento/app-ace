@@ -143,11 +143,11 @@ export class FormLocationModal extends React.Component {
     }
   }
 
-  okModal(targetTab, callback){
+  okModal = (targetTab, callback) => {
     Actions.pop();
     TimerMixin.requestAnimationFrame(() =>  {
       if(Platform.OS ===  'android'){
-        Actions.refresh({ activeTab: targetTab });
+        this.props.onSubmit(targetTab)
       }
       callback();
       Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });
@@ -292,7 +292,9 @@ export class FormLocationModal extends React.Component {
   
       let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
       
-      TimerMixin.setTimeout(this.okModal.bind(this, targetTab, callback));
+      TimerMixin.setTimeout(
+        () => this.okModal(targetTab, callback)
+      );
     } catch(e) {
       console.log(e);
       Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });

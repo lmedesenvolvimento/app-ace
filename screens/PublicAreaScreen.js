@@ -58,7 +58,8 @@ class FieldGroupScreen extends React.Component {
       model: {},
       addresses: [],
       queryVisited: '',
-      queryNotVisited: ''
+      queryNotVisited: '',
+      activePage: 0
     };
   }
 
@@ -109,7 +110,7 @@ class FieldGroupScreen extends React.Component {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     if(this.state.addresses && this.state.addresses.length){
       return (
-        <Tabs locked={true} initialPage={this.props.activeTab || 0} page={this.props.activeTab}>
+        <Tabs locked={true} initialPage={0} page={this.state.activePage}>
           <Tab heading={<TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content>
               <List
@@ -310,9 +311,14 @@ class FieldGroupScreen extends React.Component {
       Actions.locationModal({ 
         address: _.clone(address),
         publicarea: this.props.publicarea,
-        fieldgroup: this.props.fieldgroup
+        fieldgroup: this.props.fieldgroup,
+        onSubmit: this._onSubmitLocationModal
       });
     });
+  }
+
+  _onSubmitLocationModal = (activePage) => {
+    this.setState({ activePage })
   }
 
   alertIfSyncAddress(){
