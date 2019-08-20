@@ -48,83 +48,83 @@ class LoginScreen extends React.Component {
     let { auth } = this.props.state;
 
     return (
-      // <View style={{ flex: 1 }}>
-      //   <Content padder>
-      //     <View style={[Layout.padding, styles.imgContainer]}>
-      //       <Image source={require('../assets/images/aedes_em_foco.png')} style={styles.img} />
-      //     </View>
-      //     <Form style={{ flex: 1 }}>
-      //       <Item inlineLabel error={!this.state.emailValid}>
-      //         <Label>Email</Label>
-      //         <Input autofocus onChangeText={email => this.setState({ email })} keyboardType='email-address' disabled={auth.waiting} />
-      //         {!this.state.emailValid ? <Icon name='close-circle' /> : null}
-      //       </Item>
-      //       <Item inlineLabel error={!this.state.passwordValid}>
-      //         <Label>Password</Label>
-      //         <Input secureTextEntry={true} onChangeText={password => this.setState({ password })} disabled={auth.waiting} />
-      //         {!this.state.passwordValid ? <Icon name='close-circle' /> : null}
-      //       </Item>
-      //     </Form>
-      //   </Content>
-      //   <Button iconLeft block onPress={_ => this.login()} disabled={auth.waiting}>
-      //     <Left>
-      //       {auth.waiting ? <Spinner color="#fff" style={styles.spinner} /> : null}
-      //     </Left>
-      //     <Text>Login</Text>
-      //     <Right />
-      //   </Button>
-      // </View>
-
-      <Swiper 
-        ref={ref => this.swiper = ref}
-        style={styles.wrap}
-        loop={false}
-        loadMinimal={true}
-        loadMinimalSize={1}
-        scrollEnabled={false}
-        showsPagination={false}
-        showsButtons={false}
-      >
-        <Container>
+      <Container>
+        <Content padder>
           <View style={[Layout.padding, styles.imgContainer]}>
             <Image source={require('../assets/images/aedes_em_foco.png')} style={styles.img} />
           </View>
-          <Button block onPress={() => this.swiper.scrollBy(1) }>
-            <Text>Login Form</Text>
-          </Button>
-        </Container>
-        <Container>
-          <Content padder>            
-            <View style={[Layout.padding, styles.imgContainer]}>
-              <Image source={ require('../assets/images/aedes_em_foco.png') } style={styles.img} />
-            </View>
-            <Form style={{ flex: 1 }}>
-              <Item inlineLabel error={!this.state.emailValid}>
-                <Label>Email</Label>
-                <Input autofocus onChangeText={ email => this.setState({email}) } keyboardType='email-address' disabled={auth.waiting} />
-                { !this.state.emailValid ? <Icon name='close-circle' /> : null }
-              </Item>
-              <Item inlineLabel error={!this.state.passwordValid}>
-                <Label>Password</Label>
-                <Input secureTextEntry={true} onChangeText={ password => this.setState({password}) } disabled={auth.waiting} />
-                { !this.state.passwordValid ? <Icon name='close-circle' /> : null }
-              </Item>
-            </Form>
-            <View>
-              <Button block transparent onPress={() => this.swiper.scrollBy(-1)} style={{ marginTop: 16 }}>
-                <Text>Voltar para seleção de cidades</Text>
-              </Button>
-            </View>
-          </Content>
-          <Button iconLeft block onPress={ _=> this.login() } disabled={auth.waiting}>
-            <Left>
-              { auth.waiting ? <Spinner color="#fff" style={styles.spinner}/> : null }
-            </Left>
-            <Text>Login</Text>
-            <Right/>
-          </Button>
-        </Container>
-      </Swiper>
+          <Form style={{ flex: 1 }}>
+            <Item inlineLabel error={!this.state.emailValid}>
+              <Label>Email</Label>
+              <Input autofocus onChangeText={email => this.setState({ email })} keyboardType='email-address' disabled={auth.waiting} />
+              {!this.state.emailValid ? <Icon name='close-circle' /> : null}
+            </Item>
+            <Item inlineLabel error={!this.state.passwordValid}>
+              <Label>Password</Label>
+              <Input secureTextEntry={true} onChangeText={password => this.setState({ password })} disabled={auth.waiting} />
+              {!this.state.passwordValid ? <Icon name='close-circle' /> : null}
+            </Item>
+          </Form>
+        </Content>
+        <Button iconLeft block onPress={_ => this.login()} disabled={auth.waiting}>
+          <Left>
+            {auth.waiting ? <Spinner color="#fff" style={styles.spinner} /> : null}
+          </Left>
+          <Text>Login</Text>
+          <Right />
+        </Button>
+      </Container>
+
+      // <Swiper 
+      //   ref={ref => this.swiper = ref}
+      //   style={styles.wrap}
+      //   loop={false}
+      //   loadMinimal={true}
+      //   loadMinimalSize={1}
+      //   scrollEnabled={false}
+      //   showsPagination={false}
+      //   showsButtons={false}
+      // >
+      //   <Container>
+      //     <View style={[Layout.padding, styles.imgContainer]}>
+      //       <Image source={require('../assets/images/aedes_em_foco.png')} style={styles.img} />
+      //     </View>
+      //     <Button block onPress={() => this.swiper.scrollBy(1) }>
+      //       <Text>Login Form</Text>
+      //     </Button>
+      //   </Container>
+      //   <Container>
+      //     <Content padder>            
+      //       <View style={[Layout.padding, styles.imgContainer]}>
+      //         <Image source={ require('../assets/images/aedes_em_foco.png') } style={styles.img} />
+      //       </View>
+      //       <Form style={{ flex: 1 }}>
+      //         <Item inlineLabel error={!this.state.emailValid}>
+      //           <Label>Email</Label>
+      //           <Input autofocus onChangeText={ email => this.setState({email}) } keyboardType='email-address' disabled={auth.waiting} />
+      //           { !this.state.emailValid ? <Icon name='close-circle' /> : null }
+      //         </Item>
+      //         <Item inlineLabel error={!this.state.passwordValid}>
+      //           <Label>Password</Label>
+      //           <Input secureTextEntry={true} onChangeText={ password => this.setState({password}) } disabled={auth.waiting} />
+      //           { !this.state.passwordValid ? <Icon name='close-circle' /> : null }
+      //         </Item>
+      //       </Form>
+      //       <View>
+      //         <Button block transparent onPress={() => this.swiper.scrollBy(-1)} style={{ marginTop: 16 }}>
+      //           <Text>Voltar para seleção de cidades</Text>
+      //         </Button>
+      //       </View>
+      //     </Content>
+      //     <Button iconLeft block onPress={ _=> this.login() } disabled={auth.waiting}>
+      //       <Left>
+      //         { auth.waiting ? <Spinner color="#fff" style={styles.spinner}/> : null }
+      //       </Left>
+      //       <Text>Login</Text>
+      //       <Right/>
+      //     </Button>
+      //   </Container>
+      // </Swiper>
     );
   }
 
