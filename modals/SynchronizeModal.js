@@ -33,12 +33,14 @@ export class SynchronizeModal extends React.Component {
     super(props);
     this.state = {
       status: SynchronizeStatus.wait,
-      progress: 0.0
+      errorAfterSync: false,
+      progress: 0.0,
     };
   }
 
   render(){
-    let { network } = this.props.state;
+    const { state, props } = this;
+    const { network } = props.state;
 
     if(network.isConnected){
       switch (this.state.status) {
@@ -70,7 +72,7 @@ export class SynchronizeModal extends React.Component {
           return(
             <Container>
               <Content>
-                <OkStatus onBackButton={this.toAwaitStatus} />
+                <OkStatus onBackButton={this.toAwaitStatus} errorAfterSync={state.errorAfterSync} />
               </Content>
             </Container>
           )
@@ -105,17 +107,23 @@ onStartSync(){
 }
 
 onStartSyncSuccess(response){
-  let { currentUser } = this.props.state;
+  const { props, state } = this;
+  let { currentUser } = props.state;
   let emptyArray = []
     
   // Limpando States
-  this.props.setFieldGroups(emptyArray)
+  props.setFieldGroups(emptyArray)
  
   // Limpando gravações antigas do usuário
   Session.Storage.destroy(currentUser.data.email)
 
+  if (!state.errorAfterSync) this.setState({ errorAfterSync: false })
+
   // Carregando novo estado da Aplicação
-  this.props.getFieldGroups()
+  props.getFieldGroups(null, () => {
+    // onFail
+    this.setState({ errorAfterSync: true })
+  })
 
   this.setState({ status: SynchronizeStatus.done })
 }

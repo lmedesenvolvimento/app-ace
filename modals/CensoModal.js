@@ -299,8 +299,6 @@ export class CensoModal extends React.Component {
 
     this.setState(updates);
 
-    console.log(key, nextInput)
-
     if (nextInput) this.inputs[nextInput]._root.focus();
   }
 
