@@ -6,7 +6,3 @@ export function setCity(data) {
      data 
   };
 }
-
-export function setStatusOffline() {
-  return { type: Actions.NOTCONNECTED };
-}
