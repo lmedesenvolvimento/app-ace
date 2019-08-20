@@ -49,6 +49,7 @@
     "react-timer-mixin": "^0.13.4",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
+    "redux-persist": "^5.10.0",
     "redux-thunk": "^2.2.0",
     "sentry-expo": "^1.11.0",
     "short-unique-id": "^1.1.1",
