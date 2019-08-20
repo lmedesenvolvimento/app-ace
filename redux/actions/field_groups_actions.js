@@ -192,6 +192,12 @@ function commit(getState){
 
 let gql_get_field_groups = {
   query:`query {
+    public_areas{
+      id,
+      address,
+      type,
+      neighborhood_id
+    },   
     mappings{
       id,
       cycle_id,
@@ -200,6 +206,7 @@ let gql_get_field_groups = {
         id,
         name,
         neighborhood {
+          id,
           name
         },
         field_group_public_areas {
@@ -208,7 +215,8 @@ let gql_get_field_groups = {
           {
             id,
             address,
-            type
+            type,
+            neighborhood_id
           },
           addresses
           {

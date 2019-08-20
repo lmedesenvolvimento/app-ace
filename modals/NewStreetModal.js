@@ -35,6 +35,7 @@ export class NewStreetModal extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      id: null,
       address: undefined,
       type: PublicAreaTypes.street,
       neighborhood: {},
@@ -53,29 +54,17 @@ export class NewStreetModal extends React.Component {
         <Content padder>
           <H1 style={Layout.padding}>Novo Logradouro</H1>
           <Form>
-            <View style={Layout.padding}>
-              <Label>Bairro</Label>
-              <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
-            </View>
-            
-
-            <View style={Layout.padding}>
-              <Text note>Tipo de Imóvel</Text>
-              <Picker
-                selectedValue={state.type}
-                onValueChange={(type) => this.setState({type}) }
-                supportedOrientations={['portrait','landscape']}
-                mode='dropdown'>
-                <Item label='Rua' value={PublicAreaTypes.street} />
-                <Item label='Avenida' value={PublicAreaTypes.avenue} />
-                <Item label='Outros' value={PublicAreaTypes.others} />
-              </Picker>
-            </View>
-
             <Item stackedLabel>
               <Label>Logradouro</Label>
               <Input placeholder='Nome do Logradouro' value={state.address} onChangeText={(address)=> this.setState({ address })} />
             </Item>
+            
+            <View style={Layout.padding}>
+              <Label>Bairro</Label>
+              <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
+            </View>
+
+            { this.renderType() }
           </Form>
         </Content>
         <Footer style={{backgroundColor: '#FFFFFF'}} padder>
@@ -96,6 +85,31 @@ export class NewStreetModal extends React.Component {
         </Footer>
       </Container>
     );
+  }
+
+  renderSelectPublicArea = () => {
+    const { fieldGroups } = this.props.state;
+  }
+
+  renderType = () => {
+    const { state } = this;
+    if (!state.id) {
+      return (
+        <View style={Layout.padding}>
+          <Text note>Tipo de Imóvel</Text>
+          <Picker
+            selectedValue={state.type}
+            onValueChange={(type) => this.setState({ type })}
+            supportedOrientations={['portrait', 'landscape']}
+            mode='dropdown'>
+            <Item label='Rua' value={PublicAreaTypes.street} />
+            <Item label='Avenida' value={PublicAreaTypes.avenue} />
+            <Item label='Outros' value={PublicAreaTypes.others} />
+          </Picker>
+        </View>
+      );
+    }
+    return null;
   }
 
   okModal = () => {
