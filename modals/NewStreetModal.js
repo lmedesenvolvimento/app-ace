@@ -28,6 +28,7 @@ import { Actions } from 'react-native-router-flux';
 import ReduxActions from '../redux/actions';
 
 import { PublicAreaTypes } from '../types/publicarea';
+import { PublicAreaMapGettersToProps } from '../redux/actions/publicareas_actions';
 
 import _ from 'lodash';
 
@@ -46,6 +47,9 @@ export class NewStreetModal extends React.Component {
   }
 
   componentDidMount(){
+    const { props } = this;
+    const data = props.getPublicAreasByNeighborhoodId();
+    console.log(data);
     this.setState({ neighborhood: this.props.fieldgroup.neighborhood });
   }
   
@@ -228,7 +232,10 @@ mapStateToProps = ({ currentUser, fieldGroups }) => {
 }
 
 mapDispatchToProps = (dispatch) => {
-  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+  return bindActionCreators(
+    Object.assign({}, ReduxActions.fieldGroupsActions, PublicAreaMapGettersToProps), 
+    dispatch
+  );
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewStreetModal);

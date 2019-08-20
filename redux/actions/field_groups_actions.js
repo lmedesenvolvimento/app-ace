@@ -1,5 +1,6 @@
 import UITypes from '../types/ui_types';
 import Types from '../types/field_groups_types';
+import PublicAreaTypes from '../types/publicareas_types';
 import Session from '../../services/Session';
 
 import { client } from '../../services/ApolloClient';
@@ -68,10 +69,13 @@ function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
     .then((response) => {
       // Criando ids únicos para todas as entidades recebidos
       let field_groups = response.data.mappings.map(createUniqueIds);
+      let public_areas =  response.data.public_areas;
       // Close Loading Modal
       dispatch({type: UITypes.CLOSE_LOADING});
       // Enviando para Store
       dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
+      // Guardando PublicAreas para consultas
+      dispatch({ type: PublicAreaTypes.SET_PUBLICAREAS, data: public_areas });
       // Guardando Alterações no Banco
       commit(getState);
       // sucess callback

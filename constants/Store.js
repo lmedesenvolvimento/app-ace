@@ -9,7 +9,7 @@ const middleware = [thunk ];
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['preferences']
+  whitelist: ['preferences', 'publicareas']
 };
 
 import reducers from '../redux/reducers';
