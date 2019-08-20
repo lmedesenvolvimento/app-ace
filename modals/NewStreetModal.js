@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, View } from 'react-native';
+import { Alert, View, FlatList } from 'react-native';
 
 import {
   Container,
@@ -39,7 +39,9 @@ export class NewStreetModal extends React.Component {
       address: undefined,
       type: PublicAreaTypes.street,
       neighborhood: {},
-      addresses: []
+      addresses: [],
+      public_areas: [],
+      focus: false,
     };
   }
 
@@ -56,15 +58,16 @@ export class NewStreetModal extends React.Component {
           <Form>
             <Item stackedLabel>
               <Label>Logradouro</Label>
-              <Input placeholder='Nome do Logradouro' value={state.address} onChangeText={(address)=> this.setState({ address })} />
+              <Input 
+                  placeholder='Nome do Logradouro' 
+                  value={state.address} 
+                  onFocus={this.onFocus}
+                  onBlur={this.onBlur}
+                  onChangeText={(address)=> this.setState({ address })} 
+              />
             </Item>
-            
-            <View style={Layout.padding}>
-              <Label>Bairro</Label>
-              <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
-            </View>
-
-            { this.renderType() }
+            { !state.focus ? this.renderNeighborhood() : null }
+            { !state.focus ? this.renderType() : null }
           </Form>
         </Content>
         <Footer style={{backgroundColor: '#FFFFFF'}} padder>
@@ -91,25 +94,49 @@ export class NewStreetModal extends React.Component {
     const { fieldGroups } = this.props.state;
   }
 
+  renderPublicAreaList = () => {
+    return (
+      <FlatList />
+    )
+  }
+
+  renderNeighborhood = () => {
+    const { state } = this;
+    return (
+      <View style={Layout.padding}>
+        <Label>Bairro</Label>
+        <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
+      </View>
+    )
+  }
+
   renderType = () => {
     const { state } = this;
     if (!state.id) {
       return (
         <View style={Layout.padding}>
-          <Text note>Tipo de Imóvel</Text>
+          <Text note>Tipo</Text>
           <Picker
             selectedValue={state.type}
             onValueChange={(type) => this.setState({ type })}
             supportedOrientations={['portrait', 'landscape']}
             mode='dropdown'>
-            <Item label='Rua' value={PublicAreaTypes.street} />
-            <Item label='Avenida' value={PublicAreaTypes.avenue} />
-            <Item label='Outros' value={PublicAreaTypes.others} />
+            <Picker.Item label='Rua' value={PublicAreaTypes.street} />
+            <Picker.Item label='Avenida' value={PublicAreaTypes.avenue} />
+            <Picker.Item label='Outros' value={PublicAreaTypes.others} />
           </Picker>
         </View>
       );
     }
     return null;
+  }
+
+  onFocus = () => {
+    this.setState({ focus: true })
+  }
+  
+  onBlur = () => {
+    this.setState({ focus: false })
   }
 
   okModal = () => {
