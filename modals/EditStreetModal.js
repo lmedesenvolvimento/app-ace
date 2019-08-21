@@ -17,36 +17,55 @@ import {
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { Actions } from 'react-native-router-flux';
+
+import TimerMixin from 'react-timer-mixin';
+
+import ReduxActions from '../redux/actions';
+import { PublicAreaMapGettersToProps } from '../redux/actions/publicareas_actions';
+
+import { PublicAreaTypes } from '../types/publicarea';
+
 import { NewStreetModal } from './NewStreetModal';
 
 import Layout from '../constants/Layout';
 
 import { simpleToast } from '../services/Toast';
 
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import { Actions } from 'react-native-router-flux';
-
-import ReduxActions from '../redux/actions';
-
-import { PublicAreaTypes } from '../types/publicarea';
-
-import TimerMixin from 'react-timer-mixin';
-
 class EditStreetModal extends NewStreetModal {
   constructor(props) {
     super(props);
     this.state = {
+      id: null,
       address: undefined,
       type: PublicAreaTypes.street,
-      neighborhood: {}
+      neighborhood: {},
+      public_areas: [],
+      selection: [],
+      focus: false,
     };
   }
 
   componentDidMount(){
     this.setState({ neighborhood: this.props.fieldgroup.neighborhood, ...this.props.publicarea.public_area });
-  }  
+  }
+  
+  componentDidMount() {
+    const { props } = this;
 
+    const neighborhoodId = props.fieldgroup.neighborhood.id;
+    const public_areas = props.getPublicAreasByNeighborhoodId(neighborhoodId);
+    
+    this.setState({ 
+      public_areas,
+      selection: public_areas,
+      neighborhood: this.props.fieldgroup.neighborhood, 
+      ...this.props.publicarea.public_area 
+    });
+  }
+  
   render() {
     const { state } = this;
     return (
@@ -54,31 +73,26 @@ class EditStreetModal extends NewStreetModal {
         <Content padder>
           <H1 style={Layout.padding}>Atualizar Logradouro</H1>
           <Form>
-            <View style={Layout.padding}>
-              <Label>Bairro</Label>
-              <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
-            </View>
-
-            <View style={Layout.padding}>
-              <Text note>Tipo de Imóvel</Text>
-              <Picker
-                selectedValue={state.type}
-                onValueChange={(type) => this.setState({type}) }
-                supportedOrientations={['portrait','landscape']}
-                mode='dropdown'>
-                <Item label='Rua' value={PublicAreaTypes.street} />
-                <Item label='Avenida' value={PublicAreaTypes.avenue} />
-                <Item label='Outros' value={PublicAreaTypes.others} />
-              </Picker>
-            </View>
-
             <Item stackedLabel>
               <Label>Logradouro</Label>
-              <Input placeholder='Nome do Logradouro' value={state.address} onChangeText={(address)=> this.setState({address})} />
+              <Input
+                ref={ref => this.inputs.address = ref}
+                placeholder='Nome do Logradouro'
+                autoCompleteType="off"
+                value={state.address}
+                onFocus={this.onFocus}
+                onBlur={this.onBlur}
+                onChangeText={(address) => this.handleSearch(address)}
+              />
             </Item>
+            {
+              state.focus
+                ? this.renderPublicAreaList()
+                : this.renderFields()
+            }
           </Form>
         </Content>
-        <Footer style={{backgroundColor: '#FFFFFF'}} padder>
+        <Footer style={{ backgroundColor: '#FFFFFF' }} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
               <Col style={styles.col}>
@@ -92,7 +106,7 @@ class EditStreetModal extends NewStreetModal {
                 </Button>
               </Col>
             </Row>
-          </Grid>          
+          </Grid>
         </Footer>
       </Container>
     );
@@ -121,6 +135,7 @@ class EditStreetModal extends NewStreetModal {
   okModal = () => {
     const { props } = this;
     const {
+      id,
       address,
       type
     } = this.state;
@@ -139,6 +154,8 @@ class EditStreetModal extends NewStreetModal {
         type
       }
     }
+
+    if (id) payload.public_area.id = id;
 
     props.editPublicArea(props.fieldgroup.$id, props.publicarea, payload);
 
@@ -179,8 +196,10 @@ mapStateToProps = ({ currentUser, fieldGroups }) => {
   };
 }
 
-function mapDispatchToProps(dispatch){
-  return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+mapDispatchToProps = (dispatch) => {
+  const publicAreaMap = PublicAreaMapGettersToProps(dispatch);
+  const fieldGroupsMap = bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
+  return Object.assign({}, publicAreaMap, fieldGroupsMap);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(EditStreetModal);
