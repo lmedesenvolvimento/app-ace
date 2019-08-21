@@ -14,7 +14,7 @@ const getters = {
   getPublicAreasByNeighborhoodId(neighborhood_id){
     return (dispatch, getState) => {
       const { data } = getState().publicareas;
-      const result = filter(data, p => p.neighborhood_id.toString() === neighborhood_id);
+      const result = filter(data, p => p.neighborhood_id && p.neighborhood_id.toString() === neighborhood_id);
       return result;
     }
   }
