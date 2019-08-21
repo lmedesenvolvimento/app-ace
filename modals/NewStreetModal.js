@@ -30,7 +30,7 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { Actions } from 'react-native-router-flux';
 
-import { filter, chain } from 'lodash';
+import { find, filter, chain } from 'lodash';
 
 import ReduxActions from '../redux/actions';
 
@@ -292,7 +292,14 @@ export class NewStreetModal extends React.Component {
 
   isHasInNeighborhood = () => {
     const { props, state } = this;
-    const selection = filter(state.public_areas, p => contains(p, state.address.toLowerCase()));
+    
+    if (!state.address) return false
+    
+    const selection = filter(
+      state.public_areas, 
+      p => contains(p, state.address.toLowerCase())
+    );
+
     return selection.length;
   }
 
@@ -304,14 +311,29 @@ export class NewStreetModal extends React.Component {
       return false;
     }
 
-    const { field_group_public_areas } = fieldgroup;
+    const field_group_public_areas = this.getPublicAreasFieldgroupFromStore();
 
     const result = 
       chain(field_group_public_areas)
-        .find(fpa => (fpa.public_area.address == state.address) && (fpa.public_area.type == state.type ))
-        .value(); 
+        .find(fpa => {
+          const { public_area } = fpa;
+          ( public_area.address == state.address ) && ( public_area.type == state.type )
+        })          
+        .value();
 
-    return result ? true : false
+    return result ? true : false;
+  }
+
+  getPublicAreasFieldgroupFromStore = () => {
+    const { state } = this.props;
+    const { data } = state.fieldGroups;
+    const result = find(data, { $id: this.props.fieldgroup.$id });
+
+    if (result) {
+      return result.field_group.field_group_public_areas;
+    }
+
+    return [];
   }
 }
 
