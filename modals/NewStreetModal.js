@@ -317,9 +317,8 @@ export class NewStreetModal extends React.Component {
       chain(field_group_public_areas)
         .find(fpa => {
           const { public_area } = fpa;
-          ( public_area.address == state.address ) && ( public_area.type == state.type )
-        })          
-        .value();
+          return ( public_area.address === state.address ) && ( public_area.type === state.type );
+        }).value();
 
     return result ? true : false;
   }
