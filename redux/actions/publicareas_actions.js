@@ -1,4 +1,7 @@
+import { bindActionCreators } from 'redux';
 import Actions from "../types/publicareas_types";
+
+import { filter } from 'lodash';
 
 export function setPublicAreas(data) {
   return { 
@@ -8,10 +11,11 @@ export function setPublicAreas(data) {
 }
 
 const getters = {
-  getPublicAreasByNeighborhoodId(){
+  getPublicAreasByNeighborhoodId(neighborhood_id){
     return (dispatch, getState) => {
-      const { publicareas } = getState();
-      return publicareas.data;
+      const { data } = getState().publicareas;
+      const result = filter(data, p => p.neighborhood_id.toString() === neighborhood_id);
+      return result;
     }
   }
 }
