@@ -67,20 +67,23 @@ export default function reducer(state = initialState, action) {
   case field_groups_types.PUSH_LOCATION:
     var { fieldGroupId, publicareaId, newData } = action.data;
 
-    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId])
-    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
+    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
+    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId);
 
     // Adicionando MappingId a visita
-    newData.visit.mapping_id = state.data[indexOfFieldGroup].id
+    newData.visit.mapping_id = state.data[indexOfFieldGroup].id;
 
     // Criando um Array para novas visitas
-    newData.$id = genSecureHex()
-    newData.census = []
-    newData.visits = [newData.visit]
+    newData.$id = genSecureHex();
+    newData.census = [];
+    newData.visits = [newData.visit];
 
     // console.log(fieldGroupId, publicareaId, indexOfFieldGroup, indexOfPublicArea)
 
     // console.log('field_group', state.data[indexOfFieldGroup].field_group)
+
+    // Adicionando tipo da visita no endereço
+    newData.type = newData.visit.type_location;
 
     // Adicionando nova Localização e Visita
     state
@@ -119,6 +122,9 @@ export default function reducer(state = initialState, action) {
       var lastVisitIndex = _.findLastIndex(record.visits);
       record.visits[lastVisitIndex] = newData.visit;
     }
+
+    // Adicionando tipo da visita no endereço
+    newData.type = newData.visit.type_location
 
     // Atualizando Localização e Visita
     state

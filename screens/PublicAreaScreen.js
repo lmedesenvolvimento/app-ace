@@ -168,7 +168,7 @@ class FieldGroupScreen extends React.Component {
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
         onPress={this._handleOnPressItem.bind(this, address)}>
         <Left>
-          <MaterialIcons name={this.renderItemIcon(address.visit.type_location)} size={28} color={Colors.iconColor} />
+          <MaterialIcons name={this.renderItemIcon(address.type)} size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
           <Grid>
