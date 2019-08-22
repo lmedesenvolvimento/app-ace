@@ -160,7 +160,10 @@ class FieldGroupScreen extends React.Component {
   
 
   renderItem(address, secId, rowId, rowMap){
+    const { icon, iconType } = this.renderItemIcon(address.type);
+    
     address.visit = _.last(address.visits) || {};
+
     return(
       <ListItem 
         icon
@@ -168,7 +171,7 @@ class FieldGroupScreen extends React.Component {
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
         onPress={this._handleOnPressItem.bind(this, address)}>
         <Left>
-          <MaterialIcons name={this.renderItemIcon(address.type)} size={28} color={Colors.iconColor} />
+          <Icon name={icon} type={iconType} size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
           <Grid>
@@ -197,17 +200,17 @@ class FieldGroupScreen extends React.Component {
   renderItemIcon(type){
     switch (type) {
     case VisitTypeLocation.residential:        
-      return 'business';
+      return { icon: 'home', iconType: 'FontAwesome' };
     case VisitTypeLocation.commerce:
-      return 'store';
+      return { icon: 'store', iconType: 'MaterialIcons' };
     case VisitTypeLocation.wasteland:
-      return 'business';
+      return { icon: 'layers-off-outline', iconType: 'MaterialCommunityIcons' };
     case VisitTypeLocation.strategic_point:
-      return 'pin-drop';
+      return { icon: 'pin-drop', iconType: 'MaterialIcons' };
     case VisitTypeLocation.others:
-      return 'help';
+      return { icon: 'help', iconType: 'MaterialIcons' };
     default:
-      return 'business';
+      return { icon: 'business', iconType: 'MaterialIcons' };
     }
   }
 
