@@ -41,6 +41,7 @@ class EditStreetModal extends NewStreetModal {
       id: null,
       address: undefined,
       type: PublicAreaTypes.street,
+      position: undefined,
       neighborhood: {},
       public_areas: [],
       selection: [],
@@ -115,14 +116,17 @@ class EditStreetModal extends NewStreetModal {
   dismissModalBeforeModal = () => {
     const { 
       address,
-      type
+      type,
+      position
      } = this.state;
 
     const publicarea = {
        public_area: {
          address,
-         type
-       }
+         type,
+         position
+       },
+       position
      }
 
     Actions.pop({ publicarea });
@@ -137,7 +141,8 @@ class EditStreetModal extends NewStreetModal {
     const {
       id,
       address,
-      type
+      type,
+      position
     } = this.state;
 
     if (!address) {
@@ -151,8 +156,10 @@ class EditStreetModal extends NewStreetModal {
     const payload = {
       public_area: {
         address,
-        type
-      }
+        type,
+        position
+      },
+      position
     }
 
     if (id) payload.public_area.id = id;

@@ -215,6 +215,7 @@ let gql_get_field_groups = {
         },
         field_group_public_areas {
           id,
+          position,
           public_area
           {
             id,

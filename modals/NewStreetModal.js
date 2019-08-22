@@ -54,6 +54,7 @@ export class NewStreetModal extends React.Component {
       id: null,
       address: undefined,
       type: PublicAreaTypes.street,
+      position: 1,
       neighborhood: {},
       addresses: [],
       public_areas: [],
@@ -168,10 +169,37 @@ export class NewStreetModal extends React.Component {
             <Label>Bairro</Label>
             <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
           </View>
-          <View style={Layout.padding}>
-            <Text note>Tipo</Text>
-            {this.renderTypePicker()}
-          </View>
+          <Grid>
+            <Row>
+              <Col>
+                <View style={Layout.padding}>
+                  <Text note>Tipo</Text>
+                  {this.renderTypePicker()}
+                </View>
+              </Col>
+              <Col>
+                <View style={Layout.padding}>
+                  <Text note>Lado</Text>
+                  <Picker
+                    selectedValue={state.position}
+                    onValueChange={(position) => this.setState({ position })}
+                    supportedOrientations={['portrait', 'landscape']}
+                    mode='dropdown'>
+                      <Picker.Item label='1' value={1} />
+                      <Picker.Item label='2' value={2} />
+                      <Picker.Item label='3' value={3} />
+                      <Picker.Item label='4' value={4} />
+                      <Picker.Item label='5' value={5} />
+                      <Picker.Item label='6' value={6} />
+                      <Picker.Item label='7' value={7} />
+                      <Picker.Item label='8' value={8} />
+                      <Picker.Item label='9' value={9} />
+                      <Picker.Item label='10' value={10} />
+                  </Picker>
+                </View>
+              </Col>
+            </Row>
+          </Grid>
         </View>
       );
     }
@@ -259,7 +287,8 @@ export class NewStreetModal extends React.Component {
       address,
       type,
       neighborhood,
-      addresses
+      addresses,
+      position
     } = this.state;
 
     if (!address) {
@@ -273,8 +302,10 @@ export class NewStreetModal extends React.Component {
     const payload = {
       public_area: {
         address,
-        type
+        type,
+        position
       },
+      position,
       neighborhood,
       addresses
     };
