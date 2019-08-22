@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ListView } from 'react-native';
+import { View, ListView, StyleSheet } from 'react-native';
 
 import {
   Header,
@@ -88,8 +88,9 @@ class PublicAreaScreen extends React.Component {
         </Header>
         <Content padder>
           <Row style={{ maxHeight: 48, paddingLeft: 24, paddingRight: 8 }}>
-            <Col></Col>
-            <Text note style={{ lineHeight: 48, marginRight: 8 }}>Quarteirão finalizado?</Text>
+            <Col>
+              <Text note style={{ lineHeight: 48, marginRight: 8 }}>Quarteirão finalizado?</Text>
+            </Col>
             <Switch value={ mapping.status ? true : false } onValueChange={() => this.props.toggleMappingStatus(mapping.$id)}  />
           </Row>
           <List style={Layout.listMargin}>
@@ -117,7 +118,9 @@ class PublicAreaScreen extends React.Component {
         onPress={this._handleItemPress.bind(this, item)}
         style={Layout.listHeight}>
         <Left>
-          <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
+          <View style={[Layout.listHeight, styles.rect]}>
+            <Text style={styles.rectLabel}>{item.position}</Text>
+          </View>
         </Left>
         <Body style={Layout.listItemBody}>
           <Text>{item.public_area.address}</Text>
@@ -158,13 +161,29 @@ class PublicAreaScreen extends React.Component {
       let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
       return _.orderBy(
         result.field_group.field_group_public_areas,
-        fpa => fpa.public_area.address
+        fpa => fpa.position
       );
     } else{
       return [];
     }
   }  
 }
+
+const styles = StyleSheet.create({
+  rect: {
+    backgroundColor: '#666666',
+    alignContent: 'center',
+    justifyContent: 'center',
+    borderRadius: 4,    
+    width: 42,
+    height: 42,
+    margin: 8,
+  },
+  rectLabel: {
+    color: '#FFFFFF',
+    fontSize: 16
+  }
+});
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);
