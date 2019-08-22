@@ -169,7 +169,8 @@ class FieldGroupScreen extends React.Component {
         icon
         style={[Layout.listHeight, styles.listItem]}
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
-        onPress={this._handleOnPressItem.bind(this, address)}>
+        onPress={this._handleOnPressItem.bind(this, address)}
+      >
         <Left>
           <Icon name={icon} type={iconType} size={28} color={Colors.iconColor} />
         </Left>
