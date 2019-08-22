@@ -47,7 +47,7 @@ export default class BaseLightbox extends Component {
           height,
           justifyContent: 'center',
           alignItems: 'center',
-          backgroundColor: 'white',
+          backgroundColor: '#FFFFFF',
           borderRadius: Theme.borderRadiusBase
         }}
       >

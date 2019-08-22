@@ -1,5 +1,6 @@
 import UITypes from '../types/ui_types';
 import Types from '../types/field_groups_types';
+import PublicAreaTypes from '../types/publicareas_types';
 import Session from '../../services/Session';
 
 import { client } from '../../services/ApolloClient';
@@ -68,19 +69,25 @@ function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
     .then((response) => {
       // Criando ids únicos para todas as entidades recebidos
       let field_groups = response.data.mappings.map(createUniqueIds);
+      let public_areas =  response.data.public_areas;
       // Close Loading Modal
       dispatch({type: UITypes.CLOSE_LOADING});
       // Enviando para Store
       dispatch({ type: Types.UPDATE_FIELD_GROUPS, data: field_groups });
+      // Guardando PublicAreas para consultas
+      dispatch({ type: PublicAreaTypes.SET_PUBLICAREAS, data: public_areas });
       // Guardando Alterações no Banco
       commit(getState);
       // sucess callback
       return callback ? callback(field_groups) : false;
-    }).catch(({ response }) => {
+    }).catch((error) => {
+      let { response } = error;
       let msg = null;
 
       if(!response) {
         simpleToast('Error desconhecido. Por favor informe ao administrador');
+        dispatch({ type: UITypes.CLOSE_LOADING });
+        return;
       }
 
       switch (response.status) {
@@ -165,16 +172,16 @@ function createUniqueIds(mapping){
   let { field_group } = mapping;
 
   mapping.$id = genSecureHex();
-  
+
   field_group.mapping_id = mapping.id;
-  field_group.public_areas.map(createUniqueIdsForPublicAreas.bind(this));
+  field_group.field_group_public_areas.map(createUniqueIdsForFieldGroupPublicAreas);
   return mapping;
 }
 
-function createUniqueIdsForPublicAreas(public_area){
-  public_area.$id = genSecureHex();
-  public_area.addresses.map(createUniqueIdsForAddresses);
-  return public_area;
+function createUniqueIdsForFieldGroupPublicAreas(fpa){
+  fpa.$id = genSecureHex();
+  fpa.addresses.map(createUniqueIdsForAddresses);
+  return fpa;
 }
 
 function createUniqueIdsForAddresses(address){
@@ -189,6 +196,12 @@ function commit(getState){
 
 let gql_get_field_groups = {
   query:`query {
+    public_areas{
+      id,
+      address,
+      type,
+      neighborhood_id
+    },   
     mappings{
       id,
       cycle_id,
@@ -197,12 +210,19 @@ let gql_get_field_groups = {
         id,
         name,
         neighborhood {
+          id,
           name
         },
-        public_areas {
+        field_group_public_areas {
           id,
-          type,
-          address,
+          position,
+          public_area
+          {
+            id,
+            address,
+            type,
+            neighborhood_id
+          },
           addresses
           {
             id,
@@ -232,7 +252,7 @@ let gql_get_field_groups = {
             }
           }
         }
-      }
+      }        
     }
   }`
 };

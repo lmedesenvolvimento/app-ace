@@ -46,7 +46,7 @@ export default {
     height: 58,
   },
   listItemBody: {
-    height: 58,
+    height: 57,
   },
   listItemChevron:{
     height: 58,
@@ -65,6 +65,6 @@ export default {
     height: '100%'
   },
   modalBody: {
-    backgroundColor: 'white'
+    backgroundColor: '#FFFFFF'
   }
 }

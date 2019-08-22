@@ -58,7 +58,8 @@ class FieldGroupScreen extends React.Component {
       model: {},
       addresses: [],
       queryVisited: '',
-      queryNotVisited: ''
+      queryNotVisited: '',
+      activePage: 0
     };
   }
 
@@ -71,6 +72,7 @@ class FieldGroupScreen extends React.Component {
   }
 
   render() {
+    const { publicarea } = this.props;
     return (
       <Container>
         <Header hasTabs={true} style={{ zIndex: 9 }}>
@@ -80,7 +82,7 @@ class FieldGroupScreen extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>{ this.props.publicarea.address || 'Atualizando...' }</Title>
+            <Title>{ publicarea.public_area.address || 'Atualizando...' }</Title>
           </Body>
           <Right>
             { this.renderEditButton() }
@@ -95,7 +97,8 @@ class FieldGroupScreen extends React.Component {
           onPress={() => {
             Actions.locationModal({ 
               publicarea: this.props.publicarea, 
-              fieldgroup: this.props.fieldgroup
+              fieldgroup: this.props.fieldgroup,
+              onSubmit: this._onSubmitLocationModal
             });
           }}>
           <Icon android='md-add' ios='ios-add' size={24} />
@@ -108,7 +111,7 @@ class FieldGroupScreen extends React.Component {
     const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     if(this.state.addresses && this.state.addresses.length){
       return (
-        <Tabs locked={true} initialPage={this.props.activeTab || 0} page={this.props.activeTab}>
+        <Tabs locked={true} initialPage={0} page={this.state.activePage}>
           <Tab heading={<TabHeading><Text>A VISITAR</Text></TabHeading>}>
             <Content>
               <List
@@ -157,15 +160,19 @@ class FieldGroupScreen extends React.Component {
   
 
   renderItem(address, secId, rowId, rowMap){
+    const { icon, iconType } = this.renderItemIcon(address.type);
+    
     address.visit = _.last(address.visits) || {};
+
     return(
       <ListItem 
         icon
         style={[Layout.listHeight, styles.listItem]}
         onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
-        onPress={this._handleOnPressItem.bind(this, address)}>
+        onPress={this._handleOnPressItem.bind(this, address)}
+      >
         <Left>
-          <MaterialIcons name={this.renderItemIcon(address.visit.type_location)} size={28} color={Colors.iconColor} />
+          <Icon name={icon} type={iconType} size={28} color={Colors.iconColor} />
         </Left>
         <Body style={Layout.listItemBody}>
           <Grid>
@@ -194,17 +201,17 @@ class FieldGroupScreen extends React.Component {
   renderItemIcon(type){
     switch (type) {
     case VisitTypeLocation.residential:        
-      return 'business';
+      return { icon: 'home', iconType: 'FontAwesome' };
     case VisitTypeLocation.commerce:
-      return 'store';
+      return { icon: 'store', iconType: 'MaterialIcons' };
     case VisitTypeLocation.wasteland:
-      return 'business';
+      return { icon: 'layers-off-outline', iconType: 'MaterialCommunityIcons' };
     case VisitTypeLocation.strategic_point:
-      return 'pin-drop';
+      return { icon: 'pin-drop', iconType: 'MaterialIcons' };
     case VisitTypeLocation.others:
-      return 'help';
+      return { icon: 'help', iconType: 'MaterialIcons' };
     default:
-      return 'business';
+      return { icon: 'business', iconType: 'MaterialIcons' };
     }
   }
 
@@ -309,9 +316,14 @@ class FieldGroupScreen extends React.Component {
       Actions.locationModal({ 
         address: _.clone(address),
         publicarea: this.props.publicarea,
-        fieldgroup: this.props.fieldgroup
+        fieldgroup: this.props.fieldgroup,
+        onSubmit: this._onSubmitLocationModal
       });
     });
+  }
+
+  _onSubmitLocationModal = (activePage) => {
+    this.setState({ activePage })
   }
 
   alertIfSyncAddress(){
@@ -373,9 +385,10 @@ class FieldGroupScreen extends React.Component {
 
   _getPublicArea(){
     let { fieldGroups, fieldgroup, publicarea } = this.props;
+
     let result = _.chain(fieldGroups.data)
       .find(['$id', fieldgroup.$id])
-      .get('field_group.public_areas')
+      .get('field_group.field_group_public_areas')
       .find(['$id', publicarea.$id]).value();
 
     return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta

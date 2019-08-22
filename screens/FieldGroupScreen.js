@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ListView } from 'react-native';
+import { View, ListView, StyleSheet } from 'react-native';
 
 import {
   Header,
@@ -88,8 +88,9 @@ class PublicAreaScreen extends React.Component {
         </Header>
         <Content padder>
           <Row style={{ maxHeight: 48, paddingLeft: 24, paddingRight: 8 }}>
-            <Col></Col>
-            <Text note style={{ lineHeight: 48, marginRight: 8 }}>Quarteirão finalizado?</Text>
+            <Col>
+              <Text note style={{ lineHeight: 48, marginRight: 8 }}>Quarteirão finalizado?</Text>
+            </Col>
             <Switch value={ mapping.status ? true : false } onValueChange={() => this.props.toggleMappingStatus(mapping.$id)}  />
           </Row>
           <List style={Layout.listMargin}>
@@ -117,11 +118,13 @@ class PublicAreaScreen extends React.Component {
         onPress={this._handleItemPress.bind(this, item)}
         style={Layout.listHeight}>
         <Left>
-          <MaterialIcons name='location-on' size={28} color={Colors.iconColor} />
+          <View style={[Layout.listHeight, styles.rect]}>
+            <Text style={styles.rectLabel}>{item.position}</Text>
+          </View>
         </Left>
         <Body style={Layout.listItemBody}>
-          <Text>{item.address}</Text>
-          <Text note>{ PublicAreaTypesTranslate[item.type] }</Text>
+          <Text>{item.public_area.address}</Text>
+          <Text note>{PublicAreaTypesTranslate[item.public_area.type] }</Text>
         </Body>
         <View style={Layout.listItemChevron}>
           <MaterialIcons name="chevron-right" size={24} style={{ color: Theme.listBorderColor }} />
@@ -132,7 +135,7 @@ class PublicAreaScreen extends React.Component {
 
   _handleItemPress(item){
     TimerMixin.requestAnimationFrame(() => {
-      Actions.publicarea({ publicarea: _.omit(item, ['addresses']), title: item.address, fieldgroup: this.props.fieldgroup });
+      Actions.publicarea({ publicarea: _.omit(item, ['addresses']), title: item.public_area.address, fieldgroup: this.props.fieldgroup });
     });
   }
 
@@ -152,16 +155,35 @@ class PublicAreaScreen extends React.Component {
     this.setState({public_areas:  result});
   }
 
-  _getPublicAreas(){    
+  _getPublicAreas(){
     let { fieldGroups, fieldgroup } = this.props;
     if(fieldgroup){
       let result = _.find(fieldGroups.data,['$id', fieldgroup.$id]);
-      return _.orderBy(result.field_group.public_areas, ['address']);
+      return _.orderBy(
+        result.field_group.field_group_public_areas,
+        fpa => fpa.position
+      );
     } else{
       return [];
     }
   }  
 }
+
+const styles = StyleSheet.create({
+  rect: {
+    backgroundColor: '#666666',
+    alignContent: 'center',
+    justifyContent: 'center',
+    borderRadius: 4,    
+    width: 42,
+    height: 42,
+    margin: 8,
+  },
+  rectLabel: {
+    color: '#FFFFFF',
+    fontSize: 16
+  }
+});
 
 function mapDispatchToProps(dispatch){
   return bindActionCreators(ReduxActions.fieldGroupsActions, dispatch);

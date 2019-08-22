@@ -21,6 +21,8 @@ import {
   Spinner
 } from 'native-base';
 
+import Swiper from 'react-native-swiper';
+
 import Layout from '../constants/Layout';
 import Store from '../constants/Store';
 
@@ -33,7 +35,7 @@ import * as AuthActions from '../redux/actions/auth_actions';
 class LoginScreen extends React.Component {
   constructor(props){
     super(props);
-    
+    this.swiper = null;
     this.state = {
       email: '',
       emailValid: true,
@@ -49,29 +51,80 @@ class LoginScreen extends React.Component {
       <Container>
         <Content padder>
           <View style={[Layout.padding, styles.imgContainer]}>
-            <Image source={ require('../assets/images/aedes_em_foco.png') } style={styles.img} />
+            <Image source={require('../assets/images/aedes_em_foco.png')} style={styles.img} />
           </View>
           <Form style={{ flex: 1 }}>
             <Item inlineLabel error={!this.state.emailValid}>
               <Label>Email</Label>
-              <Input autofocus onChangeText={ email => this.setState({email}) } keyboardType='email-address' disabled={auth.waiting} />
-              { !this.state.emailValid ? <Icon name='close-circle' /> : null }
+              <Input autofocus onChangeText={email => this.setState({ email })} keyboardType='email-address' disabled={auth.waiting} />
+              {!this.state.emailValid ? <Icon name='close-circle' /> : null}
             </Item>
             <Item inlineLabel error={!this.state.passwordValid}>
               <Label>Password</Label>
-              <Input secureTextEntry={true} onChangeText={ password => this.setState({password}) } disabled={auth.waiting} />
-              { !this.state.passwordValid ? <Icon name='close-circle' /> : null }
+              <Input secureTextEntry={true} onChangeText={password => this.setState({ password })} disabled={auth.waiting} />
+              {!this.state.passwordValid ? <Icon name='close-circle' /> : null}
             </Item>
           </Form>
         </Content>
-        <Button iconLeft block onPress={ _=> this.login() } disabled={auth.waiting}>
+        <Button iconLeft block onPress={_ => this.login()} disabled={auth.waiting}>
           <Left>
-            { auth.waiting ? <Spinner color="#fff" style={styles.spinner}/> : null }
+            {auth.waiting ? <Spinner color="#fff" style={styles.spinner} /> : null}
           </Left>
           <Text>Login</Text>
-          <Right/>
+          <Right />
         </Button>
       </Container>
+
+      // <Swiper 
+      //   ref={ref => this.swiper = ref}
+      //   style={styles.wrap}
+      //   loop={false}
+      //   loadMinimal={true}
+      //   loadMinimalSize={1}
+      //   scrollEnabled={false}
+      //   showsPagination={false}
+      //   showsButtons={false}
+      // >
+      //   <Container>
+      //     <View style={[Layout.padding, styles.imgContainer]}>
+      //       <Image source={require('../assets/images/aedes_em_foco.png')} style={styles.img} />
+      //     </View>
+      //     <Button block onPress={() => this.swiper.scrollBy(1) }>
+      //       <Text>Login Form</Text>
+      //     </Button>
+      //   </Container>
+      //   <Container>
+      //     <Content padder>            
+      //       <View style={[Layout.padding, styles.imgContainer]}>
+      //         <Image source={ require('../assets/images/aedes_em_foco.png') } style={styles.img} />
+      //       </View>
+      //       <Form style={{ flex: 1 }}>
+      //         <Item inlineLabel error={!this.state.emailValid}>
+      //           <Label>Email</Label>
+      //           <Input autofocus onChangeText={ email => this.setState({email}) } keyboardType='email-address' disabled={auth.waiting} />
+      //           { !this.state.emailValid ? <Icon name='close-circle' /> : null }
+      //         </Item>
+      //         <Item inlineLabel error={!this.state.passwordValid}>
+      //           <Label>Password</Label>
+      //           <Input secureTextEntry={true} onChangeText={ password => this.setState({password}) } disabled={auth.waiting} />
+      //           { !this.state.passwordValid ? <Icon name='close-circle' /> : null }
+      //         </Item>
+      //       </Form>
+      //       <View>
+      //         <Button block transparent onPress={() => this.swiper.scrollBy(-1)} style={{ marginTop: 16 }}>
+      //           <Text>Voltar para seleção de cidades</Text>
+      //         </Button>
+      //       </View>
+      //     </Content>
+      //     <Button iconLeft block onPress={ _=> this.login() } disabled={auth.waiting}>
+      //       <Left>
+      //         { auth.waiting ? <Spinner color="#fff" style={styles.spinner}/> : null }
+      //       </Left>
+      //       <Text>Login</Text>
+      //       <Right/>
+      //     </Button>
+      //   </Container>
+      // </Swiper>
     );
   }
 
@@ -97,9 +150,13 @@ class LoginScreen extends React.Component {
 }
 
 const styles = {
+  wrap: {},
   container: {
     flex: 1,
     paddingVertical: 86
+  },
+  slide: {
+    flex: 1,
   },
   imgContainer: {
     flex: 1,

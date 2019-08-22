@@ -80,7 +80,7 @@ const styles = {
     zIndex: 99
   },
   modalContainer: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 4
   },
   modalContent: {

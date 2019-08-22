@@ -88,16 +88,16 @@ class HomeScreen extends React.Component {
   }
   _handleOnPressItem(field_group){
     TimerMixin.requestAnimationFrame(() => {
-      Actions.fieldgroup({fieldgroup: omit(field_group, ['public_areas']), title: field_group.name});
+      Actions.fieldgroup({ fieldgroup: omit(field_group, ['public_areas', 'field_group_public_areas']), title: field_group.name});
     });
   }
 }
 
-function mapStateToProps(state) {
+function mapStateToProps({ currentUser, fieldGroups }) {
   return {
     state: {
-      currentUser: state.currentUser,
-      fieldGroups: state.fieldGroups
+      currentUser,
+      fieldGroups
     }
   };
 }

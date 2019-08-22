@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert, BackHandler, StyleSheet, View, StatusBar } from 'react-native';
 import { Container } from 'native-base';
 import { connect, Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
 
 import {
   Actions,
@@ -42,8 +43,9 @@ import ReportCardScreen from '../screens/ReportCardScreen';
 import SynchronizeModal from '../modals/SynchronizeModal';
 
 const RouterWithRedux = connect()(Router);
+const { store, persistor } = configureStore();
 
-Store.instance = configureStore();
+Store.instance = store;
 
 class Navigator extends React.Component {
   
@@ -79,71 +81,73 @@ class Navigator extends React.Component {
     return(
       <View style={styles.container}>
         <Provider store={Store.instance}>
-          <Container>
-            <Loading />
-            <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={this.onBackPress.bind(this)}>
-              <Modal key="root">
-                <Scene key='unauthorized' type='replace' initial={!this.props.authorized} hideNavBar>
-                  <Stack>
-                    <Scene key='login'
-                      component={LoginScreen}
-                      title='Login'
+          <PersistGate loading={null} persistor={persistor}>
+            <Container>
+              <Loading />
+              <RouterWithRedux sceneStyle={styles.sceneStyle} backAndroidHandler={this.onBackPress.bind(this)}>
+                <Modal key="root">
+                  <Scene key='unauthorized' type='replace' initial={!this.props.authorized} hideNavBar>
+                    <Stack>
+                      <Scene key='login'
+                        component={LoginScreen}
+                        title='Login'
+                        hideNavBar />
+                    </Stack>
+                  </Scene>
+                  <Scene key='authorized' type='replace' initial={this.props.authorized} hideNavBar>
+                    <Drawer
+                      key='drawer'
+                      contentComponent={MainMenu}
+                      navigationBarStyle={styles.navigationBarStyle}
+                      titleStyle={styles.navTitleStyle}
+                      drawerOpenRoute='DrawerOpen'
+                      drawerCloseRoute='DrawerClose'
+                      drawerToggleRoute='DrawerToggle'
+                      renderLeftButton={() => <MenuButton /> }>
+                      <Scene
+                        key='home'
+                        component={HomeScreen}
+                        title='AEDES em foco'>
+                      </Scene>
+                      <Scene
+                        key='about'
+                        component={AboutScreen}
+                        title='Sobre o App' />
+                      <Scene
+                        key='reportcard'
+                        component={ReportCardScreen}
+                        title='Boletim Diário' />
+                      <Scene
+                        key='profile'
+                        component={ProfileScreen}
+                        title='Perfil' />
+                    </Drawer>
+                    {/* LOCATIONS SCENES */}
+                    <Scene
+                      key='fieldgroup'
+                      component={FieldGroupScreen}
+                      type='push'
                       hideNavBar />
-                  </Stack>
-                </Scene>
-                <Scene key='authorized' type='replace' initial={this.props.authorized} hideNavBar>
-                  <Drawer
-                    key='drawer'
-                    contentComponent={MainMenu}
-                    navigationBarStyle={styles.navigationBarStyle}
-                    titleStyle={styles.navTitleStyle}
-                    drawerOpenRoute='DrawerOpen'
-                    drawerCloseRoute='DrawerClose'
-                    drawerToggleRoute='DrawerToggle'
-                    renderLeftButton={() => <MenuButton /> }>
                     <Scene
-                      key='home'
-                      component={HomeScreen}
-                      title='AEDES em foco'>
-                    </Scene>
-                    <Scene
-                      key='about'
-                      component={AboutScreen}
-                      title='Sobre o App' />
-                    <Scene
-                      key='reportcard'
-                      component={ReportCardScreen}
-                      title='Boletim Diário' />
-                    <Scene
-                      key='profile'
-                      component={ProfileScreen}
-                      title='Perfil' />
-                  </Drawer>
-                  {/* LOCATIONS SCENES */}
-                  <Scene
-                    key='fieldgroup'
-                    component={FieldGroupScreen}
-                    type='push'
-                    hideNavBar />
-                  <Scene
-                    key='publicarea'
-                    component={PublicAreaScreen}
-                    type='push'
-                    hideNavBar />
-                  {/* END LOCATIONS SCENES */}
-                </Scene>
-                
-                {/* MODALS*/}
-                <Scene key='syncDataModal' component={ SynchronizeModal } modal title='Sincronizando Informações' hideNavBar />
-                <Scene key='newStreetModal'  component={ NewStreetModal } modal title='Novo Logradouro'   hideNavBar />
-                <Scene key='editStreetModal' component={ EditStreetModal } modal title='Editar Logradouro' hideNavBar />
-                <Scene key='locationModal' component={ FormLocationModal } modal title='Editar Logradouro' hideNavBar />
-                <Scene key='censoModal' component={ CensoModal } modal title='Editar Censo' hideNavBar />
-                <Scene key='clearStorageModal' component={ ClearStorageModal } modal title='Apagar todos os dados locais' hideNavBar />
-                {/* END MODALS*/}
-              </Modal>
-            </RouterWithRedux>
-          </Container>          
+                      key='publicarea'
+                      component={PublicAreaScreen}
+                      type='push'
+                      hideNavBar />
+                    {/* END LOCATIONS SCENES */}
+                  </Scene>
+                  
+                  {/* MODALS*/}
+                  <Scene key='syncDataModal' component={ SynchronizeModal } modal title='Sincronizando Informações' hideNavBar />
+                  <Scene key='newStreetModal'  component={ NewStreetModal } modal title='Novo Logradouro'   hideNavBar />
+                  <Scene key='editStreetModal' component={ EditStreetModal } modal title='Editar Logradouro' hideNavBar />
+                  <Scene key='locationModal' component={ FormLocationModal } modal title='Editar Logradouro' hideNavBar />
+                  <Scene key='censoModal' component={ CensoModal } modal title='Editar Censo' hideNavBar />
+                  <Scene key='clearStorageModal' component={ ClearStorageModal } modal title='Apagar todos os dados locais' hideNavBar />
+                  {/* END MODALS*/}
+                </Modal>
+              </RouterWithRedux>
+            </Container>
+          </PersistGate>
         </Provider>
       </View>
     );
@@ -166,6 +170,6 @@ const styles = StyleSheet.create({
     color: 'white'
   },
   sceneStyle: {
-    backgroundColor: 'white'
+    backgroundColor: '#FFFFFF'
   }
 });

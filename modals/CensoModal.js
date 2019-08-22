@@ -41,7 +41,7 @@ export class CensoModal extends React.Component {
   
   constructor(props) {
     super(props);
-    
+    this.inputs = {};
     this.state = {
       inhabitants: 0,
       tank: 0,
@@ -79,18 +79,21 @@ export class CensoModal extends React.Component {
                       keyboardType='numeric' 
                       value={this.state.inhabitants.toString()}
                       onChangeText={inhabitants => this.setState({inhabitants})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'inhabitants')} 
+                      onBlur={() => this.onBlurNumeralState('inhabitants')} 
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'inhabitants', 'tank')}
                     />
                   </Item>
                 </Col>
                 <Col style={styles.item}>
                   <Item stackedLabel>
                     <Label>{CensoType.tank}</Label>
-                    <Input 
+                    <Input
+                      ref={ref => this.inputs.tank = ref}
                       keyboardType='numeric' 
                       value={this.state.tank.toString()}
                       onChangeText={tank => this.setState({tank})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'tank')}
+                      onBlur={() => this.onBlurNumeralState('tank')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'tank', 'filter')}
                     />
                   </Item>
                 </Col>
@@ -101,10 +104,12 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.filter}</Label>
                     <Input
+                      ref={ref => this.inputs.filter = ref}
                       keyboardType='numeric' 
                       value={this.state.filter.toString()}
                       onChangeText={filter => this.setState({filter})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'filter')}
+                      onBlur={() => this.onBlurNumeralState('filter')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'filter', 'tina')}
                     />
                   </Item>
                 </Col>
@@ -112,10 +117,12 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.tina}</Label>
                     <Input
+                      ref={ref => this.inputs.tina = ref}
                       keyboardType='numeric' 
                       value={this.state.tina.toString()}
                       onChangeText={tina => this.setState({tina})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'tina')}
+                      onBlur={() => this.onBlurNumeralState('tina')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'tina', 'drum')}
                     />
                   </Item>
                 </Col>
@@ -126,10 +133,12 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.drum}</Label>
                     <Input
+                      ref={ref => this.inputs.drum= ref}
                       keyboardType='numeric' 
                       value={this.state.drum.toString()}
                       onChangeText={drum => this.setState({drum})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'drum')}
+                      onBlur={() => this.onBlurNumeralState('drum')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'drum', 'pot')}
                     />
                   </Item>
                 </Col>
@@ -137,10 +146,12 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.pot}</Label>
                     <Input
+                      ref={ref => this.inputs.pot = ref}
                       keyboardType='numeric' 
                       value={this.state.pot.toString()}
                       onChangeText={pot => this.setState({pot})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'pot')}
+                      onBlur={() => this.onBlurNumeralState('pot')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'pot', 'plant_pot')}
                     />
                   </Item>
                 </Col>
@@ -151,10 +162,12 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.plant_pot}</Label>
                     <Input
+                      ref={ref => this.inputs.plant_pot = ref}
                       keyboardType='numeric' 
                       value={this.state.plant_pot.toString()} 
                       onChangeText={plant_pot => this.setState({plant_pot})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'plant_pot')}
+                      onBlur={() => this.onBlurNumeralState('plant_pot')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'plant_pot', 'cistern')}
                     />
                   </Item>
                 </Col>
@@ -162,10 +175,12 @@ export class CensoModal extends React.Component {
                 <Item stackedLabel>
                   <Label>{CensoType.cistern}</Label>
                   <Input
+                    ref={ref => this.inputs.cistern = ref}
                     keyboardType='numeric' 
                     value={this.state.cistern.toString()}
                     onChangeText={cistern => this.setState({cistern})}
-                    onBlur={this.onBlurNumeralState.bind(this, 'cistern')}
+                    onBlur={() => this.onBlurNumeralState('cistern')}
+                    onSubmitEditing={this.onBlurNumeralState.bind(this, 'cistern', 'waterhole')}
                   />
                 </Item>
                 </Col>
@@ -176,10 +191,12 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.waterhole}</Label>
                     <Input
+                      ref={ref => this.inputs.waterhole = ref}
                       keyboardType='numeric' 
                       value={this.state.waterhole.toString()}
                       onChangeText={waterhole => this.setState({waterhole})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'waterhole')}
+                      onBlur={() => this.onBlurNumeralState('waterhole')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'waterhole', 'pool')}
                     />
                   </Item>
                 </Col>
@@ -187,10 +204,12 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.pool}</Label>
                     <Input
+                      ref={ref => this.inputs.pool = ref}
                       keyboardType='numeric' 
                       value={this.state.pool.toString()}
                       onChangeText={pool => this.setState({pool})}
-                      onBlur={this.onBlurNumeralState.bind(this, 'pool')}
+                      onBlur={() => this.onBlurNumeralState('pool')}
+                      onSubmitEditing={this.onBlurNumeralState.bind(this, 'pool', 'water_box')}
                     />
                   </Item>
                 </Col>
@@ -200,10 +219,11 @@ export class CensoModal extends React.Component {
                   <Item stackedLabel>
                     <Label>{CensoType.water_box}</Label>
                     <Input
+                      ref={ref => this.inputs.water_box = ref}
                       keyboardType='numeric' 
                       value={this.state.water_box.toString()}
                       onChangeText={water_box => this.setState({water_box}) }
-                      onBlur={this.onBlurNumeralState.bind(this, 'water_box')}
+                      onBlur={() => this.onBlurNumeralState('water_box')}
                     />
                   </Item>
                 </Col>
@@ -271,16 +291,21 @@ export class CensoModal extends React.Component {
     );
   }
 
-  onBlurNumeralState(key) {
-    let number = numeral(this.state[key]).value()
-    let updates = {}
+  onBlurNumeralState = (key, nextInput) => {
+    let number = numeral(this.state[key]).value();
+    let updates = {};
 
-    updates[key] = Math.abs(number)
+    updates[key] = Math.abs(number);
 
-    this.setState(updates)
+    this.setState(updates);
+
+    if (nextInput) this.inputs[nextInput]._root.focus();
   }
 
   okModal(){
+    const { props } = this;
+    const { fieldgroup, publicarea, address } = props;
+    
     let updates = _.clone(this.props.address);
     let data = _.chain(this.state).omit(['isReady']).value();
     
@@ -292,7 +317,12 @@ export class CensoModal extends React.Component {
       updates.census[0] = data;
     }
     // dispath action
-    this.props.updateCensus(this.props.fieldgroup.$id, this.props.publicarea.$id, this.props.address, updates);
+    props.updateCensus(
+      fieldgroup.$id, 
+      publicarea.$id, 
+      address, updates
+    );
+    
     // feedback user
     simpleToast('Censo atualizado com successo!');
     // close modal

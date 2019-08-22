@@ -30,7 +30,7 @@ export default function reducer(state = initialState, action) {
     newData.$id = genSecureHex();
 
     // Adicionando novo Logradouro
-    _.find(state.data, ['$id', fieldGroupId]).field_group.public_areas.push(newData);
+    _.find(state.data, ['$id', fieldGroupId]).field_group.field_group_public_areas.push(newData);
 
     return { ...state, data: state.data };
 
@@ -41,12 +41,12 @@ export default function reducer(state = initialState, action) {
     var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
     var indexOfPublicArea = getPublicAreaIndex(state, action, record.$id);
 
-    var oldRecord = state.data[indexOfFieldGroup].field_group.public_areas[indexOfPublicArea];
+    var oldRecord = state.data[indexOfFieldGroup].field_group.field_group_public_areas[indexOfPublicArea];
 
     state
       .data[indexOfFieldGroup]
       .field_group
-      .public_areas[indexOfPublicArea] = { ...oldRecord, ...newData };
+      .field_group_public_areas[indexOfPublicArea] = { ...oldRecord, ...newData };
 
     return { ...state, data: state.data };
 
@@ -60,29 +60,36 @@ export default function reducer(state = initialState, action) {
     state
       .data[indexOfFieldGroup]
       .field_group
-      .public_areas.splice(indexOfPublicArea, 1);
+      .field_group_public_areas.splice(indexOfPublicArea, 1);
 
     return { ...state, data: state.data };
 
   case field_groups_types.PUSH_LOCATION:
     var { fieldGroupId, publicareaId, newData } = action.data;
 
-    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId])
-    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId)
+    var indexOfFieldGroup = _.findIndex(state.data, ['$id', fieldGroupId]);
+    var indexOfPublicArea = getPublicAreaIndex(state, action, publicareaId);
 
     // Adicionando MappingId a visita
-    newData.visit.mapping_id = state.data[indexOfFieldGroup].id
+    newData.visit.mapping_id = state.data[indexOfFieldGroup].id;
 
     // Criando um Array para novas visitas
-    newData.$id = genSecureHex()
-    newData.census = []
-    newData.visits = [newData.visit]
+    newData.$id = genSecureHex();
+    newData.census = [];
+    newData.visits = [newData.visit];
+
+    // console.log(fieldGroupId, publicareaId, indexOfFieldGroup, indexOfPublicArea)
+
+    // console.log('field_group', state.data[indexOfFieldGroup].field_group)
+
+    // Adicionando tipo da visita no endereço
+    newData.type = newData.visit.type_location;
 
     // Adicionando nova Localização e Visita
     state
       .data[indexOfFieldGroup]
       .field_group
-      .public_areas[indexOfPublicArea]
+      .field_group_public_areas[indexOfPublicArea]
       .addresses.push(_.omit(newData, ['visit']));
 
     return { ...state, data: state.data };
@@ -116,11 +123,14 @@ export default function reducer(state = initialState, action) {
       record.visits[lastVisitIndex] = newData.visit;
     }
 
+    // Adicionando tipo da visita no endereço
+    newData.type = newData.visit.type_location
+
     // Atualizando Localização e Visita
     state
       .data[indexOfFieldGroup]
       .field_group
-      .public_areas[indexOfPublicArea]
+      .field_group_public_areas[indexOfPublicArea]
       .addresses[indexOfAddress] = _.omit(newData, ['visit']);
 
     return { ...state, data: state.data };
@@ -136,7 +146,7 @@ export default function reducer(state = initialState, action) {
     state
       .data[indexOfFieldGroup]
       .field_group
-      .public_areas[indexOfPublicArea]
+      .field_group_public_areas[indexOfPublicArea]
       .addresses.splice(indexOfAddress, 1)
 
     return { ...state, data: state.data }
@@ -152,7 +162,7 @@ export default function reducer(state = initialState, action) {
       state
         .data[indexOfFieldGroup]
         .field_group
-        .public_areas[indexOfPublicArea]
+        .field_group_public_areas[indexOfPublicArea]
         .addresses[indexOfAddress] = newData;
 
       return { ...state, data: state.data };
@@ -168,7 +178,7 @@ function getPublicAreaIndex(state, action, index) {
 
   let result = _.chain(state.data)
     .find(['$id', fieldGroupId])
-    .get('field_group.public_areas')
+    .get('field_group.field_group_public_areas')
     .findIndex(['$id', index])
     .value();
 
@@ -181,7 +191,7 @@ function getLocationIndex(state, action, index) {
 
   let result = _.chain(state.data)
     .find(['$id', fieldGroupId])
-    .get('field_group.public_areas')
+    .get('field_group.field_group_public_areas')
     .find(['$id', publicareaId])
     .get('addresses')
     .findIndex(['$id', index])
