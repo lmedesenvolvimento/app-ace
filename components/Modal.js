@@ -49,12 +49,12 @@ export default class _Modal extends React.Component {
       return(
         <Grid style={styles.modalFooter}>
           <Col>
-            <Button transparent full primary onPress={this.props.onCancel}>
+            <Button transparent full onPress={this.props.onCancel}>
               <Text>Cancelar</Text>
             </Button>
           </Col>
           <Col>
-            <Button transparent full primary onPress={this.props.onConfirm}>
+            <Button transparent full onPress={this.props.onConfirm}>
               <Text>Ok</Text>
             </Button>
           </Col>
