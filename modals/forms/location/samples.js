@@ -32,14 +32,15 @@ import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
-import { SampleType } from '../../../types/sample';
+import { SampleType, SampleDeposits } from '../../../types/sample';
 
 import TimerMixin from 'react-timer-mixin';
 
 const initialItem = {
   number: 0,
   type: SampleType.a1,
-  processing: false
+  processing: false,
+  deposit: 0,
 };
 
 export class SamplesForm extends React.Component {
@@ -95,7 +96,7 @@ export class SamplesForm extends React.Component {
                     <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
                     <Picker
                       selectedValue={this.state.newItem.type}
-                      onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type } })}
+                      onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type, deposit: 0 } })}
                       supportedOrientations={['portrait', 'landscape']}
                       iosHeader='Selecione um'
                       mode='dropdown'>
@@ -106,6 +107,20 @@ export class SamplesForm extends React.Component {
                       <Picker.Item label='D1' value={SampleType.d1} />
                       <Picker.Item label='D2' value={SampleType.d2} />
                       <Picker.Item label='E' value={SampleType.e} />
+                    </Picker>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col style={{ paddingHorizontal: 4, paddingVertical: 8 }}>
+                    <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Depósito</Label>
+                    <Picker
+                      selectedValue={this.state.newItem.deposit}
+                      onValueChange={(deposit) => this.setState({ newItem: { ...this.state.newItem, deposit } })}
+                      supportedOrientations={['portrait', 'landscape']}
+                      iosHeader='Selecione um'
+                      mode='dropdown'>
+                      <Picker.Item label='Selecione um tipo de depósito' value={undefined} />
+                      { this.renderDepositTypes() }
                     </Picker>
                   </Col>
                 </Row>
@@ -223,7 +238,7 @@ export class SamplesForm extends React.Component {
       <ListItem>
         <Body>
           <Text>{ `Nº da Coleta ${item.number}` }</Text>
-          <Text note> Tipo da coleta: { Object.keys(SampleType)[item.type].toUpperCase() }</Text>
+          <Text note> {`Tipo da coleta: ${Object.keys(SampleType)[item.type].toUpperCase()} - ${this.renderDepositType(item)}`}</Text>
         </Body>
       </ListItem>
     );
@@ -243,8 +258,51 @@ export class SamplesForm extends React.Component {
     );
   }
 
+  renderDepositTypes = () => {
+    const { newItem } = this.state;
+    let deposits = [];
+
+    switch (newItem.type) {
+      case SampleType.a1:
+        deposits = SampleDeposits.a1;
+        break;
+      case SampleType.a2:
+        deposits = SampleDeposits.a2;
+        break;
+      case SampleType.b:
+        deposits = SampleDeposits.b;
+        break;
+      case SampleType.c:
+        deposits = SampleDeposits.c;
+        break;
+      case SampleType.d1:
+        deposits = SampleDeposits.d1;
+        break;
+      case SampleType.d2:
+        deposits = SampleDeposits.d2;
+        break;
+      case SampleType.e:
+        deposits = SampleDeposits.e;
+        break;
+      default:
+        break;
+    }
+
+    return deposits.map(({ key, label, value }) => (
+      <Picker.Item key={key} label={label} value={value} />
+    ));              
+  }
+
+  renderDepositType({ type, deposit }){
+    const values = Object.values(SampleDeposits);
+    const result = _.find(values[type], { value: deposit });
+    return result ? result.label : '';
+  }
+
   addSampleItem(){
-    if (_.isUndefined(this.state.newItem.number) || this.state.newItem.number <= 0){
+    const { newItem } = this.state;
+    
+    if (_.isUndefined(newItem.number) || newItem.number <= 0){
       Alert.alert(
         'Falha na numeração da coleta',
         'A numeração da amostra não pode ser igual a zero',
@@ -253,11 +311,23 @@ export class SamplesForm extends React.Component {
         ],
         { cancelable: true }
       );
-      return true;
-    } else{
-      this.state.data.unshift( _.clone(this.state.newItem));
-      this.setState({ data: this.state.data, newItem: initialItem });
-    }
+      return false;
+    } 
+
+    if (_.isUndefined(newItem.deposit) || newItem.deposit <= 0){
+      Alert.alert(
+        'Falha no tipo de depósito',
+        'Tipo de depósito não pode estar vazio',
+        [
+          { text: 'Ok', onPress: () => false, style: 'cancel' },          
+        ],
+        { cancelable: true }
+      );
+      return false;
+    } 
+
+    this.state.data.unshift( _.clone(this.state.newItem));
+    this.setState({ data: this.state.data, newItem: initialItem });
   }
 
   removeSampleItem(secId, rowId, rowMap){
