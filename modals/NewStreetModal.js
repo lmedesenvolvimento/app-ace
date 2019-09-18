@@ -92,7 +92,7 @@ export class NewStreetModal extends React.Component {
                   value={state.address} 
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}
-                  onChangeText={(address) => this.handleSearch(address)} 
+                  onChangeText={(address) => this.handleSearch(address)}
               />
             </Item>
             { 
@@ -160,7 +160,7 @@ export class NewStreetModal extends React.Component {
     );
   }
 
-  renderFields = () => {
+  renderFields = (isEdit = false) => {
     const { state } = this;
     if (!state.focus) {
       return (
@@ -179,14 +179,7 @@ export class NewStreetModal extends React.Component {
               </Col>
               <Col>
                 <View style={Layout.padding}>
-                  <Text note>Lado</Text>
-                  <Picker
-                    selectedValue={state.position}
-                    onValueChange={(position) => this.setState({ position })}
-                    supportedOrientations={['portrait', 'landscape']}
-                    mode='dropdown'>
-                    { this.renderPositionItems() }
-                  </Picker>
+                  {this.renderPositionPicker()}
                 </View>
               </Col>
             </Row>
@@ -226,6 +219,22 @@ export class NewStreetModal extends React.Component {
     );
   }
 
+  renderPositionPicker = () => {
+    const { state } = this;
+    return (
+      <>
+        <Text note>Lado</Text>
+        <Picker
+          selectedValue={state.position}
+          onValueChange={(position) => this.setState({ position })}
+          supportedOrientations={['portrait', 'landscape']}
+          mode='dropdown'>
+          {this.renderPositionItems()}
+        </Picker>
+      </>
+    );
+  }
+
   renderPositionItems = () => {
     const items = range(1, 10);
     return items.map((position) => (
@@ -243,7 +252,7 @@ export class NewStreetModal extends React.Component {
       return 'Outros';
     }
   }
-
+  
   handleSearch = (address) => {
     const { props, state } = this;
     const selection = filter(state.public_areas, p => contains(p, address.toLowerCase()));

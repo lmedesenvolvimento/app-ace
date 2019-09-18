@@ -293,19 +293,17 @@ class FieldGroupScreen extends React.Component {
   }
 
   renderEditButton(){
-    if(!this.props.publicarea.hasOwnProperty('id')){
-      return(
-        <Button transparent onPress={() => {
-          Actions.editStreetModal({
-            hide: false,
-            publicarea: this.props.publicarea,
-            fieldgroup: this.props.fieldgroup,
-          });
-        }}>
-          <Icon android='md-create' ios='ios-create' />
-        </Button>
-      );
-    }
+    return(
+      <Button transparent onPress={() => {
+        Actions.editStreetModal({
+          hide: false,
+          publicarea: this.props.publicarea,
+          fieldgroup: this.props.fieldgroup,
+        });
+      }}>
+        <Icon android='md-create' ios='ios-create' />
+      </Button>
+    );
   }
 
   _handleOnPressItem(address){

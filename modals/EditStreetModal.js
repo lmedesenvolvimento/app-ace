@@ -80,6 +80,7 @@ class EditStreetModal extends NewStreetModal {
                 ref={ref => this.inputs.address = ref}
                 placeholder='Nome do Logradouro'
                 autoCompleteType="off"
+                disabled={state.id}
                 value={state.address}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
@@ -115,18 +116,25 @@ class EditStreetModal extends NewStreetModal {
 
   dismissModalBeforeModal = () => {
     const { 
+      id,
       address,
       type,
-      position
+      neighborhood,
+      addresses,
+      position,      
      } = this.state;
 
     const publicarea = {
-       public_area: {
-         address,
-         type,
-         position
-       },
-       position
+      id,
+      public_area: {
+        id,
+        address,
+        type,
+        position
+      },
+      position,
+      neighborhood,
+      addresses
      }
 
     Actions.pop({ publicarea });
