@@ -3,7 +3,7 @@
   "expo": {
     "sdkVersion": "32.0.0",
     "name": "Aedes em Foco Agente",
-    "version": "1.0.0.0",
+    "version": "1.0.1.3",
     "description": "Aplicativo para auxiliar os agentes de endemias de cedro no controle das arboviroses",
     "slug": "aedes-agent-react-native",
     "privacy": "unlisted",
@@ -37,7 +37,7 @@
   "expo": {
     "sdkVersion": "32.0.0",
     "name": "Aedes em Foco Agente Teste",
-    "version": "1.0.0.1",
+    "version": "1.0.1.3",
     "description": "Aplicativo para auxiliar os agentes de endemias de cedro no controle das arboviroses",
     "slug": "aedes-agent-react-native-teste",
     "privacy": "unlisted",
