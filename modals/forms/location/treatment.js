@@ -24,11 +24,13 @@ import {
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
-import { Alert, ListView, View } from 'react-native';
+import { Alert, FlatList, View } from 'react-native';
 
 import Modal from '../../../components/Modal';
 
 import numeral from 'numeral';
+
+import { generate } from 'shortid';
 
 import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
@@ -67,20 +69,32 @@ export class TreatmentForm extends React.Component {
   componentWillMount(){
     let { payload } = this.props;
     if(payload && payload.visit){
+      
       if(payload.visit.treatment){
-        let { treatment } = payload.visit;        
+        // DECREAPTED !IMPORTANT
+        let { treatment } = payload.visit;
+        let treatments = this.state.treatments.map((t) => {
+          t.$id = generate();
+          return t;
+        });
+
         treatment.type = TreatmentType.larvicida_pyriproxyfen;
-        this.setState({ treatments: this.state.treatments });
+
+        this.setState({ treatments });
+        // END-DREAPTED
       } 
       else if (payload.visit.treatments && payload.visit.treatments.length){
-        this.setState({ treatments: payload.visit.treatments });
+        let treatments = payload.visit.treatments.map((t) => {
+          t.$id = generate();
+          return t;
+        });
+
+        this.setState({ treatments });
       }
     }
   }
 
   render(){
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
     return (
       <Container>
         <Content padder>
@@ -179,22 +193,24 @@ export class TreatmentForm extends React.Component {
                 <Col>
                   {
                     this.state.treatments.length
-                      ? <List
-                        dataSource={ds.cloneWithRows(this.state.treatments)}
-                        renderRow={this.renderItem.bind(this)}
-                        renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
-                        renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
-                        enableEmptySections={true}
-                        onRowOpen={false}
-                        leftOpenValue={0}
-                        rightOpenValue={-75} />
+                      ? <FlatList
+                          keyExtractor={({ $id }) => $id}
+                          data={this.state.treatments}
+                          renderItem={this.renderItem}
+                          extraData={this.state}
+                        />
                       : <Text note style={Layout.marginHorizontal}>Esta visita não possui nenhum tratamento.</Text>
                   }
                 </Col>
               </Row>
             </Grid>            
 
-            <Modal isVisible={this.state.modalIsVisible} onConfirm={this.onConfirmModal.bind(this)} onCancel={this.onCancelModal.bind(this)} title='Calcular quantidade'>
+            <Modal 
+              isVisible={this.state.modalIsVisible} 
+              onConfirm={this.onConfirmModal.bind(this)} 
+              onCancel={this.onCancelModal.bind(this)} 
+              title='Calcular quantidade'
+            >
               <Content padder>
                 <Form>
                   <Item floatingLabel>
@@ -383,17 +399,30 @@ export class TreatmentForm extends React.Component {
       return true;
     }
     else {
-      this.state.treatments.unshift( clone(this.state.form) );
+      let payload = clone(this.state.form);
+      payload.$id = generate();
+      this.state.treatments.unshift(payload);
       this.setState({ data: this.state.treatments, form: initialForm });
     }
   }
 
 
-  removeTreatmentItem(secId, rowId, rowMap){
-    // Force close row
-    rowMap[`${secId}${rowId}`].props.closeRow();
-    this.state.treatments.splice(rowId, 1);
-    this.setState({ treatments: this.state.treatments });
+  removeTreatmentItem = (rowId) => {
+    let { treatments } = this.state;
+    Alert.alert(
+      'Excluir Tratamento',
+      'Você deseja realmente excluir este tratamento?',
+      [
+        { text: 'Não', onPress: () => false, style: 'cancel' },
+        {
+          text: 'Sim', onPress: () => {
+            treatments.splice(rowId, 1);
+            this.setState({ treatments });
+          }
+        },
+      ],
+      { cancelable: true }
+    );
   }
 
   
@@ -414,9 +443,9 @@ export class TreatmentForm extends React.Component {
     );
   }
   
-  renderItem(item){
+  renderItem = ({item, index}) => {
     return (
-      <ListItem>
+      <ListItem onPress={() => this.removeTreatmentItem(index)}>
         <Body>
           <Text>{`N de depósitos tratados ${item.quantity}`}</Text>
           <Text>{`Larvicida gramas ${item.adulticida_quantity}`}</Text>
@@ -424,21 +453,7 @@ export class TreatmentForm extends React.Component {
         </Body>
       </ListItem>
     );
-  }
-
-  renderRightHiddenRow(data, secId, rowId, rowMap) {
-    return (
-      <Button danger onPress={this.removeTreatmentItem.bind(this, secId, rowId, rowMap)}>
-        <Icon active name='trash' />
-      </Button>
-    );
-  }
-
-  renderLeftHiddenRow(){
-    return (
-      <View></View>
-    );
-  }
+  }    
 }
 
 const styles = {

@@ -7,10 +7,9 @@ import {
   MaterialCommunityIcons 
 } from '@expo/vector-icons';
 
-import {
-  AppLoading,
-  Font
-} from 'expo'
+import { AppLoading } from 'expo';
+
+import * as Font from 'expo-font';
 
 import { 
   StyleProvider, 
@@ -20,7 +19,7 @@ import {
   Grid, 
   Row, 
   Spinner, 
-  Text 
+  Text,
 } from 'native-base';
 
 import { StyleSheet } from 'react-native';
@@ -83,8 +82,8 @@ export default class App extends React.Component {
 
     await Font.loadAsync({
       'Arial': require('./assets/fonts/arial.ttf'),
-      'Roboto': require('native-base/Fonts/Roboto.ttf'),
-      'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
+      'Roboto': require('./assets/fonts/Roboto-Regular.ttf'),
+      'Roboto_medium': require('./assets/fonts/Roboto-Medium.ttf'),
       ...Ionicons.font,
       ...MaterialIcons.font,
       ...FontAwesome.font,

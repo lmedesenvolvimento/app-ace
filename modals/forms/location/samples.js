@@ -1,9 +1,11 @@
 import React from 'react';
-import { View, Alert, ListView } from 'react-native';
+import { View, Alert, FlatList } from 'react-native';
 
 import _ from 'lodash';
 
 import numeral from 'numeral';
+
+import { generate } from 'shortid'
 
 import {
   Container,
@@ -25,8 +27,6 @@ import {
 } from 'native-base';
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-
 
 import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
@@ -55,108 +55,105 @@ export class SamplesForm extends React.Component {
   componentWillMount(){    
     let { payload } = this.props;
     if (payload && payload.visit && payload.visit.samples){
-      this.setState({ data: payload.visit.samples });
+      const data = payload.visit.samples.map((s) => {
+        s.$id = generate()
+        return s
+      })      
+      this.setState({ data });
     }
   }
 
   render(){
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-
     return (
       <Container>
-        <KeyboardAwareScrollView>
-          <Content padder>
-            <Form>
-              <StepBars>
-                <Step complete={true}></Step>
-                <Step complete={true}></Step>
-                <Step active={true}></Step>
-                <Step></Step>
-                <Step></Step>
-              </StepBars>
-              <Grid>
-                <Row style={Layout.marginVertical8}>
-                  <Col style={Layout.padding}>
-                    <H2>Coleta de Amostra</H2>                
-                    <Text style={Layout.marginVertical8} note>Preencha abaixo os dados referentes a coleta que você deseja adicionar:</Text>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col style={{ paddingHorizontal: 4 }}>
-                    <Item floatingLabel>
-                      <Label> Nº da Coleta</Label>
-                      <Input
-                        value={this.state.newItem.number.toString()}
-                        keyboardType='numeric'
-                        onChangeText={(number) => this.setState({ newItem: { ...this.state.newItem, number: number } })}
-                        onBlur={this.onBlurNumeralState.bind(this, 'number')} />
-                    </Item>
-                  </Col>
-                  <Col style={{ paddingHorizontal: 4 }}>
-                    <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
-                    <Picker
-                      selectedValue={this.state.newItem.type}
-                      onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type, deposit: 0 } })}
-                      supportedOrientations={['portrait', 'landscape']}
-                      iosHeader='Selecione um'
-                      mode='dropdown'>
-                      <Picker.Item label='A1' value={SampleType.a1} />
-                      <Picker.Item label='A2' value={SampleType.a2} />
-                      <Picker.Item label='B' value={SampleType.b} />
-                      <Picker.Item label='C' value={SampleType.c} />
-                      <Picker.Item label='D1' value={SampleType.d1} />
-                      <Picker.Item label='D2' value={SampleType.d2} />
-                      <Picker.Item label='E' value={SampleType.e} />
-                    </Picker>
-                  </Col>
-                </Row>
-                <Row>
-                  <Col style={{ paddingHorizontal: 4, paddingVertical: 8 }}>
-                    <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Depósito</Label>
-                    <Picker
-                      selectedValue={this.state.newItem.deposit}
-                      onValueChange={(deposit) => this.setState({ newItem: { ...this.state.newItem, deposit } })}
-                      supportedOrientations={['portrait', 'landscape']}
-                      iosHeader='Selecione um'
-                      mode='dropdown'>
-                      <Picker.Item label='Selecione um tipo de depósito' value={undefined} />
-                      { this.renderDepositTypes() }
-                    </Picker>
-                  </Col>
-                </Row>
-                <Row style={Layout.marginVertical8}>
-                  <Col></Col>
-                  <Button primary onPress={() => this.addSampleItem()} style={{ alignSelf: 'center' }}>
-                    <Text>Adicionar Coleta +</Text>
-                  </Button>
-                  <Col></Col>
-                </Row>
-                <Row>
-                  <Col style={Layout.padding}>
-                    <H3 style={{ color: Colors.primaryColor }}>Suas Amostras</H3>
-                  </Col>                  
-                </Row>
-                <Row>
-                  <Col>
-                    {
-                      this.state.data.length
-                        ? <List
-                          dataSource={ds.cloneWithRows(this.state.data)}
-                          renderRow={this.renderItem.bind(this)}
-                          renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
-                          renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
-                          enableEmptySections={true}
-                          onRowOpen={false}
-                          leftOpenValue={0}
-                          rightOpenValue={-75} />
-                        : <Text note style={Layout.marginHorizontal}>Esta visita não possui nenhuma amostra.</Text>
-                    }                    
-                  </Col>
-                </Row>                                                
-              </Grid>
-            </Form>
-          </Content>
-        </KeyboardAwareScrollView>
+        <Content padder>
+          <Form>
+            <StepBars>
+              <Step complete={true}></Step>
+              <Step complete={true}></Step>
+              <Step active={true}></Step>
+              <Step></Step>
+              <Step></Step>
+            </StepBars>
+            <Grid>
+              <Row style={Layout.marginVertical8}>
+                <Col style={Layout.padding}>
+                  <H2>Coleta de Amostra</H2>                
+                  <Text style={Layout.marginVertical8} note>Preencha abaixo os dados referentes a coleta que você deseja adicionar:</Text>
+                </Col>
+              </Row>
+              <Row>
+                <Col style={{ paddingHorizontal: 4 }}>
+                  <Item floatingLabel>
+                    <Label> Nº da Coleta</Label>
+                    <Input
+                      value={this.state.newItem.number.toString()}
+                      keyboardType='numeric'
+                      onChangeText={(number) => this.setState({ newItem: { ...this.state.newItem, number: number } })}
+                      onBlur={this.onBlurNumeralState.bind(this, 'number')} />
+                  </Item>
+                </Col>
+                <Col style={{ paddingHorizontal: 4 }}>
+                  <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Código</Label>
+                  <Picker
+                    selectedValue={this.state.newItem.type}
+                    onValueChange={(type) => this.setState({ newItem: { ...this.state.newItem, type: type, deposit: 0 } })}
+                    supportedOrientations={['portrait', 'landscape']}
+                    iosHeader='Selecione um'
+                    mode='dropdown'>
+                    <Picker.Item label='A1' value={SampleType.a1} />
+                    <Picker.Item label='A2' value={SampleType.a2} />
+                    <Picker.Item label='B' value={SampleType.b} />
+                    <Picker.Item label='C' value={SampleType.c} />
+                    <Picker.Item label='D1' value={SampleType.d1} />
+                    <Picker.Item label='D2' value={SampleType.d2} />
+                    <Picker.Item label='E' value={SampleType.e} />
+                  </Picker>
+                </Col>
+              </Row>
+              <Row>
+                <Col style={{ paddingHorizontal: 4, paddingVertical: 8 }}>
+                  <Label style={{ color: '#999', fontSize: 16 }}>Tipo de Depósito</Label>
+                  <Picker
+                    selectedValue={this.state.newItem.deposit}
+                    onValueChange={(deposit) => this.setState({ newItem: { ...this.state.newItem, deposit } })}
+                    supportedOrientations={['portrait', 'landscape']}
+                    iosHeader='Selecione um'
+                    mode='dropdown'>
+                    <Picker.Item label='Selecione um tipo de depósito' value={undefined} />
+                    { this.renderDepositTypes() }
+                  </Picker>
+                </Col>
+              </Row>
+              <Row style={Layout.marginVertical8}>
+                <Col></Col>
+                <Button primary onPress={() => this.addSampleItem()} style={{ alignSelf: 'center' }}>
+                  <Text>Adicionar Coleta +</Text>
+                </Button>
+                <Col></Col>
+              </Row>
+              <Row>
+                <Col style={Layout.padding}>
+                  <H3 style={{ color: Colors.primaryColor }}>Suas Amostras</H3>
+                </Col>                  
+              </Row>
+              <Row>
+                <Col>
+                  {
+                    this.state.data.length
+                      ? <FlatList
+                          keyExtractor={({ $id }) => $id}
+                          data={this.state.data}
+                          renderItem={this.renderItem.bind(this)}
+                          extraData={this.state}
+                        />
+                      : <Text note style={Layout.marginHorizontal}>Esta visita não possui nenhuma amostra.</Text>
+                  }                    
+                </Col>
+              </Row>                                                
+            </Grid>
+          </Form>
+        </Content>
         <Footer style={{backgroundColor: '#FFFFFF'}} padder>
           <Grid>
             <Row style={{ alignItems: 'center' }}>
@@ -233,30 +230,16 @@ export class SamplesForm extends React.Component {
     this.setState(updates);
   }
 
-  renderItem(item){
+  renderItem = ({item, index}) => {
     return(
-      <ListItem>
+      <ListItem onPress={() =>  this.removeSampleItem(index)}>
         <Body>
           <Text>{ `Nº da Coleta ${item.number}` }</Text>
           <Text note> {`Tipo da coleta: ${Object.keys(SampleType)[item.type].toUpperCase()} - ${this.renderDepositType(item)}`}</Text>
         </Body>
       </ListItem>
     );
-  }
-
-  renderRightHiddenRow(data, secId, rowId, rowMap) {
-    return (
-      <Button danger onPress={this.removeSampleItem.bind(this, secId, rowId, rowMap )}>
-        <Icon active name='trash' />
-      </Button>
-    );
-  }
-
-  renderLeftHiddenRow() {
-    return (
-      <View></View>
-    );
-  }
+  }  
 
   renderDepositTypes = () => {
     const { newItem } = this.state;
@@ -301,6 +284,8 @@ export class SamplesForm extends React.Component {
 
   addSampleItem(){
     const { newItem } = this.state;
+
+    newItem.$id = generate()
     
     if (_.isUndefined(newItem.number) || newItem.number <= 0){
       Alert.alert(
@@ -330,11 +315,22 @@ export class SamplesForm extends React.Component {
     this.setState({ data: this.state.data, newItem: initialItem });
   }
 
-  removeSampleItem(secId, rowId, rowMap){
-    // Force close row
-    rowMap[`${secId}${rowId}`].props.closeRow();    
-    this.state.data.splice(rowId, 1)    ;
-    this.setState({ data: this.state.data });
+  removeSampleItem(rowId){
+    let { data } = this.state;
+    Alert.alert(
+      'Excluir Amostra',
+      'Você deseja realmente excluir esta amostra?',
+      [
+        { text: 'Não', onPress: () => false, style: 'cancel' },
+        {
+          text: 'Sim', onPress: () => {            
+            data.splice(rowId, 1);
+            this.setState({ data });
+          }
+        },
+      ],
+      { cancelable: true }
+    );
   }
 }
 

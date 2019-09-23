@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ListView, StyleSheet } from 'react-native';
+import { View, StyleSheet, FlatList } from 'react-native';
 
 import {
   Header,
@@ -59,7 +59,6 @@ class PublicAreaScreen extends React.Component {
   }
 
   render() {
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
     const mapping = _.find(this.props.fieldGroups.data, { $id: this.props.fieldgroup.$id });
     
     return (
@@ -94,10 +93,11 @@ class PublicAreaScreen extends React.Component {
             <Switch value={ mapping.status ? true : false } onValueChange={() => this.props.toggleMappingStatus(mapping.$id)}  />
           </Row>
           <List style={Layout.listMargin}>
-            <ListView
-              dataSource={ ds.cloneWithRows(this.state.public_areas)}
-              enableEmptySections={true}
-              renderRow={this.renderItem.bind(this) }/>
+            <FlatList
+              keyExtractor={({ $id }) => $id}
+              data={this.state.public_areas}
+              extraData={this.state}
+              renderItem={this.renderItem.bind(this) }/>
           </List>
         </Content>
         <Fab
@@ -111,7 +111,7 @@ class PublicAreaScreen extends React.Component {
     );
   }
 
-  renderItem(item){
+  renderItem = ({ item }) => {
     return(
       <ListItem
         icon
@@ -146,13 +146,13 @@ class PublicAreaScreen extends React.Component {
 
   _handleSearch(q){
     // Use Lodash regex for get match public_areas
-    let public_areas = this._getPublicAreas();
+    let field_group_public_areas = this._getPublicAreas();
 
-    let result = _.filter(public_areas , (pua)=> {
-      return _.includes(pua.address.toLowerCase(), q.toLowerCase());
+    let public_areas = _.filter(field_group_public_areas, ({ public_area })=> {
+      return _.includes(public_area.address.toLowerCase(), q.toLowerCase());
     });
 
-    this.setState({public_areas:  result});
+    this.setState({ public_areas });
   }
 
   _getPublicAreas(){

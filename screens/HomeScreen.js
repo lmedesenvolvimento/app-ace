@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import {
   Container,
@@ -7,7 +7,6 @@ import {
   Text,
   Left,
   Body,
-  List,
   ListItem,
   Tabs,
   Tab,
@@ -52,12 +51,20 @@ class HomeScreen extends React.Component {
         <Tabs locked={true}>
           <Tab heading={<TabHeading><Text>ABERTOS</Text></TabHeading>}>
             <Content>
-              <List dataArray={not_finished} renderRow={this.renderItem.bind(this)} />
+              <FlatList 
+                keyExtractor={({$id}) => $id} 
+                data={not_finished} 
+                renderItem={this.renderItem.bind(this)} 
+              />
             </Content>
           </Tab>
           <Tab heading={<TabHeading><Text>FINALIZADOS</Text></TabHeading>}>
             <Content>
-              <List dataArray={finished} renderRow={this.renderItem.bind(this)} />
+              <FlatList
+                keyExtractor={({ $id }) => $id}
+                data={finished}
+                renderItem={this.renderItem.bind(this)}
+              />
             </Content>
           </Tab>
         </Tabs>          
@@ -65,7 +72,7 @@ class HomeScreen extends React.Component {
     );    
   }
 
-  renderItem(item){
+  renderItem = ({ item }) => {
     let { field_group } = item;
     
     // Pass item id for field_group

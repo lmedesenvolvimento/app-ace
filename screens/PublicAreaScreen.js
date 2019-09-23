@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Alert, ListView } from 'react-native';
+import { View, Alert, Dimensions, FlatList } from 'react-native';
 
 import {
   Header,
@@ -20,6 +20,8 @@ import {
   Fab,
   Col
 } from 'native-base';
+
+import RBSheet from "react-native-raw-bottom-sheet";
 
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -47,6 +49,7 @@ import moment from '../services/Timestamp';
 import { Grid } from 'react-native-easy-grid';
 
 import TimerMixin from 'react-timer-mixin';
+import { thisExpression } from '@babel/types';
 
 const INITIAL_LIST_SIZE = 15;
 
@@ -59,7 +62,8 @@ class FieldGroupScreen extends React.Component {
       addresses: [],
       queryVisited: '',
       queryNotVisited: '',
-      activePage: 0
+      activePage: 0,
+      selectedAddress: null
     };
   }
 
@@ -73,6 +77,9 @@ class FieldGroupScreen extends React.Component {
 
   render() {
     const { publicarea } = this.props;
+    const RBSheetHeight = ( Dimensions.get("screen").height / 3 );
+    const RBSheetOptions = this.RBSheetOptions;
+
     return (
       <Container>
         <Header hasTabs={true} style={{ zIndex: 9 }}>
@@ -85,8 +92,8 @@ class FieldGroupScreen extends React.Component {
             <Title>{ publicarea.public_area.address || 'Atualizando...' }</Title>
           </Body>
           <Right>
-            { this.renderEditButton() }
-            { this.renderRemoveButton() }
+            { this.renderEditPublicAreaButton() }
+            { this.renderRemovePublicAreaButton() }
           </Right>          
         </Header>
         { this.renderTabs() }
@@ -103,42 +110,44 @@ class FieldGroupScreen extends React.Component {
           }}>
           <Icon android='md-add' ios='ios-add' size={24} />
         </Fab>
+        <RBSheet
+          ref={ref => {
+            this.RBSheet = ref;
+          }}
+          onClose={() => this.setState({ selectedAddress: null })}
+          height={RBSheetHeight}
+          duration={250}
+        >
+          <RBSheetOptions />
+        </RBSheet>
       </Container>
     );
   }
 
   renderTabs(){
-    const ds = new ListView.DataSource({ rowHasChanged: (r1, r2) => r1 !== r2 });
-    if(this.state.addresses && this.state.addresses.length){
+    const { state }  = this;
+    if(state.addresses && state.addresses.length){
       return (
-        <Tabs locked={true} initialPage={0} page={this.state.activePage}>
+        <Tabs 
+          initialPage={0} 
+          page={state.activePage} 
+          onChangeTab={({ i }) => this.setState({ activePage: i })}
+        >
           <Tab heading={<TabHeading><Text>A VISITAR</Text></TabHeading>}>
-            <Content>
-              <List
-                initialListSize={INITIAL_LIST_SIZE}
-                dataSource={ ds.cloneWithRows(this._getAddressNotVisited())}
-                renderRow={this.renderItem.bind(this)}
-                renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
-                renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}                
-                enableEmptySections={true}
-                onRowOpen={false}
-                leftOpenValue={75}
-                rightOpenValue={-75} />
-            </Content>
+            <FlatList
+              keyExtractor={({ $id }) => $id}
+              data={this._getAddressNotVisited()}
+              renderItem={this.renderItem.bind(this)}
+              extraData={state}
+            />
           </Tab>
           <Tab heading={ <TabHeading><Text>VISITADAS</Text></TabHeading>}>
-            <Content>
-              <List
-                initialListSize={INITIAL_LIST_SIZE}   
-                dataSource={ ds.cloneWithRows( this._getAddressVisited() )}
-                renderRow={this.renderItem.bind(this)}
-                renderLeftHiddenRow={this.renderLeftHiddenRow.bind(this)}
-                renderRightHiddenRow={this.renderRightHiddenRow.bind(this)}
-                enableEmptySections={true}
-                onRowOpen={false}
-                leftOpenValue={75}
-                rightOpenValue={-75} />
-            </Content>
+            <FlatList
+              keyExtractor={({ $id }) => $id}
+              data={this._getAddressVisited()}
+              renderItem={this.renderItem.bind(this)}
+              extraData={state}
+            />            
           </Tab>
         </Tabs>
       );
@@ -146,20 +155,9 @@ class FieldGroupScreen extends React.Component {
       return this.renderNotFoundItems();
     }
   }
-  
-  // renderHeader(key){
-  //   return (
-  //     <Header searchBar rounded style={styles.listHeader}>
-  //       <Item>
-  //         <Icon name="ios-search" />
-  //         <Input placeholder="Buscar rápida" onChangeText={this._handleSearch.bind(this, key)} />
-  //       </Item>          
-  //     </Header>
-  //   );
-  // }
-  
 
-  renderItem(address, secId, rowId, rowMap){
+  renderItem = ({ item }) => {
+    const address = item;
     const { icon, iconType } = this.renderItemIcon(address.type);
     
     address.visit = _.last(address.visits) || {};
@@ -168,8 +166,7 @@ class FieldGroupScreen extends React.Component {
       <ListItem 
         icon
         style={[Layout.listHeight, styles.listItem]}
-        onLongPress={this._removeLocation.bind(this, address, secId, rowId, rowMap)}
-        onPress={this._handleOnPressItem.bind(this, address)}
+        onPress={() => this._handleOnPressItem(address)}
       >
         <Left>
           <Icon name={icon} type={iconType} size={28} color={Colors.iconColor} />
@@ -228,33 +225,59 @@ class FieldGroupScreen extends React.Component {
     }
   }
 
-  renderRightHiddenRow(data, secId, rowId, rowMap){
-    if(data.hasOwnProperty('id')){
-      return(
-        <View></View>
-      );
-    } else{
-      return (
-        <Button danger onPress={ ()=> this._removeLocation(data, secId, rowId, rowMap) }>
-          <Icon active name='trash' />
-        </Button>
-      );
-    }
-  }
-
-  renderLeftHiddenRow(data){
+  RBSheetOptions = () => {
+    const { props, state } = this;
+    const isLocationPermitVisit = this.isLocationPermitVisit();
     return (
-      <Button full onPress={() => {
-        Actions.censoModal({
-          address: data,
-          publicarea: this.props.publicarea,
-          fieldgroup: this.props.fieldgroup
-        });
-      }}>
-        <Icon active size={28} name = 'md-list-box' />
-      </Button>
+      <List>
+        <ListItem itemHeader first noBorder>
+          <Text>Opções</Text>
+        </ListItem>
+        
+        {(() => {
+          if (isLocationPermitVisit) {
+            return (
+              <ListItem icon onPress={this._handleLocationVisit} noBorder>
+                <Left>
+                  <Icon name="home" type="FontAwesome" />
+                </Left>
+                <Body>
+                  <Text>Criar / Atualizar Endereço</Text>
+                </Body>
+                <Right />
+              </ListItem>
+            )
+          }
+        })()}
+
+        <ListItem icon onPress={this._handleLocationCensus} noBorder>
+          <Left>
+            <Icon name="md-list-box" />
+          </Left>
+          <Body>
+            <Text>Realizar Censo</Text>
+          </Body>
+          <Right />
+        </ListItem>
+        
+        {(() => {
+          if (!state.selectedAddress.hasOwnProperty('id')){
+            return (
+              <ListItem icon onPress={this._removeLocation} noBorder>
+                <Left>
+                  <Icon android='md-trash' ios='ios-trash'/>
+                </Left>
+                <Body>
+                  <Text>Remover Endereço</Text>
+                </Body>
+                <Right />
+              </ListItem>
+            )
+          }
+        })()}
+      </List>
     );
-  }
+  }   
 
   renderLastVisit(address){
     let visit = _.last(address.visits);
@@ -282,7 +305,7 @@ class FieldGroupScreen extends React.Component {
     }
   }
 
-  renderRemoveButton(){
+  renderRemovePublicAreaButton(){
     if(!this.props.publicarea.hasOwnProperty('id')){
       return(
         <Button transparent onPress={ () => this._removePublicArea()  }>
@@ -292,7 +315,7 @@ class FieldGroupScreen extends React.Component {
     }
   }
 
-  renderEditButton(){
+  renderEditPublicAreaButton(){
     return(
       <Button transparent onPress={() => {
         Actions.editStreetModal({
@@ -306,26 +329,44 @@ class FieldGroupScreen extends React.Component {
     );
   }
 
-  _handleOnPressItem(address){
-    TimerMixin.requestAnimationFrame(() => {
-      if( _.last(address.visits) && _.last(address.visits).hasOwnProperty('id') && this._SyncAddressHasVisit(address)){
-        return false;
-      }
-      Actions.locationModal({ 
-        address: _.clone(address),
-        publicarea: this.props.publicarea,
-        fieldgroup: this.props.fieldgroup,
-        onSubmit: this._onSubmitLocationModal
-      });
+  _handleOnPressItem = (selectedAddress) => {
+    this.setState({ selectedAddress })
+    this.RBSheet.open()
+  }
+  
+  _handleLocationVisit = () => {
+    const { selectedAddress } = this.state;
+    const address = selectedAddress;
+    const isLocationPermitVisit = this.isLocationPermitVisit();
+    
+    if (!isLocationPermitVisit){
+      return false;
+    }
+
+    Actions.locationModal({ 
+      address: _.clone(address),
+      publicarea: this.props.publicarea,
+      fieldgroup: this.props.fieldgroup,
+      onSubmit: this._onSubmitLocationModal
     });
+
+    this.RBSheet.close();
+  }
+
+  _handleLocationCensus = () => {
+    const { props, state, RBSheet } = this;
+    
+    Actions.censoModal({
+      address: Object.assign({}, state.selectedAddress),
+      publicarea: props.publicarea,
+      fieldgroup: props.fieldgroup
+    });
+
+    RBSheet.close()
   }
 
   _onSubmitLocationModal = (activePage) => {
     this.setState({ activePage })
-  }
-
-  alertIfSyncAddress(){
-    return simpleToast('Endereço já sincronizados.');
   }
 
   // DELETE ACTIONS
@@ -345,9 +386,13 @@ class FieldGroupScreen extends React.Component {
     );
   }
 
-  _removeLocation(address, secId, rowId, rowMap){
-    if(address.hasOwnProperty('id')){
-      return this.alertIfSyncAddress();
+  _removeLocation = () => {
+    const { props, state, RBSheet } = this;
+    const { removeLocationInPublicArea } = props;
+    const { selectedAddress } = state;
+    
+    if (selectedAddress.hasOwnProperty('id')){
+      return simpleToast('Endereço já sincronizados.');
     }
 
     Alert.alert(
@@ -355,29 +400,18 @@ class FieldGroupScreen extends React.Component {
       'Você deseja realmente excluir este endereço? Suas visitas serão apagadas.',
       [
         {text: 'Não', onPress: () => false, style: 'cancel'},
-        {text: 'Sim', onPress: () => {
-          // Force close animate Row
-          rowMap[`${secId}${rowId}`].props.closeRow();          
+        {text: 'Sim', onPress: () => {          
           // Dispatch Action
-          this.props.removeLocationInPublicArea(this.props.fieldgroup.$id, this.props.publicarea.$id, address);
+          removeLocationInPublicArea(
+            props.fieldgroup.$id, 
+            props.publicarea.$id, selectedAddress
+          );
+          RBSheet.close();
         }},
       ],
       { cancelable: true }
     );
   }
-
-  // SEARCH BAR
-
-  // _onSearchExit(){
-  //   this.setState({ addresses: this._getPublicArea().addresses});
-  //   this.searchBar.hide();
-  // }
-
-  // _handleSearch(key, q){
-  //   let updates = {};
-  //   updates[key] = q;
-  //   this.setState(updates);
-  // }
 
   // Helpers Queries 
 
@@ -434,12 +468,15 @@ class FieldGroupScreen extends React.Component {
 
     return result;
   }
-  // onEndReached
-  onEndReachedVisited(){
-    console.log("NEW LIST")
+  isLocationPermitVisit = () => {
+    const address = this.state.selectedAddress;
+    const lastVisit = _.last(address.visits);
+    if (lastVisit && lastVisit.hasOwnProperty('id') && this._SyncAddressHasVisit(address)) {
+      return false;
+    }
+    return true;
   }
 }
-
 
 function sortByNumber(o){
   let number = parseInt(o.number);
