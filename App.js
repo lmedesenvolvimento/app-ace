@@ -1,8 +1,27 @@
 import React from 'react';
 
-// import Sentry from 'sentry-expo';
+import { 
+  Ionicons, 
+  MaterialIcons, 
+  FontAwesome, 
+  MaterialCommunityIcons 
+} from '@expo/vector-icons';
 
-import { StyleProvider, getTheme, Container, Col, Grid, Row, Spinner, Text } from 'native-base';
+import {
+  AppLoading,
+  Font
+} from 'expo'
+
+import { 
+  StyleProvider, 
+  getTheme, 
+  Container, 
+  Col, 
+  Grid, 
+  Row, 
+  Spinner, 
+  Text 
+} from 'native-base';
 
 import { StyleSheet } from 'react-native';
 
@@ -49,7 +68,7 @@ export default class App extends React.Component {
         </StyleProvider>
       );
     } else{
-      return <Expo.AppLoading/>;
+      return <AppLoading/>;
     }
   }
 
@@ -62,14 +81,14 @@ export default class App extends React.Component {
 
     // Sentry.config('https://d372673b4ed44d82a8ab68bd308f54cf@sentry.io/1274743').install();
 
-    await Expo.Font.loadAsync({
+    await Font.loadAsync({
       'Arial': require('./assets/fonts/arial.ttf'),
       'Roboto': require('native-base/Fonts/Roboto.ttf'),
       'Roboto_medium': require('native-base/Fonts/Roboto_medium.ttf'),
-      'Ionicons': require("@expo/vector-icons/fonts/Ionicons.ttf"),
-      'MaterialIcons': require("@expo/vector-icons/fonts/MaterialIcons.ttf"),
-      'FontAwesome': require("@expo/vector-icons/fonts/FontAwesome.ttf"),
-      'MaterialCommunityIcons': require("@expo/vector-icons/fonts/MaterialCommunityIcons.ttf")      
+      ...Ionicons.font,
+      ...MaterialIcons.font,
+      ...FontAwesome.font,
+      ...MaterialCommunityIcons.icon,
     });
         
 
