@@ -10,7 +10,7 @@ export const SampleType = {
 
 export const SampleDeposits = {
   a1: [
-    { key: 'a1_water_box', label: 'Caixa de Água', value: 1 }
+    { key: 'a1_water_box', label: 'Caixa de Água', value: 1 },
     { key: 'a1_private_supply', label: 'Abastecimento particular(poço, cacimba)', value: 2 }
   ],
   a2: [

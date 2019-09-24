@@ -242,7 +242,7 @@ class FieldGroupScreen extends React.Component {
                   <Icon name="home" type="FontAwesome" />
                 </Left>
                 <Body>
-                  <Text>Criar / Atualizar Endereço</Text>
+                  <Text>Realizar / Atualizar Visita</Text>
                 </Body>
                 <Right />
               </ListItem>
