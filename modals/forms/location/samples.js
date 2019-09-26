@@ -271,6 +271,8 @@ export class SamplesForm extends React.Component {
         break;
     }
 
+    deposits = _.orderBy(deposits, ['label'])
+
     return deposits.map(({ key, label, value }) => (
       <Picker.Item key={key} label={label} value={value} />
     ));              

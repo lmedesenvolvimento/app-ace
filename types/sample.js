@@ -24,6 +24,7 @@ export const SampleDeposits = {
     { key: 'a2_well', label: 'Poço', value: 17 },
     { key: 'a2_cistern', label: 'Cisterna', value: 18 },
     { key: 'a2_waterhole', label: 'Cacimba', value: 19 },
+    { key: 'a2_low_water_box', label: 'Caixa d\'àgua baixa', value: 20 },
   ],
   b: [
     { key: 'b_plant_pot', label: 'Vaso de planta', value: 31 },
@@ -31,12 +32,15 @@ export const SampleDeposits = {
     { key: 'b_plate', label: 'Prato', value: 33 },
     { key: 'b_refri_container', label: 'Recipiente degelo de refrigerador', value: 34 },
     { key: 'b_drinking_fountain', label: 'Bebedouro', value: 35 },    
+    { key: 'b_bucket', label: 'Balde', value: 36 },    
   ],
   c: [
     { key: 'c_drain', label: 'Ralo', value: 40 },
     { key: 'c_chute', label: 'Calha', value: 41 },
     { key: 'c_sanitary', label: 'Sanitário', value: 42 },
-    { key: 'c_pool', label: 'Piscina', value: 42 },
+    { key: 'c_pool', label: 'Piscina', value: 43 },
+    { key: 'c_flower_pots_cemetery', label: 'Floreiras em cemitério', value: 44 },
+    { key: 'c_broken_glass_walls', label: 'Cacos de viros em muros', value: 45 },
   ],
   d1: [
     { key: 'd1_tire', label: 'Pneu', value: 50 },
