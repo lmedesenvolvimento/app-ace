@@ -167,7 +167,6 @@ export class InspectionForm extends React.Component {
                     onFocus={this.onFocus}
                     onChangeText={(e) => this.setState({e})}
                     onBlur={this.onBlurNumeralState.bind(this,'e')} 
-                    onSubmitEditing={this.onBlurNumeralState.bind(this, 'e')}
                   />
                 </Item>
               </Col>
@@ -189,7 +188,6 @@ export class InspectionForm extends React.Component {
                     onFocus={this.onFocus}
                     onChangeText={(removed) => this.setState({removed} )}
                     onBlur={this.onBlurNumeralState.bind(this, 'removed')}
-                    onSubmitEditing={this.onBlurNumeralState.bind(this, 'removed')}
                   />
                 </Item>
               </Col>
