@@ -19,12 +19,14 @@ import {
 
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
+import TimerMixin from 'react-timer-mixin';
+
 import Colors from '../../../constants/Colors';
 import Layout from '../../../constants/Layout';
 
 import { StepBars, Step } from './StepBars';
 
-import TimerMixin from 'react-timer-mixin';
+import { simpleToast } from '../../../services/Toast'
 
 export class InspectionForm extends React.Component {  
   constructor(props){
@@ -43,6 +45,7 @@ export class InspectionForm extends React.Component {
       collected: 0,
       removed: 0,
       processing: false,
+      focused: false,
     };
 
   }
@@ -73,10 +76,11 @@ export class InspectionForm extends React.Component {
               <Col style={{ width: 64 }}>
                 <Item floatingLabel>
                   <Label>A1</Label>
-                  <Input                      
+                  <Input                                    
                     keyboardType='numeric' 
                     value={this.state.a1.toString()} 
                     onChangeText={(a1) => this.setState({a1})}
+                    onFocus={this.onFocus}
                     onBlur={this.onBlurNumeralState.bind(this,'a1')}
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'a1', 'a2')}
                   />
@@ -89,6 +93,7 @@ export class InspectionForm extends React.Component {
                     getRef={ref => this.inputs.a2 = ref} 
                     keyboardType='numeric' value={this.state.a2.toString()} 
                     onChangeText={(a2) => this.setState({a2})}
+                    onFocus={this.onFocus}
                     onBlur={this.onBlurNumeralState.bind(this,'a2')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'a2', 'b')}
                   />
@@ -101,7 +106,8 @@ export class InspectionForm extends React.Component {
                     getRef={ref => this.inputs.b = ref} 
                     keyboardType='numeric'
                     value={this.state.b.toString()}
-                    onChangeText={(b) => this.setState({b})}              
+                    onFocus={this.onFocus}
+                    onChangeText={(b) => this.setState({b})}
                     onBlur={this.onBlurNumeralState.bind(this,'b')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'b', 'c')}
                   />
@@ -114,7 +120,8 @@ export class InspectionForm extends React.Component {
                     getRef={ref => this.inputs.c = ref}  
                     keyboardType='numeric'
                     value={this.state.c.toString()}
-                    onChangeText={(c) => this.setState({c})}              
+                    onFocus={this.onFocus}
+                    onChangeText={(c) => this.setState({c})}
                     onBlur={this.onBlurNumeralState.bind(this,'c')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'c', 'd1')}
                   />                      
@@ -129,7 +136,8 @@ export class InspectionForm extends React.Component {
                     getRef={ref => this.inputs.d1 = ref}
                     keyboardType='numeric'
                     value={this.state.d1.toString()}
-                    onChangeText={(d1) => this.setState({d1})}              
+                    onFocus={this.onFocus}
+                    onChangeText={(d1) => this.setState({d1})}
                     onBlur={this.onBlurNumeralState.bind(this,'d1')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'd1', 'd2')}
                   />                      
@@ -142,7 +150,8 @@ export class InspectionForm extends React.Component {
                     getRef={ref => this.inputs.d2 = ref}
                     keyboardType='numeric'
                     value={this.state.d2.toString()}
-                    onChangeText={(d2) => this.setState({d2})}              
+                    onFocus={this.onFocus}
+                    onChangeText={(d2) => this.setState({d2})}
                     onBlur={this.onBlurNumeralState.bind(this,'d2')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'd2', 'e')}
                   />
@@ -155,8 +164,10 @@ export class InspectionForm extends React.Component {
                     getRef={ref => this.inputs.e = ref}
                     keyboardType='numeric'
                     value={this.state.e.toString()}
-                    onChangeText={(e) => this.setState({e})}              
+                    onFocus={this.onFocus}
+                    onChangeText={(e) => this.setState({e})}
                     onBlur={this.onBlurNumeralState.bind(this,'e')} 
+                    onSubmitEditing={this.onBlurNumeralState.bind(this, 'e')}
                   />
                 </Item>
               </Col>
@@ -175,8 +186,10 @@ export class InspectionForm extends React.Component {
                   <Input 
                     keyboardType='numeric' 
                     value={this.state.removed.toString()} 
+                    onFocus={this.onFocus}
                     onChangeText={(removed) => this.setState({removed} )}
                     onBlur={this.onBlurNumeralState.bind(this, 'removed')}
+                    onSubmitEditing={this.onBlurNumeralState.bind(this, 'removed')}
                   />
                 </Item>
               </Col>
@@ -208,7 +221,11 @@ export class InspectionForm extends React.Component {
   }
 
   onSubmit(){
-    if(this.state.processing) return;
+    if (this.state.focused) {
+      return simpleToast('Preencha todos os campos.');
+    }
+    
+    if(this.state.processing || this.state.focused) return;
 
     this.setState({ processing: true });
     
@@ -244,9 +261,13 @@ export class InspectionForm extends React.Component {
     this.props.scrollBy(-1);
   }
 
+  onFocus = () => {
+    this.setState({ focused: true })
+  }
+
   onBlurNumeralState(key, nextInput){
     let number = numeral(this.state[key]).value();
-    let updates = {};
+    let updates = { focused: false };
 
     updates[key] = Math.abs(number);
 
