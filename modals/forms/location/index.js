@@ -128,18 +128,18 @@ export class LocationForm extends React.Component {
               </Row>
               <Row>
                 <Col size={33}>
-                  <Item floatingLabel error={this.state.validation.number}>
+                  <Item stackedLabel error={this.state.validation.number}>
                     <Label>Número</Label>
                     <Input 
                       disabled={this.state.id}
                       onChangeText={(number) => this.setState({number})}
                     >
-                        { _.isNumber(this.state.number) ? this.state.number.toString() : this.state.number }
-                      </Input>
+                      { this.state.number.toString() }
+                    </Input>
                   </Item>
                 </Col>
                 <Col size={66} style={{ justifyContent: 'flex-end' }}>
-                  <Item floatingLabel>
+                  <Item stackedLabel>
                     <Label>Complemento</Label>
                     <Input 
                       disabled={this.state.id} 

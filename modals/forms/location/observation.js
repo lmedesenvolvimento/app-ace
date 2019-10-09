@@ -61,13 +61,14 @@ export class ObservationForm extends React.Component {
             <H2 style={Layout.padding}>Observação</H2>
             <Grid>
               <Col>
-                <Item floatingLabel>
+                <Item stackedLabel>
                   <Label>Descrição</Label>
-                  <Input 
+                  <Input
                     onChangeText={(observation) => this.setState({observation})} 
-                    style={styles.textarea} 
+                    style={styles.textarea}
                     multiline={true} 
                     maxHeight={120}
+                    placeholder="Adicione aqui sua descrição"
                   >
                     {this.state.observation}
                   </Input>

@@ -116,7 +116,7 @@ export class TreatmentForm extends React.Component {
 
             <Grid>
               <Col>
-                <Item floatingLabel >
+                <Item stackedLabel >
                   <Label>N de depósitos tratados</Label>
                   <Input 
                     keyboardType='numeric'                    
@@ -154,7 +154,7 @@ export class TreatmentForm extends React.Component {
             <Grid>
               <Row style={{ alignItems: 'flex-end' }}>
                 <Col>
-                  <Item floatingLabel>
+                  <Item stackedLabel>
                     <Label>Larvicida gramas</Label>
                     <Input 
                       keyboardType='numeric'
@@ -217,7 +217,7 @@ export class TreatmentForm extends React.Component {
             >
               <Content padder>
                 <Form>
-                  <Item floatingLabel>
+                  <Item stackedLabel>
                     <Label>Nº de colheres grandes</Label>
                     <Input
                       keyboardType='numeric'
@@ -226,7 +226,7 @@ export class TreatmentForm extends React.Component {
                         {this.state.bigSpoonpQuantity.toString()}
                       </Input>
                   </Item>
-                  <Item floatingLabel>
+                  <Item stackedLabel>
                     <Label>Nº de colheres pequenas</Label>
                     <Input
                       keyboardType='numeric'

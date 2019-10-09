@@ -84,7 +84,7 @@ export class SamplesForm extends React.Component {
               </Row>
               <Row>
                 <Col style={{ paddingHorizontal: 4 }}>
-                  <Item floatingLabel>
+                  <Item stackedLabel>
                     <Label> Nº da Coleta</Label>
                     <Input
                       keyboardType='numeric'
