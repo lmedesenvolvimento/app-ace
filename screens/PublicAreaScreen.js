@@ -58,7 +58,7 @@ class FieldGroupScreen extends React.Component {
     super(props);
     
     this.state = {
-      model: {},
+      publicarea: null,
       addresses: [],
       queryVisited: '',
       queryNotVisited: '',
@@ -68,7 +68,8 @@ class FieldGroupScreen extends React.Component {
   }
 
   componentDidMount(){
-    this.setState({ addresses: this._getPublicArea().addresses });
+    const { publicarea } = this.props;
+    this.setState({ addresses: this._getPublicArea().addresses, publicarea });
   }
 
   componentWillReceiveProps(){
@@ -76,7 +77,7 @@ class FieldGroupScreen extends React.Component {
   }
 
   render() {
-    const { publicarea } = this.props;
+    const { publicarea } = this.state;
     const RBSheetHeight = ( Dimensions.get("screen").height / 3 );
     const RBSheetOptions = this.RBSheetOptions;
 
@@ -89,7 +90,7 @@ class FieldGroupScreen extends React.Component {
             </Button>
           </Left>
           <Body>
-            <Title>{ publicarea.public_area.address || 'Atualizando...' }</Title>
+            <Title>{ publicarea ? publicarea.public_area.address : 'Atualizando...' }</Title>
           </Body>
           <Right>
             { this.renderEditPublicAreaButton() }
@@ -316,12 +317,13 @@ class FieldGroupScreen extends React.Component {
   }
 
   renderEditPublicAreaButton(){
+    const { publicarea } = this.state;
     return(
       <Button transparent onPress={() => {
         Actions.editStreetModal({
-          hide: false,
-          publicarea: this.props.publicarea,
+          publicarea,
           fieldgroup: this.props.fieldgroup,
+          onSubmit: this._onEditPublicAreaModal
         });
       }}>
         <Icon android='md-create' ios='ios-create' />
@@ -369,6 +371,10 @@ class FieldGroupScreen extends React.Component {
     this.setState({ activePage })
   }
 
+  _onEditPublicAreaModal = (publicarea) => {
+    this.setState({ publicarea });
+  }
+
   // DELETE ACTIONS
 
   _removePublicArea(){
@@ -404,7 +410,8 @@ class FieldGroupScreen extends React.Component {
           // Dispatch Action
           removeLocationInPublicArea(
             props.fieldgroup.$id, 
-            props.publicarea.$id, selectedAddress
+            props.publicarea.$id, 
+            selectedAddress
           );
           RBSheet.close();
         }},
@@ -416,12 +423,13 @@ class FieldGroupScreen extends React.Component {
   // Helpers Queries 
 
   _getPublicArea(){
-    let { fieldGroups, fieldgroup, publicarea } = this.props;
+   let { fieldGroups, fieldgroup, publicarea } = this.props;
 
     let result = _.chain(fieldGroups.data)
       .find(['$id', fieldgroup.$id])
       .get('field_group.field_group_public_areas')
-      .find(['$id', publicarea.$id]).value();
+      .find(['$id', publicarea.$id])
+      .value();
 
     return result || {}; // É nescessário como placeholder equanto as propriedades não está pronta
   }

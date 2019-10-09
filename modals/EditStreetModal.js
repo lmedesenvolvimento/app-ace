@@ -116,6 +116,8 @@ class EditStreetModal extends NewStreetModal {
   }
 
   dismissModalBeforeModal = () => {
+    const { state, props } = this;
+
     const { 
       id,
       address,
@@ -123,9 +125,10 @@ class EditStreetModal extends NewStreetModal {
       neighborhood,
       addresses,
       position,      
-     } = this.state;
+     } = state;
 
-    const publicarea = {
+
+    let publicarea = {
       id,
       public_area: {
         id,
@@ -136,13 +139,13 @@ class EditStreetModal extends NewStreetModal {
       position,
       neighborhood,
       addresses
-     }
+    };
 
-    Actions.pop({ publicarea });
+    publicarea.$id = props.publicarea.$id;
 
-    TimerMixin.setTimeout(() => {
-      Actions.refresh({ publicarea });
-    });
+    props.onSubmit(publicarea);
+    
+    Actions.pop({ publicarea });    
   }
 
   okModal = () => {
