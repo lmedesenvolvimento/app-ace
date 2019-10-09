@@ -27,23 +27,28 @@ class ProfileScreen extends React.Component {
   }
 
   componentDidMount(){
-    let {state} = this.props;
+    let { state } = this.props;
     this.setState({currentUser: state.currentUser.data})
   }
 
   render() {
-    if(this.state.currentUser){
+    const { state } = this;
+    if(state.currentUser){
       return (
         <Container>
           <Content padder>
             <Form>
               <Item stackedLabel>
                 <Label>Nome</Label>
-                <Input value={this.state.currentUser.name} disabled={true}/>
+                <Input disabled={true}>
+                  {state.currentUser.name}
+                </Input>
               </Item>
               <Item stackedLabel>
                 <Label>Email</Label>
-                <Input value={this.state.currentUser.email} disabled={true} />
+                <Input disabled={true}>
+                  {state.currentUser.email}
+                </Input>
               </Item>
             </Form>
             <LogoutButton />

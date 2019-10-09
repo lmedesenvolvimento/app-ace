@@ -89,11 +89,12 @@ export class NewStreetModal extends React.Component {
                   ref={ref => this.inputs.address = ref}
                   placeholder='Nome do Logradouro' 
                   autoCompleteType="off"
-                  value={state.address} 
                   onFocus={this.onFocus}
                   onBlur={this.onBlur}
                   onChangeText={(address) => this.handleSearch(address)}
-              />
+              >
+                {state.address} 
+              </Input>
             </Item>
             { 
               state.focus 
@@ -167,7 +168,12 @@ export class NewStreetModal extends React.Component {
         <View>
           <View style={Layout.padding}>
             <Label>Bairro</Label>
-            <Input placeholder='Nome do Bairro' value={state.neighborhood.name} disabled={true}/>
+            <Input 
+              placeholder='Nome do Bairro' 
+              disabled={true}
+            >
+              {state.neighborhood.name} 
+            </Input>
           </View>
           <Grid>
             <Row>

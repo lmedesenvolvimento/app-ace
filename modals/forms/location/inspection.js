@@ -78,12 +78,13 @@ export class InspectionForm extends React.Component {
                   <Label>A1</Label>
                   <Input                                    
                     keyboardType='numeric' 
-                    value={this.state.a1.toString()} 
                     onChangeText={(a1) => this.setState({a1})}
                     onFocus={this.onFocus}
                     onBlur={this.onBlurNumeralState.bind(this,'a1')}
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'a1', 'a2')}
-                  />
+                  >
+                    {this.state.a1.toString()} 
+                  </Input>
                 </Item>
               </Col>
               <Col style={{ width: 64 }}>
@@ -91,12 +92,14 @@ export class InspectionForm extends React.Component {
                   <Label>A2</Label>
                   <Input
                     getRef={ref => this.inputs.a2 = ref} 
-                    keyboardType='numeric' value={this.state.a2.toString()} 
+                    keyboardType='numeric'
                     onChangeText={(a2) => this.setState({a2})}
                     onFocus={this.onFocus}
                     onBlur={this.onBlurNumeralState.bind(this,'a2')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'a2', 'b')}
-                  />
+                  >
+                    { this.state.a2.toString() } 
+                  </Input>
                 </Item>
               </Col>
               <Col style={{ width: 64 }}>
@@ -105,12 +108,13 @@ export class InspectionForm extends React.Component {
                   <Input 
                     getRef={ref => this.inputs.b = ref} 
                     keyboardType='numeric'
-                    value={this.state.b.toString()}
                     onFocus={this.onFocus}
                     onChangeText={(b) => this.setState({b})}
                     onBlur={this.onBlurNumeralState.bind(this,'b')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'b', 'c')}
-                  />
+                  >
+                    {this.state.b.toString()}
+                  </Input>
                 </Item>
               </Col>
               <Col style={{ width: 64 }}>
@@ -119,12 +123,13 @@ export class InspectionForm extends React.Component {
                   <Input
                     getRef={ref => this.inputs.c = ref}  
                     keyboardType='numeric'
-                    value={this.state.c.toString()}
                     onFocus={this.onFocus}
                     onChangeText={(c) => this.setState({c})}
                     onBlur={this.onBlurNumeralState.bind(this,'c')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'c', 'd1')}
-                  />                      
+                  >
+                    {this.state.c.toString()}              
+                  </Input>
                 </Item>
               </Col>
             </Grid>
@@ -135,12 +140,13 @@ export class InspectionForm extends React.Component {
                   <Input
                     getRef={ref => this.inputs.d1 = ref}
                     keyboardType='numeric'
-                    value={this.state.d1.toString()}
                     onFocus={this.onFocus}
                     onChangeText={(d1) => this.setState({d1})}
                     onBlur={this.onBlurNumeralState.bind(this,'d1')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'd1', 'd2')}
-                  />                      
+                  >       
+                    {this.state.d1.toString()}               
+                  </Input>
                 </Item>
               </Col>
               <Col style={{ width: 64 }}>
@@ -149,12 +155,13 @@ export class InspectionForm extends React.Component {
                   <Input
                     getRef={ref => this.inputs.d2 = ref}
                     keyboardType='numeric'
-                    value={this.state.d2.toString()}
                     onFocus={this.onFocus}
                     onChangeText={(d2) => this.setState({d2})}
                     onBlur={this.onBlurNumeralState.bind(this,'d2')} 
                     onSubmitEditing={this.onBlurNumeralState.bind(this, 'd2', 'e')}
-                  />
+                  >
+                    {this.state.d2.toString()}
+                  </Input>
                 </Item>
               </Col>
               <Col style={{ width: 64 }}>
@@ -163,11 +170,12 @@ export class InspectionForm extends React.Component {
                   <Input
                     getRef={ref => this.inputs.e = ref}
                     keyboardType='numeric'
-                    value={this.state.e.toString()}
                     onFocus={this.onFocus}
                     onChangeText={(e) => this.setState({e})}
                     onBlur={this.onBlurNumeralState.bind(this,'e')} 
-                  />
+                  >
+                    {this.state.e.toString()}
+                  </Input>
                 </Item>
               </Col>
             </Grid>
@@ -176,7 +184,12 @@ export class InspectionForm extends React.Component {
               <Col>
                 <Item floatingLabel>
                   <Label>Inspecionados</Label>
-                  <Input value={this.state.total_items.toString()} keyboardType='numeric' disabled={true}/>
+                  <Input 
+                    keyboardType='numeric' 
+                    disabled={true}
+                  >
+                    {this.state.total_items.toString()}
+                  </Input>
                 </Item>
               </Col>
               <Col>
@@ -184,11 +197,12 @@ export class InspectionForm extends React.Component {
                   <Label>Eliminados</Label>
                   <Input 
                     keyboardType='numeric' 
-                    value={this.state.removed.toString()} 
                     onFocus={this.onFocus}
                     onChangeText={(removed) => this.setState({removed} )}
                     onBlur={this.onBlurNumeralState.bind(this, 'removed')}
-                  />
+                  >
+                    {this.state.removed.toString()}
+                  </Input>
                 </Item>
               </Col>
             </Grid>

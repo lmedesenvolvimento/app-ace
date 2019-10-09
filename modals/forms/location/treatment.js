@@ -119,15 +119,16 @@ export class TreatmentForm extends React.Component {
                 <Item floatingLabel >
                   <Label>N de depósitos tratados</Label>
                   <Input 
-                    keyboardType='numeric'
-                    value={this.state.form.quantity.toString()}
+                    keyboardType='numeric'                    
                     onChangeText={(quantity) => this.setState(prevState => ({
                       form: {
                         ...prevState.form,
                         quantity
                       }
                     }))} 
-                    onBlur={this.onFormBlurNumeralState.bind(this, 'quantity')} />
+                    onBlur={this.onFormBlurNumeralState.bind(this, 'quantity')}>
+                      {this.state.form.quantity.toString()}
+                    </Input>
                 </Item>
               </Col>
             </Grid>
@@ -157,14 +158,17 @@ export class TreatmentForm extends React.Component {
                     <Label>Larvicida gramas</Label>
                     <Input 
                       keyboardType='numeric'
-                      value={this.state.form.adulticida_quantity.toString()}
+                    
                       onChangeText={(adulticida_quantity) => this.setState(prevState => ({
                         form: {
                           ...prevState.form,
                           adulticida_quantity
                         }
                       }))} 
-                      onBlur={this.onFormBlurNumeralState.bind(this, 'adulticida_quantity')} />
+                      onBlur={this.onFormBlurNumeralState.bind(this, 'adulticida_quantity')}
+                    >
+                      { this.state.form.adulticida_quantity.toString() }
+                    </Input>
                   </Item>
                 </Col>
                 <Col>
@@ -217,17 +221,20 @@ export class TreatmentForm extends React.Component {
                     <Label>Nº de colheres grandes</Label>
                     <Input
                       keyboardType='numeric'
-                      value={this.state.bigSpoonpQuantity.toString()}
                       onChangeText={(bigSpoonpQuantity) => this.setState({ bigSpoonpQuantity })}
-                      onBlur={this.onBlurNumeralState.bind(this, 'bigSpoonpQuantity')} />
+                      onBlur={this.onBlurNumeralState.bind(this, 'bigSpoonpQuantity')}>
+                        {this.state.bigSpoonpQuantity.toString()}
+                      </Input>
                   </Item>
                   <Item floatingLabel>
                     <Label>Nº de colheres pequenas</Label>
                     <Input
                       keyboardType='numeric'
-                      value={this.state.smallSpoonpQuantity.toString()}
                       onChangeText={(smallSpoonpQuantity) => this.setState({ smallSpoonpQuantity })}
-                      onBlur={this.onBlurNumeralState.bind(this, 'smallSpoonpQuantity')} />
+                      onBlur={this.onBlurNumeralState.bind(this, 'smallSpoonpQuantity')}
+                      >
+                        {this.state.smallSpoonpQuantity.toString()}
+                      </Input>
                   </Item>
                   <Grid style={Layout.padding}>
                     <Row style={{ alignItems: 'flex-end' }}>

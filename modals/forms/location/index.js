@@ -132,14 +132,21 @@ export class LocationForm extends React.Component {
                     <Label>Número</Label>
                     <Input 
                       disabled={this.state.id}
-                      value={ _.isNumber(this.state.number) ? this.state.number.toString() : this.state.number} 
-                      onChangeText={(number) => this.setState({number})} />
+                      onChangeText={(number) => this.setState({number})}
+                    >
+                        { _.isNumber(this.state.number) ? this.state.number.toString() : this.state.number }
+                      </Input>
                   </Item>
                 </Col>
                 <Col size={66} style={{ justifyContent: 'flex-end' }}>
                   <Item floatingLabel>
                     <Label>Complemento</Label>
-                    <Input disabled={this.state.id} value={this.state.complement} onChangeText={(complement) => this.setState({complement})} />
+                    <Input 
+                      disabled={this.state.id} 
+                      onChangeText={(complement) => this.setState({complement})}
+                    >
+                      {this.state.complement}
+                    </Input>
                   </Item>
                 </Col>
               </Row>

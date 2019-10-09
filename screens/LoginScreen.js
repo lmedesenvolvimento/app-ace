@@ -45,7 +45,8 @@ class LoginScreen extends React.Component {
   }
   
   render() {
-    let { auth } = this.props.state;
+    const { state, props } = this;
+    const { auth } = props.state;
 
     return (
       <Container>
@@ -56,12 +57,25 @@ class LoginScreen extends React.Component {
           <Form style={{ flex: 1 }}>
             <Item inlineLabel error={!this.state.emailValid}>
               <Label>Email</Label>
-              <Input autofocus onChangeText={email => this.setState({ email })} keyboardType='email-address' disabled={auth.waiting} />
+              <Input 
+                autofocus 
+                onChangeText={email => this.setState({ email })} 
+                keyboardType='email-address' 
+                disabled={auth.waiting} 
+              >
+                {state.email}
+              </Input>
               {!this.state.emailValid ? <Icon name='close-circle' /> : null}
             </Item>
             <Item inlineLabel error={!this.state.passwordValid}>
               <Label>Password</Label>
-              <Input secureTextEntry={true} onChangeText={password => this.setState({ password })} disabled={auth.waiting} />
+              <Input 
+                secureTextEntry={true} 
+                onChangeText={password => this.setState({ password })} 
+                disabled={auth.waiting}
+              >
+                {state.password}
+              </Input>
               {!this.state.passwordValid ? <Icon name='close-circle' /> : null}
             </Item>
           </Form>

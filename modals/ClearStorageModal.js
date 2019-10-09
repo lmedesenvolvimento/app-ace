@@ -77,12 +77,13 @@ export class ClearStorageModal extends React.Component {
                     <H1 style={[Layout.padding, styles.textCenter]}>{this.state.confirmCode}</H1>
                     <Item fixedLabel>
                       <Input 
-                        value={this.state.inputConfirmCode}
                         onChangeText={(inputConfirmCode) => {
                           this.setState({inputConfirmCode});
                         }} 
                         style={styles.textCenter} 
-                        placeholder="Informe o código de confirmação." />
+                        placeholder="Informe o código de confirmação.">
+                          {this.state.inputConfirmCode}
+                        </Input>
                     </Item>
                     <Button onPress={this.onSubmitConfirmCode.bind(this)} full primary style={Layout.padding}>
                       <Text>Recarregar dados agora</Text>

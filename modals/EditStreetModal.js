@@ -81,11 +81,12 @@ class EditStreetModal extends NewStreetModal {
                 placeholder='Nome do Logradouro'
                 autoCompleteType="off"
                 disabled={state.id}
-                value={state.address}
                 onFocus={this.onFocus}
                 onBlur={this.onBlur}
                 onChangeText={(address) => this.handleSearch(address)}
-              />
+              >
+                {state.address}
+              </Input>
             </Item>
             {
               state.focus

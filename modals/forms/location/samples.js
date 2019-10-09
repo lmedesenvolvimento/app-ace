@@ -87,10 +87,12 @@ export class SamplesForm extends React.Component {
                   <Item floatingLabel>
                     <Label> Nº da Coleta</Label>
                     <Input
-                      value={this.state.newItem.number.toString()}
                       keyboardType='numeric'
                       onChangeText={(number) => this.setState({ newItem: { ...this.state.newItem, number: number } })}
-                      onBlur={this.onBlurNumeralState.bind(this, 'number')} />
+                      onBlur={this.onBlurNumeralState.bind(this, 'number')}
+                    >
+                      {this.state.newItem.number.toString()}
+                    </Input>
                   </Item>
                 </Col>
                 <Col style={{ paddingHorizontal: 4 }}>
