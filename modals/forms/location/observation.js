@@ -69,6 +69,7 @@ export class ObservationForm extends React.Component {
                     multiline={true} 
                     maxHeight={120}
                     placeholder="Adicione aqui sua descrição"
+                    placeholderTextColor="#dbdbdb"
                   >
                     {this.state.observation}
                   </Input>
