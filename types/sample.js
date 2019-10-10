@@ -25,6 +25,9 @@ export const SampleDeposits = {
     { key: 'a2_cistern', label: 'Cisterna', value: 18 },
     { key: 'a2_waterhole', label: 'Cacimba', value: 19 },
     { key: 'a2_low_water_box', label: 'Caixa d\'àgua baixa', value: 20 },
+    { key: 'a2_basin', label: 'Bacia', value: 21 },
+    { key: 'a2_concrete_pipe', label: 'manilha', value: 22 },
+    { key: 'a2_washing_machine', label: 'Máquina de lavar', value: 23 },
   ],
   b: [
     { key: 'b_plant_pot', label: 'Vaso de planta', value: 31 },
