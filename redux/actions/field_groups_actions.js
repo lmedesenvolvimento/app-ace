@@ -83,6 +83,7 @@ function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
     }).catch((error) => {
       let { response } = error;
       let msg = null;
+      let forceNotAuthorized = false;
 
       if(!response) {
         simpleToast('Error desconhecido. Por favor informe ao administrador');
@@ -93,22 +94,26 @@ function fetchFieldGroupsInGraph(dispatch, getState, callback, onFail){
       switch (response.status) {
       case 200:
         msg = 'Sessão de usuário já expirada, por favor efetue login novamente e tente de novo.';
-        // user feedback
-        simpleToast(msg);
-        // Redirect for unauthorized
-        Actions.unauthorized({type: ActionConst.RESET});
+        forceNotAuthorized = true;
         break;
       default:
         msg = 'Falha na recuperação dos dados. Por favor informe ao administrador.';
-        // user feedback
-        simpleToast(msg);
         break;
       }
+      
+      simpleToast(msg);
 
       // Close Loading Modal
       dispatch({type: UITypes.CLOSE_LOADING});
 
-      return onFail ? onFail(msg) : false;
+      onFail ? onFail(msg) : false;
+
+      // Redirect for unauthorized
+      if (forceNotAuthorized){
+        Actions.unauthorized({ type: ActionConst.RESET });
+      }
+
+      return;
     });
 }
 
