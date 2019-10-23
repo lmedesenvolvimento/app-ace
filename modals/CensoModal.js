@@ -59,9 +59,9 @@ export class CensoModal extends React.Component {
   }  
 
   componentDidMount(){
-    this.setCensus();
     // remove preloading
-    setTimeout( () => this.setState({ isReady: true }), 200 );
+    setTimeout(() => this.setState({ isReady: true }), 200 );
+    this.setCensus();    
   }
 
   render() {
@@ -343,21 +343,20 @@ export class CensoModal extends React.Component {
   dismissModal(){
     Actions.pop();
   }
-
-  scrollBy = (index) => {
-    this.swiper.scrollBy(index)
-  }
-
+  
   setCensus(){
-    let census = _.first(this.props.address.census);
+    const address = this.props.address;
+    
+    const census = _.first(
+      ( address && address.census ) ? address.census : []
+    );
 
     if (_.isEmpty(census)) {
       return false;
     }
 
     // update component state
-    let updates = { ...census };
-    this.setState(updates)
+    this.setState({ ...census })
   }
 
   onCancel = () => {

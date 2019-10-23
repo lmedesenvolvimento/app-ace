@@ -144,13 +144,14 @@ export class FormLocationModal extends React.Component {
   }
 
   okModal = (targetTab, callback) => {
-    Actions.pop();
     TimerMixin.requestAnimationFrame(() =>  {
-      if(Platform.OS ===  'android'){
+      if(Platform.OS === 'android'){
         this.props.onSubmit(targetTab)
       }
-      callback();
+      // remove UI loading
       Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });
+      callback();
+      Actions.pop();
     });
   }
 
@@ -292,11 +293,8 @@ export class FormLocationModal extends React.Component {
   
       let targetTab = isVisitClosedOrRefused(this.state.visit.type) ? 0 : 1;
       
-      TimerMixin.setTimeout(
-        () => this.okModal(targetTab, callback)
-      );
+      this.okModal(targetTab, callback)
     } catch(e) {
-      console.log(e);
       Store.instance.dispatch({ type: UITypes.CLOSE_LOADING });
 
       simpleToast('Problema ao tentar criar a visita, informe ao administrador.');
