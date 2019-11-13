@@ -2,7 +2,6 @@
 
 # expo
 .expo/
-app.json
 
 # variables
 env.json

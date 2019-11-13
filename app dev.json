@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "sdkVersion": "34.0.0",
+    "name": "Aedes em Foco Agente Teste",
+    "version": "1.0.3.7",
+    "description": "Aplicativo para auxiliar os agentes de endemias de cedro no controle das arboviroses",
+    "slug": "aedes-agent-react-native-teste",
+    "privacy": "unlisted",
+    "platforms": [
+      "android"
+    ],
+    "orientation": "portrait",
+    "icon": "./assets/images/aedes_em_foco.png",
+    "primaryColor": "#00796B",
+    "splash": {
+      "backgroundColor": "#ffffff",
+      "image": "./assets/images/aedes_em_foco.png"
+    },
+    "android": {
+      "package": "br.ufc.lme.aedesemfoco.agent",
+      "versionCode": 32,
+      "permissions": [
+        "ACCESS_FINE_LOCATION"
+      ]
+    },
+    "extra": {
+      "baseurl": "https://aedes-agent-staging.herokuapp.com"
+    }
+  }
+}
