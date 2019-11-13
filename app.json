@@ -13,8 +13,9 @@
     "icon": "./assets/images/aedes_em_foco.png",
     "primaryColor": "#00796B",
     "splash": {
-      "backgroundColor": "#ffffff",
-      "image": "./assets/images/aedes_em_foco.png"
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
     },
     "android": {
       "package": "br.ufc.lme.aedesemfoco.agent",
