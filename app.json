@@ -28,7 +28,7 @@
       "baseurl": "https://aedes-agent-cedro-production.herokuapp.com"
     },
     "updates": {
-      "enabled": false
+      "fallbackToCacheTimeout": 0
     },
     "entryPoint": "node_modules/expo/AppEntry.js"
   }
